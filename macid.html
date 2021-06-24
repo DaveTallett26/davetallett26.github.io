@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Using the dir and macid functions in Excel 2011 VBA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/><br/>Using the dir and macid functions in Excel 2011 VBA</div>
+<div class="style84">
+<br/><br/>
+I came across the dir() and macid() functions in Excel 2011 on the Mac OS X 10.6.8 when I was converting my <a href="excelvbamacsitemap.html">sitemap generator</a> from Excel 2013 VBA to work on the Mac in Excel 2011 VBA. File types in Windows parlance are defined by the last characters in the file name for example .TXT or .DOCX. On Mac OSX the file type is a specific Linux attribute of the file (?) <a href="https://msdn.microsoft.com/en-us/library/office/gg278779.aspx">Here</a> is the MSDN write up of the dir() function which apparently has a second attribute parameter even on a Windows machine although most programmers would use a wildcard in the directory specification to select a subset of the directory contents for example *.txt to select all the files with the .txt extension. To replicate this behaviour on a Mac the macid() function is required. <a href="https://msdn.microsoft.com/en-us/library/office/gg264329.aspx">Here</a> is the MSDN write up of the macid() function which uses the file attribute to achieve roughly the same effect. This attribute is not set for files that were originated on a Windows machine and for files created with Office for the Mac there are various file types that can be tested for although I can find no enumeration of all the different types that could be set.
+<br/><br/>
+</div>
+<br/><br/>
+<div class="style61">
+Tags - Excel for Mac 2011, VBA, code, Microsoft, Visual BASIC for Applications, dir(), macid(), MSDN, file attribute, directory contents, file types, enumeration  ...
+</div>
+<script type="text/javascript" src="analytics.js"></script>
+</body>
+</html>

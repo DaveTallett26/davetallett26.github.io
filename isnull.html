@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>MySQL IsNull function</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#0000ff">
+<ul class="style1">
+<li class="style4"><a class="style2" href="email.html">Email</a></li>
+<li class="style4"><a class="style2" href="index.html">Home</a></li>
+</ul>
+<table width=100%>
+<td width=20% align=left valign=top>
+</td>
+<td width=60% valign=top>
+<center>
+<br>
+<font size=3><font face="arial"><b>MySQL IsNull Function</b>
+<font size=2><font face="arial"><br>Translating MSAccess JET SQL into MySQL syntax this function saves a translation to IFNULL</font>
+</center>
+</td>
+<td width=20%>
+</td>
+</table>
+<br>
+<table width=100%>
+<td width=20% align=left valign=top></td>
+<td width=60% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+DELIMITER $$
+
+DROP FUNCTION IF EXISTS `mydatabase`.`IsNull` $$
+CREATE DEFINER=`root`@`localhost` FUNCTION `IsNull`(sIn varchar(1024)) RETURNS tinyint(1)
+RETURN If(IFNULL(sIn,TRUE),TRUE,FALSE) $$
+
+DELIMITER ;
+</pre>
+</td>
+<td width=20%>
+</td>
+</table>
+</b>
+</font>
+<script type="text/javascript" src="analytics.js"></script>
+</body
+</html>
+

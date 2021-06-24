@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Serialize an object to XML in VB .NET</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#0000ff">
+<ul class="style1">
+<li class="style4"><a class="style2" href="email.html">Email</a></li>
+<li class="style4"><a class="style2" href="index.html">Home</a></li>
+</ul>
+<table width=100%>
+<td width=20% align=left valign=top>
+<br></td>
+<td width=60% valign=top>
+<center>
+<br>
+<font size=3><font face="arial"><b>Serialize an object to XML in VB .NET</b>
+</center>
+</td>
+<td width=20%>
+</td>
+</table>
+<br>
+<table width=100%>
+<td width=20% align=left valign=top></td>
+<td width=60% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+'Module1.vb
+Imports System.Xml.Serialization
+Imports System.IO
+
+Module Module1
+
+    Sub Main()
+
+        'How to serialize and deserialize an object to an XML file in Visual Basic .NET
+        'http://support.microsoft.com/kb/316730
+        'Set up product object or User Preferences object for that matter
+        Dim sFilename As String
+        Dim p As New clsProduct()
+
+        p.Name = "Widget"
+        p.Description = "Faster, better, cheaper"
+        p.Qty = 5
+        p.Username = "Dave"
+        p.HomeURL = "http://www.google.com"
+        sFilename = "c:\temp\" & p.Username & ".xml"
+
+        'Serialize object to a text file.
+        Dim objStreamWriter As New StreamWriter(sFilename)
+        Dim x As New XmlSerializer(p.GetType)
+        x.Serialize(objStreamWriter, p)
+        objStreamWriter.Close()
+
+        'Deserialize text file to a new object.
+        Dim objStreamReader As New StreamReader(sFilename)
+        Dim p2 As New clsProduct()
+        p2 = x.Deserialize(objStreamReader)
+        objStreamReader.Close()
+
+        'Display property values of the new product object.
+        Console.WriteLine(p2.Name)
+        Console.WriteLine(p2.Description)
+        Console.WriteLine(CStr(p2.Qty))
+        Console.WriteLine(p2.Username)
+        Console.WriteLine(p2.HomeURL)
+        Console.ReadLine()
+
+    End Sub
+
+End Module
+
+'clsProduct.vb
+
+Public Class clsProduct
+
+    Private mstrName As String
+    Private mstrDescription As String
+    Private mintQty As Integer
+    Private mstrUsername As String
+    Private mstrHomeURL As String
+
+    Public Property Name() As String
+        Get
+            Name = mstrName
+        End Get
+        Set(ByVal Value As String)
+            mstrName = Value
+        End Set
+    End Property
+
+    Public Property Description() As String
+        Get
+            Description = mstrDescription
+        End Get
+        Set(ByVal Value As String)
+            mstrDescription = Value
+        End Set
+    End Property
+
+    <XmlElementAttribute(ElementName:="Quantity")> _
+    Public Property Qty() As Integer
+        Get
+            Qty = mintQty
+        End Get
+        Set(ByVal Value As Integer)
+            mintQty = Value
+        End Set
+    End Property
+
+    Public Property Username() As String
+        Get
+            Username = mstrUsername
+        End Get
+        Set(ByVal Value As String)
+            mstrUsername = Value
+        End Set
+    End Property
+
+    Public Property HomeURL() As String
+        Get
+            HomeURL = mstrHomeURL
+        End Get
+        Set(ByVal Value As String)
+            mstrHomeURL = Value
+        End Set
+    End Property
+
+End Class
+
+</pre>
+</td>
+<td width=20%></td>
+</table>
+<br>
+<br>
+<center>
+<font size=2>
+<font face="arial">
+<a href="http://support.microsoft.com/kb/316730">How to serialize and deserialize an object to an XML file in Visual Basic .NET</a>
+</b>
+</font>
+<script type="text/javascript" src="analytics.js"></script>
+</body
+</html>
+

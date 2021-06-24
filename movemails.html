@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Move mail items to a target folder using Outlook VBA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/><br/>Move mail items to a target folder using Outlook VBA</div>
+<font size=3><font face="arial">
+<br/><br/>
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+' Outlook VB Macro to save attachments to folder
+
+Public Sub saveAttachtoDisk(itm As Outlook.MailItem)
+Dim objAtt As Outlook.Attachment
+Dim saveFolder As String
+Dim saveDate As String
+saveFolder = "\\intranet\employer\UserData\Users\DTalle1\documents\_temp"
+saveDate = Format(itm.ReceivedTime, "ddmmyy")
+For Each objAtt In itm.Attachments
+  objAtt.SaveAsFile saveFolder & "\" & Mid(objAtt.DisplayName, 1, Len(objAtt.DisplayName) - 4) & " " & _
+	saveDate & Mid(objAtt.DisplayName, Len(objAtt.DisplayName) - 3, 4)
+  Set objAtt = Nothing
+Next
+End Sub
+
+' Outlook VB Macro to move selected mail item(s) to a target folder
+
+Public Sub MoveEmail()
+
+'On Error Resume Next
+
+Dim ns As Outlook.NameSpace
+Dim moveToFolder As Outlook.MAPIFolder
+Dim moveFromFolder As Outlook.MAPIFolder
+Dim objItem As Outlook.MailItem
+Dim i, j, k, l, m As Integer
+
+Set ns = Application.GetNamespace("MAPI")
+
+'For i = 1 To ns.Folders.Count
+' Debug.Print "Level 1 - " & ns.Folders(i).Name
+' For j = 1 To ns.Folders(i).Folders.Count
+'  Debug.Print "Level 2 -- " & ns.Folders(i).Folders(j).Name
+'  For k = 1 To ns.Folders(i).Folders(j).Folders.Count
+'   Debug.Print "Level 3 --- " & ns.Folders(i).Folders(j).Folders(k).Name
+'   For l = 1 To ns.Folders(i).Folders(j).Folders(k).Folders.Count
+'    Debug.Print "Level 4 ---- " & ns.Folders(i).Folders(j).Folders(k).Folders(l).Name
+'    For m = 1 To ns.Folders(i).Folders(j).Folders(k).Folders(l).Folders.Count
+'     Debug.Print "Level 5 ----- " & ns.Folders(i).Folders(j).Folders(k).Folders(l).Folders(m).Name
+'    Next m
+'   Next l
+'  Next k
+' Next j
+'Next i
+
+'Define path to the target folder
+Set moveToFolder = ns.Folders("Tallett, David").Folders("Inbox").Folders("Daily Mash API").Folders("Execute")
+Set moveFromFolder = ns.Folders("Tallett, David").Folders("Inbox")
+For i = 1 To moveFromFolder.Items.Count - 1
+    Set objItem = moveFromFolder.Items(i)
+    If objItem.Subject = "Daily Mash" Then
+     objItem.Move moveToFolder
+    End If
+Next i
+
+Set objItem = Nothing
+Set moveFromFolder = Nothing
+Set moveToFolder = Nothing
+Set ns = Nothing
+End Sub
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+</b>
+</font>
+<br/><br/>
+<div class="style61">
+Tags - Microsoft Outlook VBA, email, move mail depending on subject, save attachments, email rules.
+</div>
+<script type="text/javascript" src="analytics.js"></script>
+</body>
+</html>
