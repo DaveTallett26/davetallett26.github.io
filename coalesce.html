@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<title>MS Access COALESCE function</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#0000ff">
+<ul class="style1">
+<li class="style4"><a class="style2" href="email.html">Email</a></li>
+<li class="style4"><a class="style2" href="index.html">Home</a></li>
+</ul>
+<div class="style62">MS Access COALESCE Function</div>
+<div class="style62">The functionality of the SQL Server COALESCE function in MS Access</div>
+<br/><br/>
+<table width=100%>
+<td width=20% align=left valign=top></td>
+<td width=60% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Public Function fnCOALESCE(MyQuery As String) As String
+ Dim db As DAO.Database
+ Dim rs As DAO.Recordset
+ Dim sOutputString As String
+ Set db = CurrentDb()
+ Set rs = db.OpenRecordset(MyQuery)
+ fnCOALESCE = ""
+ sOutputString = ""
+ If rs.BOF And rs.EOF Then
+  Exit Function ' No records to process
+ Else
+  rs.MoveFirst
+  Do Until rs.EOF
+   sOutputString = sOutputString & rs.Fields(0)
+   DoEvents
+   rs.MoveNext
+  Loop
+ End If
+ fnCOALESCE = sOutputString
+ Set rs = Nothing
+ Set db = Nothing
+End Function</pre>
+</td>
+<td width=20%></td>
+</table>
+</b>
+</font>
+<script type="text/javascript" src="analytics.js"></script>
+</body
+</html>
+

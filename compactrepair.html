@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<title>Compact and Repair Access database from VBA</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4"><a class="style2" href="email.html">Email</a></li>
+<li class="style4"><a class="style2" href="index.html">Home</a></li>
+</ul>
+</br></br>
+<div class="style62">Compact and Repair Access database from VBA</div>
+</br></br>
+<font size=3><font face="arial">
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Public Function fnCompactRepairDatabase()
+
+Dim sFilename1 As String
+Dim sFilename2 As String
+Dim sFilename3 As String
+
+sFilename1 = fnFileDialog
+sFilename2 = Mid(sFilename1, 1, InStr(1, sFilename1, ".") - 1) _
+	& " Compact" _
+	& Mid(sFilename1, InStr(1, sFilename1, "."), Len(sFilename1))
+
+sFilename3 = Mid(sFilename1, 1, InStr(1, sFilename1, ".") - 1) _
+	& " Old " & Format(Now(), "yyyymmddHHMMSS") _
+	& Mid(sFilename1, InStr(1, sFilename1, "."), Len(sFilename1))
+
+MsgBox sFilename1
+MsgBox sFilename2
+MsgBox sFilename3
+
+Application.CompactRepair sFilename1, sFilename2
+Name sFilename1 As sFilename3    ' Rename file .mdb to Old <timestamp> .mdb
+Name sFilename2 As sFilename1    ' Rename file Compact .mdb to .mdb
+
+End Function
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+</b>
+</font>
+<script type="text/javascript" src="analytics.js"></script>
+</body>
+</html>
+

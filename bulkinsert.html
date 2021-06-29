@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>VBA Code to load a delimited file to a MS Access table</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4"><a class="style2" href="email.html">Email</a></li>
+<li class="style4"><a class="style2" href="index.html">Home</a></li>
+</ul>
+</br></br>
+<div class="style62">VBA Code to load a +| delimited file to a MS Access table</div>
+</br></br>
+<font size=3><font face="arial">
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Option Compare Database
+
+Public Function fnBulkInsert(sFilename As String, _
+	Optional sFieldTerminator As String, _
+	Optional sRowTerminator As String) As Boolean
+
+' Currently supports FIELDTERMINATOR='+|' and ROWTERMINATOR='&|\n'
+' + dec 43 | dec 124 & dec 38
+
+ On Error GoTo fnBulkInsert_Error_Routine
+ fnBulkInsert = True
+
+ Dim sErrFilename As String
+ sErrFilename = "c:\logs\err" & Format(Now(), "yyyymmddHHMMSS") & ".txt"
+
+ Dim i As Long
+ Dim s As String
+ Dim sInputChar As String
+ Dim sInputChar2 As String
+ Dim sInputChar3 As String
+ Dim sSQL01 As String
+ Dim sSQL02 As String
+ Dim f As Integer
+ Dim sPlus As String
+ Dim sBar As String
+ Dim sAmp As String
+
+ If sFieldTerminator = "\t" Then
+  Call fnBulkInsertTab(sFilename)
+  GoTo End_Function
+End If
+
+ If sFieldTerminator <> "+|" Then
+  Open sErrFilename For Output As #9
+  Print #9, "Unsupported FIELDTERMINATOR **" & sFieldTerminator & "**"
+  Print #9, Now()
+  Print #9, CurrentDb.Name
+  Print #9, "**END**"
+  Close #9
+  fnBulkInsert = False
+  GoTo End_Function
+ End If
+
+ If fnTableExists("tblBulkInsert") Then DoCmd.RunSQL "DROP TABLE tblBulkInsert"
+ DoCmd.RunSQL "CREATE TABLE tblBulkInsert (" & _
+    "f1 varchar,f2 varchar,f3 varchar,f4 varchar,f5 varchar," & _
+    "f6 varchar," & _
+    "f7 varchar," & _
+    "f8 varchar," & _
+    "f9 varchar," & _
+    "f10 varchar," & _
+    "f11 varchar," & _
+    "f12 varchar," & _
+    "f13 varchar," & _
+    "f14 varchar," & _
+    "f15 varchar," & _
+    "f16 varchar," & _
+    "f17 varchar," & _
+    "f18 varchar," & _
+    "f19 varchar," & _
+    "f20 varchar," & _
+    "f21 varchar," & _
+    "f22 varchar," & _
+    "f23 varchar," & _
+    "f24 varchar," & _
+    "f25 varchar," & _
+    "f26 varchar" & _
+    ");"
+
+ i = 1
+ f = 1
+ s = ""
+ sInputChar = ""
+ sInputChar2 = ""
+ sInputChar3 = ""
+ sSQL01 = ""
+ sSQL02 = ""
+ sPlus = "+"
+ sBar = "|"
+ sAmp = "&"
+
+ Open sFilename For Input As #10
+ sInputChar = Input(1, #10)
+ sInputChar2 = Input(1, #10)
+ sInputChar3 = Input(1, #10)
+
+    Do Until EOF(10)
+        If Asc(sInputChar) < 127 Then
+            If sInputChar = "'" Then
+                GoTo Next_Char
+            End If
+            If sInputChar = sPlus And sInputChar2 = sBar Then
+                If f = 1 Then
+                    sSQL01 = "INSERT INTO tblBulkInsert (f1"
+                    sSQL02 = "VALUES ('" & s & "'"
+                End If
+                If f > 1 Then
+                    sSQL01 = sSQL01 & ",f" & f
+                    sSQL02 = sSQL02 & ",'" & s & "'"
+                End If
+                s = ""
+                f = f + 1
+                sInputChar = sInputChar2
+                sInputChar2 = sInputChar3
+                sInputChar3 = Input(1, #10)
+                GoTo Next_Char
+            End If
+            If sInputChar = sAmp And sInputChar2 = sBar And sInputChar3 = vbCr Then
+'                MsgBox (s)
+'                MsgBox ("CR")
+'                Debug.Print "CR"
+                sSQL01 = sSQL01 & ",f" & f & ") "
+                sSQL02 = sSQL02 & ",'" & s & "');"
+                sSQL01 = sSQL01 & sSQL02
+'                MsgBox sSQL01
+                DoCmd.RunSQL sSQL01
+                s = ""
+                sSQL01 = ""
+                sSQL02 = ""
+                f = 1
+                sInputChar = sInputChar2
+                sInputChar2 = sInputChar3
+                sInputChar3 = Input(1, #10)
+                sInputChar = sInputChar2
+                sInputChar2 = sInputChar3
+                sInputChar3 = Input(1, #10) ' Gives "Input past end-of-file"
+                GoTo Next_Char
+            End If
+            If sInputChar = vbLf Then
+'                MsgBox ("LF")
+'                Debug.Print "LF"
+                s = ""
+                GoTo Next_Char
+            End If
+            s = s & sInputChar
+        End If
+Next_Char:
+        i = i + 1
+        sInputChar = sInputChar2
+        sInputChar2 = sInputChar3
+        sInputChar3 = Input(1, #10)
+'        If i = 400 Then Exit Do
+    Loop
+
+fnBulkInsert_Exit_Routine:
+' MsgBox "Exit Routine"
+ Close #10
+ Exit Function
+
+fnBulkInsert_Error_Routine:
+ If Err.Number = 62 Then ' Input past end of file
+  Resume fnBulkInsert_Exit_Routine
+ End If
+ Open sErrFilename For Output As #9
+ Print #9, "Industrial Computer Contracts (West Midlands) - Error Log - 15th May 2014"
+ Print #9, Now()
+ Print #9, Err.Number
+ Print #9, Err.Description
+ Print #9, CurrentDb.Name
+ Print #9, "fnBulkInsert"
+ Print #9, sSQL01
+ Print #9, sSQL02
+ Print #9, "**END**"
+ Close #9
+ Resume fnBulkInsert_Exit_Routine
+
+End_Function:
+End Function
+
+
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+</b>
+</font>
+<script type="text/javascript" src="analytics.js"></script>
+</body>
+</html>
+

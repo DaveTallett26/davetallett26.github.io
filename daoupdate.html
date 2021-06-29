@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Generic DAO table update</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4"><a class="style2" href="email.html">Email</a></li>
+<li class="style4"><a class="style2" href="index.html">Home</a></li>
+</ul>
+<div class="style62"><br/><br/>Generic DAO table update<br/><br/></div>
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Option Compare Database
+Option Explicit
+
+Public Function fnUpdateOrderRef() As Boolean
+ Dim sCustRef As String
+ Dim sDelPostcode As String
+ Dim sOrderRef As String
+ Dim rs As DAO.Recordset
+ Set rs = CurrentDb.OpenRecordset("select autoId from tbl_empdets where smesos_id=""" & user & """;")
+ rs.MoveFirst
+ sCustRef = rs!CustRef
+ sDelPostcode = rs!DelPostcode
+ sOrderRef = rs!OrderRef
+Next_Record:
+ rs.MoveNext
+ If rs.EOF Then Exit Function
+ If rs!CustRef = sCustRef And rs!DelPostcode = sDelPostcode Then
+  rs.Edit
+  rs!OrderRef = sOrderRef
+  rs.Update
+ Else
+  sCustRef = rs!CustRef
+  sDelPostcode = rs!DelPostcode
+  sOrderRef = rs!OrderRef
+ End If
+ GoTo Next_Record
+End Function
+
+Sub test()
+ Call fnUpdateOrderRef
+End Sub
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+</b>
+</font>
+<script type="text/javascript" src="analytics.js"></script>
+</body
+</html>
+
