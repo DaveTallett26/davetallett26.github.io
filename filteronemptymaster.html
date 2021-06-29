@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72474361-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-72474361-1');
+</script>
+<title>Filter on Empty Master</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/><br/><br/>Filter on Empty Master</div>
+<div class="style63">
+<br/><br/>
+One of the pitfalls of converting Access 2002 to Access 2010 is that there are new properties on forms and controls that do not exist in the old version of Access. 
+One of these is the "Filter on Empty Master" property of a subform control. In an ideal world the main form is bound to master records such as Orders and the subform and its 
+source object are bound to child records such as Order Details clearly related to the master records through a field called
+Order ID. Thus Filter on Empty Master would naturally be set to Yes and this how the conversion process configures the subform when it is converted to Access 2010.
+<br/><br/>
+However, a common way of using Access forms and subforms is, similar to a web page, 
+designing a strip of navigation buttons down the left hand side of the screen with a subform window in the centre of the screen to display multiple forms selected by the 
+navigation buttons. The navigation strip will likely be bound to the user identification table to make sure that the user see those buttons he is authorised to see. 
+In the subform window will normally be forms to display completely unrelated child records for example a client list as a result of a search and the client details records.
+<br/><br/>
+In this situation the Filter on Empty Master property behaves in a completely counter intuitive way expecting the Master records to be related to the Child records and 
+giving a blank screen except for any titles on the form. Changing the value from Yes to No produces similarly unexpected behaviour. 
+In the case I saw the work around was to make sure that the master form was always empty as it would be if the source query used the Access function CurrentUser to select 
+the user record and identify the user then switch the Filter on Empty Master property to No.
+<br/><br/>
+Tags - Access 2010, Access 2007, Access 2002, Access XP, Access 2000, Access 97, conversion, subform, Filter on Empty Master, Source Object, Link Master Fields, 
+Link Child Fields, Microsoft, property, CurrentUser, function, fails, error ...
+<br/><br/>
+</div>
+</body>
+</html>

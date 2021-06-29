@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72474361-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-72474361-1');
+</script>
+<title>Pretty Print VBA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<!--
+<li class="style4">
+<a class="style2" href="email.html">Email &nbsp;</a>
+</li>
+-->
+<li class="style4">
+<a class="style2" href="index.html">&nbsp; Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>Pretty Print VBA</div>
+<br/><br/>
+<div class="style84">
+Have you ever needed to format somebody else's code so that it was more readable? Here is a simple VBA function to read VBA and format it
+- or "Pretty Print" it as the saying goes ...
+<br/><br/>
+Tags - pretty, print, VBA, Visual BASIC for Applications, format, code, indent, blocks, structure, block, Access 2010, Access 2007, Access 2002, Access XP, Access 2000, 
+Access 97, Microsoft, function, Excel 2010, Excel 2007, Excel 2002, Excel XP, Excel 2000, Excel 97
+<br/><br/>
+</div>
+<table width=100%>
+    <tr>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Public Function fnPrettyPrint(sFilename As String)
+    ' Avoid reserved words in your labels eg Next_Line
+    Dim sOutFilename As String
+    sOutFilename = Mid(sFilename, 1, Len(sFilename) - 4) & ".ppp"
+    Dim i As Long
+    Dim sInputLine As String
+    Dim bContinuation As Boolean
+    sInputLine = ""
+    Open sFilename For Input As #10
+    Open sOutFilename For Output As #11
+    Do Until EOF(10)
+        Line Input #10, sInputLine
+        If Trim(sInputLine) = "" Then
+            GoTo Label_Next_Line
+        End If
+        If Mid(Trim(sInputLine), Len(Trim(sInputLine)), 1) = "_" Then
+            If bContinuation = True Then
+                Print #11, Spc(i + 4); Trim(sInputLine)
+                GoTo Label_Next_Line
+            End If
+            If bContinuation = False Then
+                Print #11, Spc(1)
+                Print #11, Spc(i); Trim(sInputLine)
+                bContinuation = True
+                GoTo Label_Next_Line
+            End If
+        End If
+        If Mid(Trim(sInputLine), Len(Trim(sInputLine)), 1) <> "_" Then
+            If bContinuation = True Then
+                Print #11, Spc(i + 4); Trim(sInputLine)
+                Print #11, Spc(1)
+                bContinuation = False
+                GoTo Label_Next_Line
+            End If
+        End If
+        If InStr(1, Trim(sInputLine), "Select Case") = 1 Then
+            Print #11, Spc(i); Trim(sInputLine)
+            i = i + 4
+            GoTo Label_Next_Line
+        End If
+        If InStr(1, Trim(sInputLine), "End Select") = 1 Then
+            i = i - 4
+            Print #11, Spc(i); Trim(sInputLine)
+            GoTo Label_Next_Line
+        End If
+        If InStr(1, Trim(sInputLine), "Case") = 1 Then
+            Print #11, Spc(i - 4); Trim(sInputLine)
+            GoTo Label_Next_Line
+        End If
+        If InStr(1, Trim(sInputLine), "For Each") = 1 Then
+            Print #11, Spc(i); Trim(sInputLine)
+            i = i + 4
+            GoTo Label_Next_Line
+        End If
+        If InStr(1, Trim(sInputLine), "Next") = 1 Then
+            i = i - 4
+            Print #11, Spc(i); Trim(sInputLine)
+            GoTo Label_Next_Line
+        End If
+        If InStr(1, Trim(sInputLine), "Public Sub") = 1 Then
+            Print #11, Spc(1)
+            Print #11, Trim(sInputLine)
+            i = 4
+            GoTo Label_Next_Line
+        End If
+        If InStr(1, Trim(sInputLine), "Private Sub") = 1 Then
+            Print #11, Spc(1)
+            Print #11, Trim(sInputLine)
+            i = 4
+            GoTo Label_Next_Line
+        End If
+        If InStr(1, Trim(sInputLine), "Sub") = 1 Then
+            Print #11, Spc(1)
+            Print #11, Trim(sInputLine)
+            i = 4
+            GoTo Label_Next_Line
+        End If
+        If InStr(1, Trim(sInputLine), "End Sub") = 1 Then
+            Print #11, Trim(sInputLine)
+            Print #11, Spc(1)
+            i = 0
+            GoTo Label_Next_Line
+        End If
+        If InStr(1, Trim(sInputLine), "Public Function") = 1 Then
+            Print #11, Spc(1)
+            Print #11, Trim(sInputLine)
+            i = 4
+            GoTo Label_Next_Line
+        End If
+        If InStr(1, Trim(sInputLine), "End Function") = 1 Then
+            Print #11, Trim(sInputLine)
+            Print #11, Spc(1)
+            i = 0
+            GoTo Label_Next_Line
+        End If
+        If InStr(1, Trim(sInputLine), "Do Until") = 1 Then
+            Print #11, Spc(i); Trim(sInputLine)
+            i = i + 4
+            GoTo Label_Next_Line
+        End If
+        If InStr(1, Trim(sInputLine), "Loop") = 1 Then
+            i = i - 4
+            Print #11, Spc(i); Trim(sInputLine)
+            GoTo Label_Next_Line
+        End If
+        If InStr(1, Trim(sInputLine), "If") = 1 Then
+            If Mid(Trim(sInputLine), Len(Trim(sInputLine)) - 3, 4) = _
+                "Then" Then
+                Print #11, Spc(i); Trim(sInputLine)
+                i = i + 4
+                GoTo Label_Next_Line
+            End If
+        End If
+        If InStr(1, Trim(sInputLine), "End If") = 1 Then
+            i = i - 4
+            Print #11, Spc(i); Trim(sInputLine)
+            GoTo Label_Next_Line
+        End If
+        If InStr(1, Trim(sInputLine), "Else") = 1 Then
+            Print #11, Spc(i - 4); Trim(sInputLine)
+            GoTo Label_Next_Line
+        End If
+        If Mid(Trim(sInputLine), Len(Trim(sInputLine)), 1) = ":" Then
+            Print #11, Trim(sInputLine)
+            GoTo Label_Next_Line
+        End If
+        Print #11, Spc(i); Trim(sInputLine)
+Label_Next_Line:
+    Loop
+fnPrettyPrint_Exit_Routine:
+    Close #10
+    Close #11
+    Exit Function 
+End Function
+</pre>
+</font>
+</font>
+</td>
+<td width=25%>
+</td>
+</tr>
+</table>
+</body>
+</html>

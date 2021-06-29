@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72474361-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-72474361-1');
+</script>
+<title>Function to Refresh Table Links in MS Access VBA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>Function to Refresh Table Links in MS Access VBA</div>
+
+<div class="style63">
+<br/><br/>
+This has to be the most useful piece of bespoke code I have ever got from
+<a href="https://www.microsoft.com/en-us/microsoft-365/blog/2012/08/03/automatically-relink-microsoft-access-tables/">a Microsoft website!</a> Copy all the backend databases into a development area then the front end and run this piece if code in the front end "et voila" you have a working copy of your live database to work on.
+</div>
+<br/>
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Public Function fnRefreshTableLinks() As Boolean
+' http://blogs.office.com/2012/08/03/automatically-relink-microsoft-access-tables/
+ On Error GoTo fnRefreshTableLinks_Err
+ fnRefreshTableLinks = False
+ Dim db As DAO.Database
+ Dim tdf As DAO.TableDef
+ Dim sConnect As String
+ Dim sBackEnd As String
+ Dim iCount As Integer
+
+ Set db = CurrentDb
+ iCount = 0
+
+ For Each tdf In db.TableDefs
+  If Left$(tdf.Connect, 10) = ";DATABASE=" Then
+   sConnect = Nz(tdf.Connect, "")
+   sBackEnd = Right$(sConnect, (Len(sConnect) - (InStrRev(sConnect, "\") - 1)))
+   If Len(sBackEnd & "") > 0 Then
+    Set tdf = db.TableDefs(tdf.Name)
+    tdf.Connect = ";DATABASE=" & CurrentProject.path & sBackEnd
+    tdf.RefreshLink
+    iCount = iCount + 1
+   End If
+  End If
+ Next tdf
+
+fnRefreshTableLinks_Exit:
+ MsgBox iCount & " table links refreshed"
+ Set tdf = Nothing
+ Set db = Nothing
+ fnRefreshTableLinks = True
+ Exit Function
+
+fnRefreshTableLinks_Err:
+ Dim sFilename As String
+ sFilename = CurrentProject.path & "\err" & Format(Now(), "yyyymmddHHMMSS") & ".txt"
+ Open sFilename For Output As #1
+ Print #1, "database - Error Log"
+ Print #1, Now()
+ Print #1, Err.Number
+ Print #1, Err.Description
+ Print #1, CurrentDb.Name
+ Print #1, CurrentProject.path
+ Print #1, "Table Name ***" & tdf.Name
+ Print #1, "Connect String ***" & sConnect
+ Print #1, "fnRefreshTableLinks_Err"
+ Print #1, "**End**"
+ Close #1
+ MsgBox "Error relinking tables"
+ Application.Quit
+ Resume fnRefreshTableLinks_Exit
+End Function
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+<br/><br/>
+<div class="style61">
+Tags - Microsoft Access 2013, Microsoft Access 2010, Microsoft Access 2007, refresh table links, VBA, code, Microsoft, Visual BASIC for Applications, front end, back end, relink, connect string
+</div>
+</body>
+</html>

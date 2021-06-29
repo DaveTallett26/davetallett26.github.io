@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Crosstab Missing Values</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#0000ff">
+<ul class="style1">
+<li class="style4"><a class="style2" href="email.html">Email</a></li>
+<li class="style4"><a class="style2" href="index.html">Home</a></li>
+</ul>
+<table width=100%>
+<td width=20% align=left valign=top>
+</td>
+<td width=60% valign=top>
+<center>
+<br>
+<font size=3><font face="arial"><b>Crosstab Missing Values</b><font size=2><font face="arial"><br>A simple SQL solution for avoiding those pesky missing values you get when you try to use the Microsoft Access crosstab query.</font>
+</center>
+</td>
+<td width=20%>
+</td>
+</table>
+<br>
+
+
+<table width=100%>
+<td width=20% align=left valign=top></td>
+<td width=60% valign=top bgcolor="#cccccc">
+
+<font size=1>
+<font face="arial">
+
+
+
+
+SELECT <br>
+
+DateValue("01" & "/" & Format(Date(),"mm") & "/" & Format(Date(),"yyyy")) AS dDate01, <br>
+
+DateValue("01" & "/" & Format(DateAdd("M",1,Date()),"mm") & "/" & Format(DateAdd("M",1,Date()),"yyyy")) AS dDate02, <br>
+
+DateValue("01" & "/" & Format(DateAdd("M",2,Date()),"mm") & "/" & Format(DateAdd("M",2,Date()),"yyyy")) AS dDate03, <br>
+
+DateValue("01" & "/" & Format(DateAdd("M",3,Date()),"mm") & "/" & Format(DateAdd("M",3,Date()),"yyyy")) AS dDate04, <br>
+
+DateValue("01" & "/" & Format(DateAdd("M",4,Date()),"mm") & "/" & Format(DateAdd("M",4,Date()),"yyyy")) AS dDate05, <br>
+
+DateValue("01" & "/" & Format(DateAdd("M",5,Date()),"mm") & "/" & Format(DateAdd("M",5,Date()),"yyyy")) AS dDate06, <br>
+
+DateValue("01" & "/" & Format(DateAdd("M",6,Date()),"mm") & "/" & Format(DateAdd("M",6,Date()),"yyyy")) AS dDate07, <br>
+
+DateValue("01" & "/" & Format(DateAdd("M",7,Date()),"mm") & "/" & Format(DateAdd("M",7,Date()),"yyyy")) AS dDate08, <br>
+
+DateValue("01" & "/" & Format(DateAdd("M",8,Date()),"mm") & "/" & Format(DateAdd("M",8,Date()),"yyyy")) AS dDate09, <br>
+
+DateValue("01" & "/" & Format(DateAdd("M",9,Date()),"mm") & "/" & Format(DateAdd("M",9,Date()),"yyyy")) AS dDate10, <br>
+
+DateValue("01" & "/" & Format(DateAdd("M",10,Date()),"mm") & "/" & Format(DateAdd("M",10,Date()),"yyyy")) AS dDate11, <br>
+
+DateValue("01" & "/" & Format(DateAdd("M",11,Date()),"mm") & "/" & Format(DateAdd("M",11,Date()),"yyyy")) AS dDate12 <br>
+
+FROM DummyTable;<br>
+
+
+
+
+
+</td>
+<td width=20%></td>
+</table>
+
+<br>
+<br>
+
+<table width=100%>
+<td width=20% align=left valign=top></td>
+<td width=60% valign=top bgcolor="#cccccc">
+
+<font size=1>
+<font face="arial">
+
+
+
+
+
+SELECT <br>
+DateAdd("d",-Weekday(Date())+1,Date()) AS dSunday01,  <br>
+DateAdd("d",-Weekday(Date())+8,Date()) AS dSunday02,  <br>
+DateAdd("d",-Weekday(Date())+15,Date()) AS dSunday03, <br>
+DateAdd("d",-Weekday(Date())+22,Date()) AS dSunday04, <br>
+DateAdd("d",-Weekday(Date())+29,Date()) AS dSunday05, <br>
+DateAdd("d",-Weekday(Date())+36,Date()) AS dSunday06, <br>
+DateAdd("d",-Weekday(Date())+43,Date()) AS dSunday07, <br>
+DateAdd("d",-Weekday(Date())+50,Date()) AS dSunday08, <br>
+DateAdd("d",-Weekday(Date())+57,Date()) AS dSunday09, <br>
+DateAdd("d",-Weekday(Date())+64,Date()) AS dSunday10, <br>
+DateAdd("d",-Weekday(Date())+71,Date()) AS dSunday11, <br>
+DateAdd("d",-Weekday(Date())+78,Date()) AS dSunday12, <br>
+DateAdd("d",-Weekday(Date())+85,Date()) AS dSunday13  <br>
+
+
+</td>
+<td width=20%></td>
+</table>
+
+
+</b>
+</font>
+<script type="text/javascript" src="analytics.js"></script>
+</body
+</html>
+

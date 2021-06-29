@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Form generator in MS Access VBA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/><br/>Form generator in MS Access VBA</div>
+
+<div class="style84">
+<br/><br/>
+This code is similar to the form generator supplied with Microsoft Access - it makes the job of building standard forms for big records fairly trivial. This would be useful when you are developing a front end to a SQL Server database for example. The units of size and co-ordinates of the controls are in twips. A twip is a unit of measurement equal to 1/20th of a point - there are 1440 twips to an inch and 567 twips to a centimetre. The size of a point is 0.35278 mm, and thus 12pt (a pica) is 12*0.35278 = 4.23333 mm. Both Arial and Times New Roman use this definition of point so Arial 10pt is 200 twips high or 3.5278mm
+</div>
+<br/>
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Sub form()
+    Dim db As DAO.Database
+    Dim tdf As DAO.TableDef
+    Dim i As Integer
+    Dim frm As form
+    Dim ctlLabel As Control, ctlText As Control
+    Dim intDataX As Integer, intDataY As Integer
+    Dim intLabelX As Integer, intLabelY As Integer
+    Dim sTableName As String
+    sTableName = "LOCAL tbl_sdd_main"
+    Set frm = CreateForm
+    frm.RecordSource = sTableName
+    intLabelX = 200
+    intLabelY = 200
+    intDataX = 2750
+    intDataY = 200
+    Set db = CurrentDb()
+    Set tdf = db.TableDefs(sTableName)
+    For i = 0 To tdf.Fields.Count - 1
+        Set fld = tdf.Fields(i)
+        Set ctlText = _
+        	CreateControl(frm.Name, acTextBox, , "", fld.Name, _
+        	intDataX, intDataY, 1000, 200)
+        Set ctlLabel = _
+            CreateControl(frm.Name, acLabel, , ctlText.Name, fld.Name, _
+            intLabelX, intLabelY, 2000, 100)
+        ctlText.FontName = "Arial"
+        ctlText.FontSize = 8
+        ctlText.Height = 200
+        ctlText.Width = 1000
+        ctlLabel.FontName = "Arial"
+        ctlLabel.FontSize = 8
+        ctlLabel.Height = 200
+        ctlLabel.Width = 2000
+        intLabelY = intLabelY + 300
+        intDataY = intDataY + 300
+        If (i Mod 42) = 41 Then
+'            Exit Sub
+            intLabelY = 200
+            intDataY = 200
+            intLabelX = intLabelX + 4000
+            intDataX = intDataX + 4000
+        End If
+    Next i
+    DoCmd.Close acForm, "Form1", acSaveYes
+    DoCmd.OpenForm "Form1", acDesign
+    Set frm = Forms!Form1
+    frm.AllowDatasheetView = False
+    frm.AllowPivotTableView = False
+    frm.AllowPivotChartView = False
+'    frm.ScrollBars = Neither
+    frm.RecordSelectors = False
+'    frm.NavigationButtons = False
+    frm.DividingLines = False
+    frm.AutoCenter = True
+'    frm.Width = 5748
+'    frm.AllowDesignChanges = False
+'    frm.Detail.Height = 2874
+    DoCmd.Close acForm, "Form1", acSaveYes
+    DoCmd.CopyObject , "AutoForm " & sTableName, acForm, "Form1"
+    DoCmd.DeleteObject acForm, "Form1"
+End Sub
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+
+<br/><br/>
+<div class="style61">
+Tags - Microsoft Access 2013, Microsoft Access 2010, Microsoft Access 2007, form generator, AutoForm, VBA, code, Microsoft, Visual BASIC for Applications, SQL Server, font, size, Arial, Times New Roman, height, 10 point, millimetres, inches, centimetres, units, point, pica
+</div>
+<script type="text/javascript" src="analytics.js"></script>
+</body>
+</html>

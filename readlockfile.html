@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Read MS Access lock file in Excel VBA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/><br/>Read MS Access lock file in Excel VBA</div>
+
+<div class="style84">
+<br/><br/>
+Below is a piece of code to read and display the contents of an MS Access lock file. Useful when you are waiting for the backend database to come free so that it can be worked on. The contents of a lock file are only the device names of the computers but it is useful if you can decode the device name and match it to a user.
+</div>
+<br/>
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Sub sbRead_laccdb()
+    Columns("A:A").Select
+    Selection.ClearContents
+    Range("A1").Select
+    Dim FileNum As Integer
+    Dim DataLine As String
+    FileNum = FreeFile()
+    Open "Z:\Performance\Database\Area 51\Backend\sddb_backend.laccdb" For Input As #FileNum
+    While Not EOF(FileNum)
+        Line Input #FileNum, DataLine
+    Wend
+    Dim i As Long
+    Dim sDevice As String
+    With ActiveSheet
+    For i = 1 To 20
+        sDevice = Mid(DataLine, 1, 62)
+        .Cells(i, 1).Value = Mid(sDevice, 1, InStr(1, sDevice, " ") - 1)
+        DataLine = Mid(DataLine, 63, Len(DataLine))
+        If Len(DataLine) = 0 Then Exit Sub
+    Next i
+    End With
+End Sub
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+<br/><br/>
+<div class="style61">
+Tags - Excel 2010, Excel 2007, lockfile, VBA, code, Microsoft, Visual BASIC for Applications, device, names, MS Access 2007, laccdb, backend ...
+</div>
+<script type="text/javascript" src="analytics.js"></script>
+</body>
+</html>

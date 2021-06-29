@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72474361-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-72474361-1');
+</script>
+<title>Make DDL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>Make DDL</div>
+<br/><br/>
+<table width=100%>
+<tr><td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Option Compare Database
+Option Explicit
+'
+' adapted from
+' https://stackoverflow.com/questions/698839/
+        how-to-extract-the-schema-of-an-access-mdb-database/9910716#9910716
+'
+' Outputs DDL statements for tables, indexes, and relations from Access file
+'
+' NOTE: Adapted from code from "polite person" + Kevin Chambers - see:
+' http://www.mombu.com/microsoft/comp-databases-ms-access/
+        t-exporting-jet-table-metadata-as-text-119667.html
+'
+Sub sbMakeDDL()
+ Dim sFilename As String
+ sFilename = "C:\Users\david\Desktop\nwind\out" & Format(Now(), "yyyymmddHHMMSS") & ".txt"
+ Open sFilename For Output As #1
+
+Dim appAccess, db, tbl, idx, rel
+
+Set db = CurrentDb
+
+' Iterate over tables
+  ' create table statements
+For Each tbl In db.TableDefs
+  If Not isSystemTable(tbl) And Not isHiddenTable(tbl) Then
+    Print #1, getTableDDL(tbl)
+    Print #1, ""
+
+    ' Iterate over indexes
+      ' create index statements
+    For Each idx In tbl.Indexes
+        Print #1, getIndexDDL(tbl, idx)
+    Next
+
+    Print #1, ""
+    Print #1, ""
+  End If
+Next
+
+' Iterate over relations
+  ' alter table add constraint statements
+For Each rel In db.Relations
+  Set tbl = db.TableDefs(rel.Table)
+  If Not isSystemTable(tbl) And Not isHiddenTable(tbl) Then
+        Print #1, getRelationDDL(rel)
+        Print #1, ""
+  End If
+Next
+
+End Sub
+
+Function getTableDDL(tdef)
+Const dbBoolean = 1
+Const dbByte = 2
+Const dbCurrency = 5
+Const dbDate = 8
+Const dbDouble = 7
+Const dbInteger = 3
+Const dbLong = 4
+Const dbDecimal = 20
+Const dbFloat = 17
+Const dbMemo = 12
+Const dbSingle = 6
+Const dbText = 10
+Const dbGUID = 15
+Const dbAutoIncrField = 16
+
+Dim fld
+Dim sql
+Dim ln, a
+
+    sql = "CREATE TABLE " & QuoteObjectName(tdef.Name) & " ("
+    ln = vbCrLf
+
+    For Each fld In tdef.Fields
+       sql = sql & ln & " " & QuoteObjectName(fld.Name) & " "
+       Select Case fld.Type
+       Case dbBoolean   'Boolean
+          a = "BIT"
+       Case dbByte   'Byte
+          a = "BYTE"
+       Case dbCurrency  'Currency
+          a = "MONEY"
+       Case dbDate 'Date / Time
+          a = "DATETIME"
+       Case dbDouble    'Double
+          a = "DOUBLE"
+       Case dbInteger   'Integer
+          a = "INTEGER"
+       Case dbLong  'Long
+          'test if counter, doesn't detect random property if set
+          If (fld.Attributes And dbAutoIncrField) Then
+             a = "COUNTER"
+          Else
+             a = "LONG"
+          End If
+       Case dbDecimal    'Decimal
+          a = "DECIMAL"
+       Case dbFloat      'Float
+          a = "FLOAT"
+       Case dbMemo 'Memo
+          a = "MEMO"
+       Case dbSingle    'Single
+          a = "SINGLE"
+       Case dbText 'Text
+          a = "VARCHAR(" & fld.Size & ")"
+       Case dbGUID 'Text
+          a = "GUID"
+       Case Else
+          '>>> raise error
+          MsgBox "Field " & tdef.Name & "." & fld.Name & _
+                " of type " & fld.Type & " has been ignored!!!"
+       End Select
+
+       sql = sql & a
+
+       If fld.Required Then _
+          sql = sql & " NOT NULL "
+       If Len(fld.DefaultValue) > 0 Then _
+          sql = sql & " DEFAULT " & fld.DefaultValue
+
+       ln = ", " & vbCrLf
+    Next
+
+    sql = sql & vbCrLf & ");"
+    getTableDDL = sql
+
+End Function
+
+Function getIndexDDL(tdef, idx)
+Dim sql, ln, myfld
+
+    If Left(idx.Name, 1) = "{" Then
+       'ignore, GUID-type indexes - bugger them
+    ElseIf idx.Foreign Then
+       'this index was created by a relation.  recreating the
+       'relation will create this for us, so no need to do it here
+    Else
+       ln = ""
+       sql = "CREATE "
+       If idx.Unique Then
+           sql = sql & "UNIQUE "
+       End If
+       sql = sql & "INDEX " & QuoteObjectName(idx.Name) & " ON " & _
+             QuoteObjectName(tdef.Name) & "( "
+       For Each myfld In idx.Fields
+          sql = sql & ln & QuoteObjectName(myfld.Name)
+          ln = ", "
+       Next
+       sql = sql & " )"
+       If idx.Primary Then
+          sql = sql & " WITH PRIMARY"
+       ElseIf idx.IgnoreNulls Then
+          sql = sql & " WITH IGNORE NULL"
+       ElseIf idx.Required Then
+          sql = sql & " WITH DISALLOW NULL"
+       End If
+       sql = sql & ";"
+    End If
+    getIndexDDL = sql
+
+End Function
+
+' Returns the SQL DDL to add a relation between two tables.
+' Oddly, DAO will not accept the ON DELETE or ON UPDATE
+' clauses, so the resulting sql must be executed through ADO
+Function getRelationDDL(myrel)
+Const dbRelationUpdateCascade = 256
+Const dbRelationDeleteCascade = 4096
+Dim mytdef
+Dim myfld
+Dim sql, ln
+
+    With myrel
+       sql = "ALTER TABLE " & QuoteObjectName(.ForeignTable) & _
+             " ADD CONSTRAINT " & QuoteObjectName(.Name) & " FOREIGN KEY ( "
+       ln = ""
+       For Each myfld In .Fields 'ie fields of the relation
+          sql = sql & ln & QuoteObjectName(myfld.ForeignName)
+          ln = ","
+       Next
+       sql = sql & " ) " & "REFERENCES " & _
+             QuoteObjectName(.Table) & "( "
+       ln = ""
+       For Each myfld In .Fields
+          sql = sql & ln & QuoteObjectName(myfld.Name)
+          ln = ","
+       Next
+       sql = sql & " )"
+       If (myrel.Attributes And dbRelationUpdateCascade) Then _
+             sql = sql & " ON UPDATE CASCADE"
+       If (myrel.Attributes And dbRelationDeleteCascade) Then _
+             sql = sql & " ON DELETE CASCADE"
+       sql = sql & ";"
+    End With
+    getRelationDDL = sql
+End Function
+
+Function isSystemTable(tbl)
+Dim nAttrib
+Const dbSystemObject = -2147483646
+    isSystemTable = False
+    nAttrib = tbl.Attributes
+    isSystemTable = (nAttrib <> 0 And ((nAttrib And dbSystemObject) <> 0))
+End Function
+
+Function isHiddenTable(tbl)
+Dim nAttrib
+Const dbHiddenObject = 1
+    isHiddenTable = False
+    nAttrib = tbl.Attributes
+    isHiddenTable = (nAttrib <> 0 And ((nAttrib And dbHiddenObject) <> 0))
+End Function
+
+Function QuoteObjectName(str)
+    QuoteObjectName = "[" & str & "]"
+End Function
+</pre>
+</font>
+</font>
+</td>
+<td width=25%>
+</td>
+</tr>
+</table>
+</body>
+</html>
+
