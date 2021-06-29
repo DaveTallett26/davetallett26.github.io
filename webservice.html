@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Web Service using Access VBA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+</br></br>
+<div class="style62">Web Service using Access VBA</div>
+</br></br>
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Private Sub Command1_Click()
+On Error GoTo Err_Command1_Click
+
+   Dim objXML              As Object
+   Dim strURL              As String
+
+   Set objXML = CreateObject("MSXML2.XMLHTTP")
+
+   strURL = "http://www.weather.gov/xml/current_obs/"
+'    strTest = "http://www.weather.gov/xml/current_obs/KBUF.xml"
+
+   strURL = strURL & UCase(txtStation) & ".xml"
+   objXML.Open "GET", strURL, False
+   objXML.Send
+
+   With objXML.responseXML
+      txtWeather = "Location  = " & .SelectSingleNode("//location").Text & vbCrLf & _
+        "Temp in F = " & .SelectSingleNode("//temp_f").Text & vbCrLf & _
+        "Temp in C = " & .SelectSingleNode("//temp_c").Text & vbCrLf & _
+        "Weather is " & .SelectSingleNode("//weather").Text
+   End With
+
+Exit_Command1_Click:
+    Exit Sub
+
+Err_Command1_Click:
+    txtWeather = "ERROR " & Err.Description
+    Resume Exit_Command1_Click
+
+End Sub
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+</b>
+</font>
+</br></br><center><font size=2><font face="arial"><i>
+To make this example work set weather.gov as a Trusted Site in Internet Explorer and set the secuity level for this zone to Low.
+</br></br>
+<script type="text/javascript" src="analytics.js"></script>
+</body>
+</html>
+

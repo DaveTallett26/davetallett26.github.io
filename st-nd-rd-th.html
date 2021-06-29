@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Microsoft Access VBA Date Format 1st 2nd 3rd 4th</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<center>
+</br></br>
+<div class="style62"></br></br>Microsoft Access VBA Date Format 1st 2nd 3rd 4th<br><br>VBA create the date format for the st part of 1st</div>
+</br></br>
+<font size=3><font face="arial">
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Sub usage()
+'
+' The Excel way ...
+' =TEXT(A1,"dddd, mmmm d") & LOOKUP(DAY(A1),{1,2,3,4,21,22,23,24,31;"st","nd","rd","th","st","nd","rd","th","st"})
+'
+Dim MyDate As Date
+ MyDate = #11/27/2015#
+ MsgBox Format(MyDate, "dddd ") & udfDate1st2nd3rd(Format(MyDate, "d"))
+End Sub
+
+Public Function udfDate1st2nd3rd(sDayNumber As String) As String
+ udfDate1st2nd3rd = "   "
+ If sDayNumber = "1" Then udfDate1st2nd3rd = "1st"
+ If sDayNumber = "2" Then udfDate1st2nd3rd = "2nd"
+ If sDayNumber = "3" Then udfDate1st2nd3rd = "3rd"
+ If sDayNumber = "4" Then udfDate1st2nd3rd = "4th"
+ If sDayNumber = "5" Then udfDate1st2nd3rd = "5th"
+ If sDayNumber = "6" Then udfDate1st2nd3rd = "6th"
+ If sDayNumber = "7" Then udfDate1st2nd3rd = "7th"
+ If sDayNumber = "8" Then udfDate1st2nd3rd = "8th"
+ If sDayNumber = "9" Then udfDate1st2nd3rd = "9th"
+ If sDayNumber = "10" Then udfDate1st2nd3rd = "10th"
+ If sDayNumber = "11" Then udfDate1st2nd3rd = "11th"
+ If sDayNumber = "12" Then udfDate1st2nd3rd = "12th"
+ If sDayNumber = "13" Then udfDate1st2nd3rd = "13th"
+ If sDayNumber = "14" Then udfDate1st2nd3rd = "14th"
+ If sDayNumber = "15" Then udfDate1st2nd3rd = "15th"
+ If sDayNumber = "16" Then udfDate1st2nd3rd = "16th"
+ If sDayNumber = "17" Then udfDate1st2nd3rd = "17th"
+ If sDayNumber = "18" Then udfDate1st2nd3rd = "18th"
+ If sDayNumber = "19" Then udfDate1st2nd3rd = "19th"
+ If sDayNumber = "20" Then udfDate1st2nd3rd = "20th"
+ If sDayNumber = "21" Then udfDate1st2nd3rd = "21st"
+ If sDayNumber = "22" Then udfDate1st2nd3rd = "22nd"
+ If sDayNumber = "23" Then udfDate1st2nd3rd = "23rd"
+ If sDayNumber = "24" Then udfDate1st2nd3rd = "24th"
+ If sDayNumber = "25" Then udfDate1st2nd3rd = "25th"
+ If sDayNumber = "26" Then udfDate1st2nd3rd = "26th"
+ If sDayNumber = "27" Then udfDate1st2nd3rd = "27th"
+ If sDayNumber = "28" Then udfDate1st2nd3rd = "28th"
+ If sDayNumber = "29" Then udfDate1st2nd3rd = "29th"
+ If sDayNumber = "30" Then udfDate1st2nd3rd = "30th"
+ If sDayNumber = "31" Then udfDate1st2nd3rd = "31st"
+End Function
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+</br></br>
+<center> Example - Saturday 21<i><b>st</b></i> August 2010 </center>
+</br></br>
+</br></br>
+Here is the simplest, easy to understand, way of doing this coded as a VBA user defined function.
+</br></br>
+<center>Thanks to Ron Coderre Microsoft Excel MVP for the idea and
+<a href="http://www.excelforum.com/excel-general/677702-date-format-of-just-st-nd-rd-and-th.html">the Excel code</a>
+</br></br>Date format of just "st" "nd" "rd" and "th"</br>
+</br></br>.
+</center>
+</font>
+<script type="text/javascript" src="analytics.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Add subtotals to an Excel 2007 export using MS Access VBA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>Add subtotals to an Excel 2007 export using MS Access VBA</div>
+<font size=3><font face="arial">
+<br/>
+<div class="style84">
+Subtotals are a common ask from customers where you export the contents of a database and then subtotals are needed in Excel
+<br/><br/>
+Always start a new session in Excel instead of interfering with any Excel sessions already running, this deals with the situation where the users PC never gets switched off and has several (15 to 20) seesions of Excel, Access, Outlook and Word permanently open. Skype is sometimes there as well. Then you can open the output of the export as an .XLSX and process it from VBA within Access so you don't end up generating a .XLSM and start triggering warning messages about macros when you distribute the report to others.
+<br/><br/>
+Subtotals need a sort to work on so that all the articles to be subtotalled are together. You need to work out how many rows there are in the output to start with then construct a range expression for each of the sort fields which may be for example colour, size and finish. Then the sort is done on the full range of data you have output and the subtotals statement will then reference the first sort column and total up the quantity or value field. This is how it works in Office 2007.
+<br/><br/>
+I then save the Excel with a unique date and time stamped file name to avoid problems with trying to overwrite existing files whch are locked open.
+</div>
+<br/>
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+   Sub xlSubtotals()
+    Dim xl As Excel.Application
+    Dim sFilename As String
+    Dim sRange As String
+    Dim iLastRow As Long
+    Set xl = CreateObject("Excel.Application")
+    With xl
+    .Visible = True
+    .Workbooks.Open filename:="C:\Users\Dave\Documents\Statistics.xlsx"
+     iLastRow = .ActiveWorkbook.Worksheets("Statistics").Cells(Rows.Count, 1).End(xlUp).Row
+    .ActiveWorkbook.Worksheets("Statistics_Print").Sort.SortFields.Clear
+    sRange = "G2:G" & iLastRow ' "G2:G246"
+    .ActiveWorkbook.Worksheets("Statistics_Print").Sort.SortFields.Add _
+        Key:=xl.Range(sRange), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
+    .ActiveWorkbook.Worksheets("Statistics_Print").Sort.SortFields.Add _
+        Key:=xl.Range("H2:H246"), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
+    .ActiveWorkbook.Worksheets("Statistics_Print").Sort.SortFields.Add _
+        Key:=xl.Range("I2:I246"), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
+    .ActiveWorkbook.Worksheets("Statistics_Print").Sort.SortFields.Add _
+        Key:=xl.Range("R2:R246"), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
+    With .ActiveWorkbook.Worksheets("Statistics_Print").Sort
+        .SetRange xl.Range("A1:R246")
+        .Header = xlYes
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+    .Range("A1").Select
+    .Selection.Subtotal _
+        GroupBy:=7, _
+        Function:=xlSum, _
+        TotalList:=Array(11), _
+        Replace:=True, _
+        PageBreaks:=False, _
+        SummaryBelowData:=True
+
+    .Range("A1").Select
+    sFilename = "C:\Users\Dave\Documents\Statistics" & Format(Now(), "yyyymmddHHMMSS") & ".xlsx"
+    .ActiveWorkbook.SaveAs filename:=sFilename, FileFormat:=xlOpenXMLWorkbook
+    .Quit
+    End With
+   End Sub
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+</b>
+</font>
+<br/><br/>
+<div class="style64">
+Tags - Microsoft Excel VBA, Microsoft Access VBA, subtotals, export, Sort, Office 2007
+</div>
+<script type="text/javascript" src="analytics.js"></script>
+</body>
+</html>

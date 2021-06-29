@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Microsoft Access security groups and users output to a table</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4"><a class="style2" href="email.html">Email</a></li>
+<li class="style4"><a class="style2" href="index.html">Home</a></li>
+</ul>
+<br/><br/>
+<div class="style62">UsersGroups - Microsoft Access security groups and users output to a table</div>
+<br/><br/>
+<font size=3><font face="arial">
+<table width=100%>
+<td width=20% align=left valign=top></td>
+<td width=60% valign=top bgcolor="#cccccc">
+Function fnUsersGroups() As String<br>
+
+    Dim wrk As DAO.Workspace<br>
+
+    Dim db As DAO.Database<br>
+
+    Dim usr As DAO.User<br>
+
+    Dim grp As DAO.Group<br>
+
+    Dim rst As DAO.Recordset<br>
+
+    Dim strSQL As String<br>
+
+<br>
+
+    Set db = CurrentDb<br>
+
+    strSQL = "DELETE * FROM [tblUsersGroups];"<br>
+
+    db.Execute strSQL<br>
+
+    strSQL = "SELECT * FROM [tblUsersGroups];"<br>
+
+    Set rst = db.OpenRecordset(strSQL)<br>
+
+    Set wrk = DBEngine.Workspaces(0)<br>
+
+    For Each grp In wrk.Groups<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;        For Each usr In grp.Users<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;        With rst<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            .AddNew<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            !User = usr.Name<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            !Group = grp.Name<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            .Update<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;        End With<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;        Next usr<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;    Next grp<br>
+
+End Function<br>
+
+</td>
+<td width=20%>
+</td>
+</table>
+</b>
+</font>
+<script type="text/javascript" src="analytics.js"></script>
+</body>
+</html>
+
