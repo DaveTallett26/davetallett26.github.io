@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72474361-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-72474361-1');
+</script>
+<title>Rainbow using Excel VBA</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>Rainbow using Excel VBA - Thank you NHS!</div>
+<div class="style84">
+<center>
+<br/><br/>
+I wrote this VBA program during lockdown 2020, 5th November to 2nd December
+<br/>
+<br/>The standard equation of a circle is (x-h)^2+(y-k)^2=r^2, where (h,k) is the center.
+<br/> for example h = 25 k = 25 r = 20 from quadratic x^2 + y^2 = r^2
+<br/><br/><br/>
+<img src="rainbow117.png">
+<br/><br/>
+</center>
+</div>
+<br/><br/>
+<font size=3><font face="arial">
+<table width=100%>
+<tr>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Sub doit()
+ sbAllWhiteAYL606
+ Call fnRainbow117(600, 660, 500)
+ Range("A1").Select
+End Sub
+Function fnRainbow117(h, k, r)
+' RGB rainbow
+' red 255, 0, 0
+' orange 255, 127, 0
+' yellow 255, 255, 0
+' green 0, 255, 0
+' blue 0, 0, 255
+' indigo 75, 0, 130
+' violet 148, 0, 211
+'
+' red
+ red = 255
+ green = 0
+ blue = 0
+' red 255, 0, 0
+' orange 255, 127, 0
+' yellow 255, 255, 0
+ For c = 1 To 21
+ For x = 1 To r 'Step 10
+  y = (VBA.Sqr((r * r) + 1 - (x * x)))
+  xh = x + h
+  yk = y + k
+  Cells(xh - (2 * x), yk).Select
+  Call fn1rgb(red, green, blue)
+  Cells(xh - (2 * x), yk - (2 * y)).Select
+  Call fn1rgb(red, green, blue)
+ Next x
+ r = r - 1
+ green = green + 12
+ Next c
+'
+' yellow
+ red = 255
+ green = 255
+ blue = 0
+' yellow 255, 255, 0
+' green 0, 255, 0
+ For c = 1 To 10
+ For x = 1 To r 'Step 10
+  y = (VBA.Sqr((r * r) + 1 - (x * x)))
+  xh = x + h
+  yk = y + k
+  Cells(xh - (2 * x), yk).Select
+  Call fn1rgb(red, green, blue)
+  Cells(xh - (2 * x), yk - (2 * y)).Select
+  Call fn1rgb(red, green, blue)
+ Next x
+ r = r - 1
+ red = red - 25
+ Next c
+'
+' green
+ red = 0
+ green = 255
+ blue = 0
+' green 0, 255, 0
+' blue 0, 0, 255
+ For c = 1 To 10
+ For x = 1 To r 'Step 10
+  y = (VBA.Sqr((r * r) + 1 - (x * x)))
+  xh = x + h
+  yk = y + k
+  Cells(xh - (2 * x), yk).Select
+  Call fn1rgb(red, green, blue)
+  Cells(xh - (2 * x), yk - (2 * y)).Select
+  Call fn1rgb(red, green, blue)
+ Next x
+ r = r - 1
+ green = green - 25
+ blue = blue + 25
+ Next c
+'
+' blue
+ red = 0
+ green = 0
+ blue = 255
+' blue 0, 0, 255
+' indigo 75, 0, 130
+ For c = 1 To 10
+ For x = 1 To r 'Step 10
+  y = (VBA.Sqr((r * r) + 1 - (x * x)))
+  xh = x + h
+  yk = y + k
+  Cells(xh - (2 * x), yk).Select
+  Call fn1rgb(red, green, blue)
+  Cells(xh - (2 * x), yk - (2 * y)).Select
+  Call fn1rgb(red, green, blue)
+ Next x
+ r = r - 1
+ red = red + 7
+ blue = blue - 12
+ Next c
+'
+' indigo
+ red = 75
+ green = 0
+ blue = 130
+' indigo 75, 0, 130
+' violet 148, 0, 211
+ For c = 1 To 10
+ For x = 1 To r 'Step 10
+  y = (VBA.Sqr((r * r) + 1 - (x * x)))
+  xh = x + h
+  yk = y + k
+  Cells(xh - (2 * x), yk).Select
+  Call fn1rgb(red, green, blue)
+  Cells(xh - (2 * x), yk - (2 * y)).Select
+  Call fn1rgb(red, green, blue)
+ Next x
+ r = r - 1
+ red = red + 7
+ blue = blue + 8
+ Next c
+fnRainbow117_Exit:
+ Range("A1").Select
+End Function
+Sub sb1rgb(r, g, b)
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = RGB(r, g, b)
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+    DoEvents
+End Sub
+Sub sbAllWhiteAYL606()
+ Range("A1:AYL606").Select
+     With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorDark1
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+    DoEvents
+ Range("A1").Select
+End Sub
+Sub sbNoHeadings()
+    ActiveWindow.DisplayHeadings = False
+    Application.DisplayFormulaBar = False
+End Sub
+Sub sb100x100()
+    Cells.Select
+    Selection.RowHeight = 0.75
+    Selection.ColumnWidth = 0.083
+    Range("A1").Select
+End Sub
+</pre>
+</font>
+</font>
+</td>
+<td width=25%>
+</td>
+</tr>
+</table>
+</font>
+<br/><br/>
+<div class="style61">
+Tags - Microsoft Excel VBA, rainbow, lockdown, Thank you NHS
+</div>
+</font>
+</body>
+</html>

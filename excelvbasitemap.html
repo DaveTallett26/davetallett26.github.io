@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72474361-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-72474361-1');
+</script>
+<title>Sitemap generator in Excel VBA</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+<!-- <link rel="stylesheet" href="prettify2.css" /> -->
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/><br/>Sitemap generator in Excel VBA</div>
+<div class="style63">
+<br/><br/>
+Here is my sitemap generator written in Excel VBA. 
+It generates a file list and then parses the page title from  the text of the file. 
+Then using the following formula <br/><br/>=CONCATENATE("&lt;br/&gt;&lt;a href='",A1,"'&gt;",IF(B1="",A1,B1),"&lt;/a&gt;")<br/><br/>it generates an HTML statement 
+ready for inclusion in my sitemap.html. <a href="excelvbamacsitemap.html">Here</a> is the Mac version in Excel for Mac 2011.
+<br/><br/>
+<a href="sitemap.html">Here is my sitemap</a> generated using this Excel VBA sitemap generator.
+<br/><br/>
+Google's Webmaster Tools says that the vast majority of indexed pages are as a result of spidering websites. 
+The effect of this type of sitemap is that it links every page on the website even the ones that the spider does not see because of the way they are linked.
+</div>
+<br/>
+<table width=100%>
+    <tr>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre class="prettyprint">
+
+Sub sbSiteMap()
+ Dim sPath As String
+ Dim sFilename1 As String
+ Dim sFilename2 As String
+ Dim sCell As String
+ Dim iCount As Integer
+ Dim iFileNum As Integer
+ Dim sDataLine As String
+ iCount = 1
+ iFileNum = FreeFile()
+ sCell = "A" & iCount
+ sPath = "C:\Users\Dave\Google Drive\mywebsite"
+ sFilename1 = Dir(sPath & "\*.html")
+  Do While sFilename1 NE ""
+    Range(sCell).Select
+    ActiveCell.FormulaR1C1 = sFilename1
+    sFilename2 = sPath & "\" & sFilename1
+    Open sFilename2 For Input As #iFileNum
+    While Not EOF(iFileNum)
+    Line Input #iFileNum, sDataLine  ' read in data 1 line at a time
+    If InStr(1, sDataLine, "&lt;title&gt;") > 0 Then
+        sCell = "B" & iCount
+        Range(sCell).Select
+        ActiveCell.FormulaR1C1 = _
+         Mid(sDataLine, InStr(1, sDataLine, "&lt;title&gt;") + 7, _
+         InStr(1, sDataLine, "&lt;/title&gt;") - InStr(1, sDataLine, "&lt;title&gt;") - 7)
+    End If
+    Wend
+    Close #iFileNum
+    iCount = iCount + 1
+    sCell = "A" & iCount
+    sFilename1 = Dir()
+  Loop
+End Sub
+
+</pre>
+</font></font>
+</td>
+<td width=25%>
+</td>
+</tr>
+</table>
+
+<br/><br/>
+<div class="style61">
+Tags - Excel 2010, Excel 2007, Excel 2002, sitemap, website, HTML, generator, VBA, code, Microsoft, Visual BASIC for Applications, pages, indexing, spider, CONCATENATE, webmaster, tools, title, links ...
+</div>
+<br/><br/>.
+<script src="prettify.js"></script>
+<script>
+  window.onload = (function(){ prettyPrint(); });
+</script>
+</body>
+</html>

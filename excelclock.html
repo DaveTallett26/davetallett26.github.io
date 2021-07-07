@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72474361-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-72474361-1');
+</script>
+<title>Clock and lightweight buttons in Excel VBA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>Clock and lightweight buttons in Excel VBA</div>
+</br></br>
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Dim blnClockRunning As Boolean
+
+Sub startclock() 'assign start button
+ blnClockRunning = True
+ clock
+End Sub
+
+Sub clock()
+ If blnClockRunning = False Then Exit Sub
+ ActiveWorkbook.Worksheets(1).Cells(1, 1).Value = Format(Now, "hh:mm:ss")
+ Application.OnTime (Now + TimeSerial(0, 0, 1)), "Sheet1.clock"
+End Sub
+
+Sub stopclock() 'assign stop button
+ blnClockRunning = False
+End Sub
+
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+    If Target.Address(True, True, xlA1) = "$B$1" Then
+        Range("B1") = "Start"
+        Range("B1").Select
+        Selection.Font.FontStyle = "Bold"
+        Selection.Font.ColorIndex = 2 ' White
+        Selection.Interior.ColorIndex = 1 ' Black
+        Call startclock
+    End If
+    If Target.Address(True, True, xlA1) = "$C$1" Then
+        Range("C1") = "Stop"
+        Range("C1").Select
+        Selection.Font.FontStyle = "Bold"
+        Selection.Font.ColorIndex = 2 ' White
+        Selection.Interior.ColorIndex = 1 ' Black
+        Call stopclock
+    End If
+End Sub
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+</b>
+</font>
+<div class="style61">
+<br/><br/><center>
+<a href="analogue.html">Analogue Excel Clock</a>
+</div>
+<script type="text/javascript" src="analytics.js"></script>
+</body
+</html>
+

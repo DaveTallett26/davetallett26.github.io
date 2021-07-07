@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72474361-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-72474361-1');
+</script>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Excel VBA create links to Google Maps</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/><br/>Excel VBA create links to Google Maps</div>
+
+<div class="style84">
+<br/><br/>
+I came across this idea when the system I was working on a system that gave locations in Eastings and Northings. 
+These need converting to longitude and latitude and then they can be used to link to a map of the location. 
+You really do need 13 decimal places to geolocate to the middle of a road. 
+The first line of code is used to enter the hyperlink in the cell. 
+The function is used in Access to generate the string value of the URL.
+<br/><br/>
+Here is the link to the calculations to convert Eastings and Northings to Latitude and Longitude for Google Maps
+<br/><br/>
+<a href="http://www.tek-tips.com/viewthread.cfm?qid=1659914">http://www.tek-tips.com/viewthread.cfm?qid=1659914</a>
+</div>
+<br/>
+<table width=100%>
+    <tr>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+    ActiveSheet.Hyperlinks.Add _
+    	Anchor:=Selection, _
+    	Address:="https://maps.google.com/?q=54.0344715537889,-1.08377376116491", _
+    	TextToDisplay:="https://maps.google.com/?q=54.0344715537889,-1.08377376116491"
+
+	Public Function fnGoogleMaps(iEastings As Long, iNorthings As Long) As String
+	 Dim LL As LatLong
+	 Dim EN As EastingNorthing
+	 fnGoogleMaps = ""
+	 If iEastings > 0 Then
+	   EN.Easting = iEastings
+	   EN.Northing = iNorthings
+	   LL = getLatLong(EN)
+	   fnGoogleMaps = "https://maps.google.com/?q=" & _
+	   		decDegFromRadians(LL.Lattitude) & "," & _
+	   		decDegFromRadians(LL.Longitude)
+	 End If
+	End Function
+</pre>
+</font>
+</font>
+</td>
+<td width=25%>
+</td>
+</tr>
+</table>
+
+<br/><br/>
+<div class="style61">
+Tags - Excel 2010, Excel 2007, Access 2010, Access 2007, Google Maps, 
+    VBA, code, Microsoft, Visual BASIC for Applications, eastings, northings, longitude, latitude, conversion, link, decimal, places, geolocate, hyperlink, location...
+</div>
+</body>
+</html>

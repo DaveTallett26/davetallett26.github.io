@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Display the version number of Excel using VBA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>Display the version number of Excel using VBA</div>
+<div class="style61">
+<br/><br/>
+This snippet displays the version number of Excel using VBA. <br/>On Windows Vista with Excel 2007 it gives <i>12.0</i> for example. <br/>On Windows 10 with Excel 2016 it gives 16.0.
+<br/><br/>
+Here is the definitive version from Office.com
+<br/><br/>
+<a href="https://support.office.com/en-gb/article/What-version-of-Office-am-I-using-932788b8-a3ce-44bf-bb09-e334518b8b19?ui=en-US&rs=en-GB&ad=GB&s=1&auth=1&nf=1&fromAR=1#">What version of Office am I using?</a>
+</div>
+<br/><br/>
+<font size=3><font face="arial">
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Sub sbVersion()
+ Dim xlVersion As String
+ xlVersion = Application.Version
+ MsgBox xlVersion
+ If xlVersion = "12.0" Then MsgBox "Excel 2007"
+ If xlVersion = "16.0" Then MsgBox "Excel 2016"
+End Sub
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+</b>
+</font>
+<br/><br/>
+<div class="style61">
+Tags - Microsoft Excel VBA, version number, Excel 2007, Excel 2016
+</div>
+<script type="text/javascript" src="analytics.js"></script>
+</body>
+</html>

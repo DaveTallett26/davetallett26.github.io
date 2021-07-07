@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72474361-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-72474361-1');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<title>Generate a bitmap file (.BMP) from Excel</title>
+<!--<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" /> -->
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/><br/>Generate a bitmap file (.BMP) from Excel</div>
+<font size=3><font face="arial">
+<br/><br/>
+<table width=100%>
+    <tr>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Option Explicit
+Option Base 1
+
+Private Type typHEADER
+    strType As String * 2  ' Signature of file = "BM"
+    lngSize As Long        ' File size
+    intRes1 As Integer     ' reserved = 0
+    intRes2 As Integer     ' reserved = 0
+    lngOffset As Long      ' offset to the bitmap data (bits)
+End Type
+
+Private Type typINFOHEADER
+    lngSize As Long        ' Size
+    lngWidth As Long       ' Height
+    lngHeight As Long      ' Length
+    intPlanes As Integer   ' Number of image planes in file
+    intBits As Integer     ' Number of bits per pixel
+    lngCompression As Long ' Compression type (set to zero)
+    lngImageSize As Long   ' Image size (bytes, set to zero)
+    lngxResolution As Long ' Device resolution (set to zero)
+    lngyResolution As Long ' Device resolution (set to zero)
+    lngColorCount As Long  ' Number of colors (set to zero for 24 bits)
+    lngImportantColors As Long ' "Important" colors (set to zero)
+End Type
+
+Private Type typPIXEL
+    bytB As Byte    ' Blue
+    bytG As Byte    ' Green
+    bytR As Byte    ' Red
+End Type
+
+Private Type typBITMAPFILE
+    bmfh As typHEADER
+    bmfi As typINFOHEADER
+    bmbits() As Byte
+End Type
+'
+' This is a routine to test the "subCellsToBMP" macro.
+'
+Sub subTestBMP()
+    Dim shtBMP As String
+    Dim rngBMP As Range
+'
+    shtBMP = "BMP Cells"
+    Set rngBMP = ThisWorkbook.Worksheets(shtBMP).Range("A1:AN11")
+'
+    Call subCellsToBMP(rngBMP)
+End Sub
+'
+' This macro will take an input range of cells
+' from an Excel worksheet and create a BMP file
+' that reflects the colors in the cells.  The
+' BMP file is 24 bit, uncompressed.
+'
+Sub subCellsToBMP(rngPicture As Range)
+    Dim i As Long, j As Long, k As Long, l As Long
+'
+    Dim bmpFile As typBITMAPFILE
+    Dim lngRowSize As Long
+    Dim lngPixelArraySize As Long
+    Dim lngFileSize As Long
+'
+    Dim bytRed As Integer, bytGreen As Integer, bytBlue As Integer
+    Dim lngRGBColor() As Long
+'
+    Dim strBMP As String
+'
+' First check for a valid range - set some reasonable limits
+'
+    If (rngPicture Is Nothing) Then Exit Sub
+    If (rngPicture.Cells.Count #LT 4) Then
+        MsgBox "Tried to export a BMP with less than 4 pixels!", vbOKOnly + vbCritical, "BMP Export Error"
+        Exit Sub
+    End If
+'
+' Create the BMP data structures based on the selected cells.
+'
+    With bmpFile
+' BMP Header
+        With .bmfh
+            .strType = "BM"      ' Basic BMP file
+            .lngSize = 0         ' Determine later (total file size in bytes)
+            .intRes1 = 0         ' Set to zero
+            .intRes2 = 0         ' Set to zero
+            .lngOffset = 54       ' Location where the bitmap data start
+        End With
+' DIB Header
+        With .bmfi
+            .lngSize = 40        ' This will be a Version 3 BMP
+            .lngWidth = rngPicture.Columns.Count ' Number of pixels wide
+            .lngHeight = rngPicture.Rows.Count   ' Number of pixels high
+            .intPlanes = 1       ' Set to one
+            .intBits = 24        ' 24 bits per pixel (RGB)
+            .lngCompression = 0  ' No compression
+            .lngImageSize = 0    ' Can be set to zero
+            .lngxResolution = 0  ' Set to zero
+            .lngyResolution = 0  ' Set to zero
+            .lngColorCount = 0   ' Set to zero (no color pallette)
+            .lngImportantColors = 0 ' Set to zero
+        End With
+' Bitmap pixel array (ensure 32 bit boundary alignment!)
+        lngRowSize = Round(.bmfi.intBits * .bmfi.lngWidth / 32) * 4
+        lngPixelArraySize = lngRowSize * .bmfi.lngHeight
+'
+        ReDim .bmbits(lngPixelArraySize) ' Total number of bytes to store padded pixel array
+'
+' Read color data from cells (no color is considered white)
+' Start from bottom row and work up.  Pad each row to an even
+' 4 byte boundary if required.
+' NOTE: Instead of reading colors, you can read numbers and get the "bytBlue", "bytGreen",
+'       and "bytRed" values directly from those numbers.
+'
+        k = 0
+        ReDim lngRGBColor(rngPicture.Rows.Count, rngPicture.Columns.Count)
+        For j = rngPicture.Rows.Count To 1 Step -1 ' rngPicture.Column To rngPicture.Column + rngPicture.Columns.Count - 1
+            For i = 1 To rngPicture.Columns.Count ' rngPicture.Row + rngPicture.Rows.Count - 1 To rngPicture.Row Step -1
+                If (LongToRGB(rngPicture.Cells(j, i).Interior.Color, bytRed, bytGreen, bytBlue)) Then
+                    k = k + 1
+                    .bmbits(k) = bytBlue
+                    k = k + 1
+                    .bmbits(k) = bytGreen
+                    k = k + 1
+                    .bmbits(k) = bytRed
+                Else
+                    k = k + 1
+                    .bmbits(k) = 255
+                    k = k + 1
+                    .bmbits(k) = 255
+                    k = k + 1
+                    .bmbits(k) = 255
+                End If
+            Next i ' For each column...
+            If (rngPicture.Columns.Count * .bmfi.intBits / 8 #LT lngRowSize) Then   ' Add padding if required
+                For l = rngPicture.Columns.Count * .bmfi.intBits / 8 + 1 To lngRowSize
+                    k = k + 1
+                    .bmbits(k) = 0
+                Next l
+            End If
+        Next j ' For each row, starting at the bottom and working up...
+'
+' The structures have all been loaded.  Calculate file size
+' and then dump the data to a file.
+'
+        .bmfh.lngSize = 14 + 40 + lngPixelArraySize
+'
+    End With ' Defining bmpFile
+'
+    strBMP = ThisWorkbook.Path & "\" & "Sample5.BMP"
+'
+    Open strBMP For Binary Access Write As 1 Len = 1
+'
+    Put 1, 1, bmpFile.bmfh
+    Put 1, , bmpFile.bmfi
+    Put 1, , bmpFile.bmbits
+'
+    Close
+'
+End Sub
+'
+' Convert a long integer representation of a color to its
+' red, green, blue values.
+'
+Public Function LongToRGB(theColor As Long, iRed As Integer, iGreen As Integer, iBlue As Integer) As Boolean
+'
+    Dim lColor As Long
+    lColor = theColor      'work long
+    iRed = lColor Mod 256  'get red component
+    iGreen = (lColor \ 256) Mod 256 'get green component
+    iBlue = (lColor \ 256 \ 256) Mod 256 'get blue component
+'
+    LongToRGB = True
+End Function
+
+
+Sub sb10x10px()
+    Cells.Select
+    Selection.RowHeight = 7.5
+    Selection.ColumnWidth = 0.83
+    Range("A1").Select
+End Sub
+
+Sub sb12x10px()
+    Cells.Select
+    Selection.RowHeight = 36.75
+    Selection.ColumnWidth = 6.43
+    Range("A1").Select
+End Sub
+
+Sub sb96x80px() ' x8
+    Cells.Select
+    Selection.RowHeight = 4.5
+    Selection.ColumnWidth = 0.5
+    Range("A1").Select
+End Sub
+
+'
+' This is a routine to test the "subCellsToBMP" macro.
+'
+Sub subTestBMP()
+    Dim shtBMP As String
+    Dim rngBMP As Range
+'
+    shtBMP = "BMP Cells"
+    shtBMP = "Sheet1"
+    'Set rngBMP = ThisWorkbook.Worksheets(shtBMP).Range("A1:EB55")
+    'Set rngBMP = ThisWorkbook.Worksheets(shtBMP).Range("A1:AZ54")
+    'Set rngBMP = ThisWorkbook.Worksheets(shtBMP).Range("A1:M10")
+    'Set rngBMP = ThisWorkbook.Worksheets(shtBMP).Range("A1:DH80")
+    Set rngBMP = ThisWorkbook.Worksheets(shtBMP).Range("M1:DH80")
+'
+    Call subCellsToBMP(rngBMP)
+End Sub
+
+
+
+</pre>
+</font>
+</font>
+</td>
+<td width=25%>
+</td>
+</tr>
+</table>
+</font>
+<br/><br/>
+<div class="style61">
+Tags - Microsoft Excel VBA 2007, bitmap, file type .BMP http://bit.ly/xlBMP
+</div>
+</font>
+</body>
+</html>

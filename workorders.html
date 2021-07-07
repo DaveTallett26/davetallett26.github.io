@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Copy blocks of 2000 SAP work order numbers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>Copy blocks of 2000 SAP work order numbers</div>
+<div class="style84">
+<br/><br/>
+This snippet is a general tool for copying blocks of work order numbers to the windows clipboard using Excel 2010 VBA for automation purposes when using SAP. This is a situation which can occur regularly when using SAP as some transactions have a limited capacity for processing multiple work orders
+<br/><br/>
+To use the code paste a column of work orders to column A. (possibly tens of thousands of work orders) Then in columns C and D enter the ranges of work orders that you want to copy and paste into SAP to run a transaction with 1000s of work orders. Click in column E against each range to copy them into the clipboard. Click in column G to return the focus to the top of the worksheet
+</div>
+<br/><br/>
+<font size=3><font face="arial">
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+   Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+    Dim sRange As String
+    'Do nothing if more than one cell is selected
+    If Target.Cells.Count > 1 Then Exit Sub
+    If Target.Column = 7 Then
+        Application.CutCopyMode = False
+        Range("A1").Select
+    End If
+    If Target.Column <> 5 Then Exit Sub ' only respond to column E
+    If Range("C" & Target.Row).Text <> "" And Range("D" & Target.Row).Text <> "" And Range("F" & Target.Row).Text <> "OK" Then
+        Application.CutCopyMode = False
+        sRange = "F" & Target.Row
+        Range(sRange).Select
+        Selection.Value = "OK"
+        ' for example - Range("A2:A501").Select
+        sRange = "A" & Range("C" & Target.Row).Text & ":A" & Range("D" & Target.Row).Text
+        Range(sRange).Select
+        Selection.Copy
+    End If
+   End Sub
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+</b>
+</font>
+<br/><br/>
+<div class="style61">
+Tags - Microsoft Excel VBA, SAP, Excel 2010
+</div>
+<script type="text/javascript" src="analytics.js"></script>
+</body>
+</html>

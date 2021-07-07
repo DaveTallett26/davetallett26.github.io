@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72474361-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-72474361-1');
+</script>
+<title>Output a text file</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>Output a text file</div>
+<br/><br/>
+<table width=100%>
+<tr><td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Option Explicit
+Sub sbTest()
+ MsgBox fnOutputToFile("Hello World")
+End Sub
+
+Public Function fnOutputToFile(sTextToOutput As String) As Boolean
+
+    Dim sFilename As String
+    sFilename = ThisWorkbook.Path & "\out" & Format(Now(), "yyyymmddHHMMSS") & ".txt"
+
+    Open sFilename For Output As #1
+    Print #1, Now()
+    Print #1, "sTextToOutput " & sTextToOutput
+    Print #1, "**END**"
+    Close #1
+
+    fnOutputToFile = True
+
+End Function
+</pre>
+</font>
+</font>
+</td>
+<td width=25%>
+</td>
+</tr>
+</table>
+</body>
+</html>
+

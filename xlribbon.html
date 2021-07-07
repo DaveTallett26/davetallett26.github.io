@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72474361-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-72474361-1');
+</script>
+<title>Excel and PowerPoint custom ribbon</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>Excel and PowerPoint custom ribbon</div>
+<br/><br/>
+<div class="style84">
+This code should work as is for both Excel 365 and PowerPoint 365. 
+<br/><br/>
+Replace the files <b>Excel.officeUI</b> and <b>PowerPoint.officeUI</b> in the directory
+<b>C:\Users\dave\AppData\Local\Microsoft\Office</b> which is usually a hidden directory. 
+<br/><br/>
+Much more related guidance at
+<br/><br/>
+<a href="
+https://stackoverflow.com/questions/8850836/how-to-add-a-custom-ribbon-tab-using-vba">
+https://stackoverflow.com/questions/8850836/how-to-add-a-custom-ribbon-tab-using-vba</a>
+<br/><br/>
+</div>
+<table width=100%>
+<tr><td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<textarea rows="20" cols="120">
+
+<mso:customUI      xmlns:mso='http://schemas.microsoft.com/office/2009/07/customui'>
+ <mso:ribbon>
+  <mso:qat/>
+   <mso:tabs>
+    <mso:tab idQ="mso:TabDrawInk" visible="false"/>
+    <mso:tab id="mso_c1.2A492F1" label="New Tab">
+     <mso:group id="mso_c2.2A492F1" label="New Group" autoScale="true">
+      <mso:button id="sbHelloWorld" label="sbHelloWorld" imageMso="ListMacros" onAction="sbHelloWorld" visible="true"/>
+     </mso:group>
+    </mso:tab>
+    </mso:tabs>
+ </mso:ribbon>
+</mso:customUI>
+
+Option Explicit
+
+Sub sbHelloWorld()
+ MsgBox "Hello World!"
+End Sub
+</textarea>
+</font>
+</font>
+</td>
+<td width=25%>
+</td>
+</tr>
+</table>
+</body>
+</html>

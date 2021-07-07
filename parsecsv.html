@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72474361-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-72474361-1');
+</script>
+<title>Parse CSV</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>Parse CSV</div>
+<br/><br/>
+<table width=100%>
+<tr><td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Option Explicit
+
+Sub sbParseCSV()
+    On Error GoTo Command32_Click_Error_Routine
+    Dim text As String
+    Dim iRow As Long
+    Dim iColumn As Long
+    Dim iChr1 As Long
+    Dim iChr2 As Long
+    Dim iCRPos As Long
+    Dim iCommaPos As Long
+    Dim iQuotePos As Long
+    Dim ii As Long
+    
+    With CreateObject("ADODB.Stream")
+        .Open
+        .Charset = "UTF-8"
+        .LoadFromFile ActiveWorkbook.Path & "\\nw_Employees.csv"
+        text = .ReadText(-1)
+        .Close
+    End With
+    
+    Cells.Select
+    Selection.Delete Shift:=xlUp
+    Range("O24").Select
+    
+    iRow = 1
+    iColumn = 1
+
+    iChr1 = 1 ' there isn't a comma separator at the start of the file
+    iChr2 = InStr(2, text, Chr(44)) ' ie the first comma
+    ThisWorkbook.Sheets("Sheet1").Cells(iRow, iColumn).Value = _
+        "Tx " & Mid(text, iChr1, iChr2 - iChr1)
+    iColumn = iColumn + 1
+
+    For ii = 1 To Len(text) Step 1
+        Select Case Mid(text, ii, 1)
+        Case Chr(44)  ' comma
+                iChr1 = ii
+                If Mid(text, ii + 1, 1) = Chr(34) Then
+                    ' process a string in double quotes
+                    iChr2 = InStr(ii + 2, text, Chr(34)) ' ie the next double quote
+                    If Mid(text, iChr2 + 1, 1) = Chr(34) Then
+                        ' process double double quote
+                        iChr2 = InStr(iChr2 + 2, text, Chr(34)) ' the second double double quote
+                        iChr2 = InStr(iChr2 + 2, text, Chr(34)) ' the final double quote ?
+                        If Mid(text, iChr2 + 1, 1) = Chr(34) Then
+                            ' process another double double quote
+                            ' -> my test data was the employees table from Northwind
+                            iChr2 = InStr(iChr2 + 2, text, Chr(34)) ' the second double double quote
+                            iChr2 = InStr(iChr2 + 2, text, Chr(34)) ' surely the final double quote ?
+                            ThisWorkbook.Sheets("Sheet1").Cells(iRow, iColumn).Value = _
+                                "Tx " & Mid(text, iChr1 + 2, iChr2 - iChr1 - 2)
+                            Call fnWrapTextFalse(iRow, iColumn)
+                            iColumn = iColumn + 1
+                            ii = iChr2 ' move the pointer to the final double quote
+                            GoTo Next_ii
+                        End If
+                        ThisWorkbook.Sheets("Sheet1").Cells(iRow, iColumn).Value = _
+                            "Tx " & Mid(text, iChr1 + 2, iChr2 - iChr1 - 2)
+                        Call fnWrapTextFalse(iRow, iColumn)
+                        iColumn = iColumn + 1
+                        ii = iChr2 ' move the pointer to the final double quote
+                        GoTo Next_ii
+                    End If
+                    ThisWorkbook.Sheets("Sheet1").Cells(iRow, iColumn).Value = _
+                        "Tx " & Mid(text, iChr1 + 2, iChr2 - iChr1 - 2)
+                    Call fnWrapTextFalse(iRow, iColumn) ' in case there was a crlf in the text eg 2 lines of address
+                    iColumn = iColumn + 1
+                    ii = iChr2 ' move the pointer to the final double quote
+                    GoTo Next_ii
+                End If
+                iCommaPos = InStr(ii + 1, text, Chr(44)) ' ie the next comma
+                iCRPos = InStr(ii + 1, text, Chr(13)) ' end of line has no comma at the end
+                If iCommaPos < iCRPos Then
+                    iChr2 = iCommaPos
+                Else
+                    iChr2 = iCRPos
+                End If
+                
+                If iChr2 = 0 Then ' found CR but no more commas
+                    iChr2 = Len(text) ' the end of the file
+                    ThisWorkbook.Sheets("Sheet1").Cells(iRow, iColumn).Value = _
+                        "Tx " & Mid(text, iChr1 + 1, iChr2 - iChr1 - 1)
+                    GoTo sbExit
+                End If
+                ThisWorkbook.Sheets("Sheet1").Cells(iRow, iColumn).Value = _
+                    "Tx " & Mid(text, iChr1 + 1, iChr2 - iChr1 - 1)
+                iColumn = iColumn + 1
+                GoTo Next_ii
+        Case Chr(13) ' carriage return
+            iColumn = 1
+            GoTo Next_ii
+        Case Chr(10) ' line feed - this is the end of a line
+            iRow = iRow + 1
+            iChr1 = ii
+            iChr2 = InStr(ii + 1, text, Chr(44)) ' ie the next comma
+            ThisWorkbook.Sheets("Sheet1").Cells(iRow, iColumn).Value = _
+                "Tx " & Mid(text, iChr1 + 1, iChr2 - iChr1 - 1)
+            iColumn = iColumn + 1
+            GoTo Next_ii
+        Case Else
+        End Select
+        
+Next_ii:
+    Next ii
+
+sbExit:
+Command32_Click_Exit_Routine:
+ Exit Sub
+
+Command32_Click_Error_Routine:
+ 
+ Dim sFilename As String
+ sFilename = "C:\Users\david\Desktop\err" & Format(Now(), "yyyymmddHHMMSS") & ".txt"
+
+ Open sFilename For Output As #1
+ Print #1, "Industrial Computer Contracts (West Midlands) - Error Log - 29th March 2021"
+ Print #1, Now()
+ Print #1, Err.Number
+ Print #1, Err.Description
+ Print #1, "ii " & ii
+ Print #1, "**END**"
+ Close #1
+ Resume Command32_Click_Exit_Routine
+
+End Sub
+
+Public Function fnWrapTextFalse(iRow As Long, iColumn As Long)
+'    Range("A1").Select
+    ThisWorkbook.Sheets("Sheet1").Cells(iRow, iColumn).Select
+    With Selection
+        .HorizontalAlignment = xlGeneral
+        .VerticalAlignment = xlBottom
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+End Function
+
+Sub sbTest()
+ MsgBox toHx("aBC")
+End Sub
+
+Public Function toHx(strIn As String) As String
+    Dim strOut As String
+    strOut = Hex(Asc(Mid(strIn, 1, 1)))
+    If Len(strOut) = 1 Then strOut = "0" & strOut
+    strOut = "Hx " & strOut
+    toHx = strOut
+End Function
+</pre>
+</font>
+</font>
+</td>
+<td width=25%>
+</td>
+</tr>
+</table>
+</body>
+</html>
+
