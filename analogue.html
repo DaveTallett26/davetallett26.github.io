@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72474361-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-72474361-1');
+</script>
+<title>Analogue Clock in Excel VBA</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4"><a class="style2" href="email.html">Email</a></li>
+<li class="style4"><a class="style2" href="index.html">Home</a></li>
+</ul>
+<div class="style62"><br/><br/>Analogue Clock in Excel VBA</div>
+</br>
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Dim blnClockRunning As Boolean
+Dim SecondHand As Object
+Dim MinuteHand As Object
+Dim HourHand As Object
+Dim sTime As String
+' Usage - click in cell B1 to Start, C1 to Stop
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+    If Target.Address(True, True, xlA1) = "$B$1" Then
+        Call startclock
+        Range("B1") = "Start"
+        Range("B1").Select
+        Selection.Font.FontStyle = "Bold"
+        Selection.Font.ColorIndex = 2 ' White
+        Selection.Interior.ColorIndex = 1 ' Black
+        Exit Sub
+    End If
+    If Target.Address(True, True, xlA1) = "$C$1" Then
+        Call stopclock
+        Range("C1") = "Stop"
+        Range("C1").Select
+        Selection.Font.FontStyle = "Bold"
+        Selection.Font.ColorIndex = 2 ' White
+        Selection.Interior.ColorIndex = 1 ' Black
+        Exit Sub
+    End If
+End Sub
+Sub startclock()
+ DrawClock
+ blnClockRunning = True
+ clock
+End Sub
+Sub clock()
+ If blnClockRunning = False Then Exit Sub
+ sTime = Format(Now(), "hh:mm:ss")
+ ActiveWorkbook.Worksheets(1).Cells(1, 1).Value = sTime
+ SecondHand.IncrementRotation (6)
+ If Mid(sTime, 7, 2) = "00" Then MinuteHand.IncrementRotation (6)
+ If Mid(sTime, 5, 1) = "0" And Mid(sTime, 7, 2) = "00" Then HourHand.IncrementRotation (6)
+ Application.OnTime (Now() + TimeSerial(0, 0, 1)), "Sheet1.clock"
+End Sub
+Sub stopclock()
+ blnClockRunning = False
+End Sub
+Sub DrawClock()
+    ActiveSheet.Shapes.SelectAll  '*** warning DELETE all Shapes
+    Selection.Delete
+    Set ws = Worksheets(1)
+    With ws.Shapes.AddShape(msoShapeOval, 45, 30, 60, 60)
+        .Line.Visible = 1
+        .Fill.ForeColor.RGB = RGB(255, 255, 255)
+    End With
+    With ws.Shapes.AddShape(msoShapeRectangle, 75, 30, 1, 30)
+        .Line.Visible = 0
+        .Fill.ForeColor.RGB = RGB(0, 0, 0)
+        .Name = "Second"
+    End With
+    With ws.Shapes.AddShape(msoShapeRectangle, 75, 60, 1, 30)
+        .Line.Visible = 0
+        .Fill.Transparency = 1
+        .Name = "SHand"
+    End With
+    With ws.Shapes.AddShape(msoShapeRectangle, 75, 30, 2, 30)
+        .Line.Visible = 0
+        .Fill.ForeColor.RGB = RGB(0, 0, 0)
+        .Name = "Minute"
+    End With
+    With ws.Shapes.AddShape(msoShapeRectangle, 75, 60, 2, 30)
+        .Line.Visible = 0
+        .Fill.Transparency = 1
+        .Name = "MHand"
+    End With
+    With ws.Shapes.AddShape(msoShapeRectangle, 75, 45, 2, 15)
+        .Line.Visible = 0
+        .Fill.ForeColor.RGB = RGB(0, 0, 0)
+        .Name = "Hour"
+    End With
+    With ws.Shapes.AddShape(msoShapeRectangle, 75, 60, 2, 15)
+        .Line.Visible = 0
+        .Fill.Transparency = 1
+        .Name = "HHand"
+    End With
+    sTime = Format(Now(), "HH:mm:ss")
+    Set SecondHand = ws.Shapes.Range(Array("Second", "SHand"))
+    SecondHand.Group
+    SecondHand.IncrementRotation ((Mid(sTime, 7, 2) - 1) * 6)
+    Set MinuteHand = ws.Shapes.Range(Array("Minute", "MHand"))
+    MinuteHand.Group
+    MinuteHand.IncrementRotation (Mid(sTime, 4, 2) * 6)
+    Set HourHand = ws.Shapes.Range(Array("Hour", "HHand"))
+    HourHand.Group
+    HourHand.IncrementRotation ((Mid(sTime, 1, 2)) * 30)
+    HourHand.IncrementRotation ((Mid(sTime, 4, 1)) * 6)
+End Sub
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+</b>
+</font>
+<script type="text/javascript" src="analytics.js"></script>
+</body
+</html>
+

@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72474361-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-72474361-1');
+</script>
+<title>The Mac version of sitemap generator in Excel VBA</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/><br/>The Mac version of sitemap generator in Excel VBA</div>
+<div class="style63">
+<br/><br/>
+This is the Mac version of my sitemap generator written in Excel for Mac 2011 VBA. It works in roughly the same way as the PC version but copes with the different syntax for VBA on Excel for the Mac particularly the file specifications on the Mac using the colon as a path separator and the file type specifier expected on the Mac by the DIR function. The DIR function syntax on the Mac seems to rely on the second parameter File Type known as the MACID which does not work for files created on a PC as you might expect. Basically the code loops through all the files in a directory and selects those with .HTML at the end to work on and output to the sitemap.
+<br/><br/>
+In the process of converting a Mac OSX Unix file to an MSDOS file I came across these two Perl commands for converting a file from OSX to PC and vice versa
+<br/><br/>
+<b>perl -pi -e 's/\r\n|\n|\r/\r\n/g' file-to-convert  # Convert to DOS
+<br/><br/>
+perl -pi -e 's/\r\n|\n|\r/\n/g'   file-to-convert  # Convert to UNIX</b>
+<br/><br/>
+</div>
+<br/>
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Sub sbSitemap()
+ ' Using the file extension .xlsm on the Mac is misleading as it will not run on a PC
+ On Error GoTo error_routine
+ Dim sPath As String
+ Dim sFilename1 As String
+ Dim sFilename2 As String
+ Dim sCell As String
+ Dim iCount As Integer
+ Dim iFileNum As Integer
+ Dim sDataLine As String
+ iCount = 1
+ iFileNum = FreeFile()
+ sCell = "A" & iCount
+ sPath = ActiveWorkbook.Path & ":"
+ ' Path separator is : on the Mac and not / or \
+ sFilename1 = Dir(sPath)
+ ' Dir syntax on the Mac - second parameter for FileType/MacId
+ ' MacId does not work for files created on a PC
+ ' List all files and select .html at the end
+Next_File:
+   If Mid(sFilename1, Len(sFilename1) - 4, 5) = ".html" Then
+    Range(sCell).Select
+    ActiveCell.FormulaR1C1 = sFilename1
+    sFilename2 = sPath & sFilename1
+    Open sFilename2 For Input As #iFileNum
+    While Not EOF(iFileNum)
+     Line Input #iFileNum, sDataLine  ' read in data 1 line at a time
+     If InStr(1, sDataLine, "&lt;title&gt;") > 0 Then
+        sCell = "B" & iCount
+        Range(sCell).Select
+        ActiveCell.FormulaR1C1 = _
+         Mid(sDataLine, InStr(1, sDataLine, "&lt;title&gt;") + 7, _
+         InStr(1, sDataLine, "&lt;title&gt;") - InStr(1, sDataLine, "&lt;title&gt;") - 7)
+    End If
+    Wend
+    Close #iFileNum
+    iCount = iCount + 1
+    sCell = "A" & iCount
+    End If
+    sFilename1 = Dir()
+ If iCount < 300 Then GoTo Next_File
+exit_routine:
+ Exit Sub
+error_routine:
+ If Err.Number = 5 Then Exit Sub
+ MsgBox Err.Number & "  " & Err.Description
+ Resume exit_routine
+End Sub
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+
+<br/><br/>
+<div class="style61">
+Tags - Excel for Mac 2011, sitemap, website, HTML, generator, VBA, code, Microsoft, Visual BASIC for Applications, PERL, convert text files OSX to PC ...
+</div>
+</body>
+</html>
