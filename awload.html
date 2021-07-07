@@ -1,0 +1,1818 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>VBA Code to load the AdventureWorks database into Access 2010</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4"><a class="style2" href="email.html">Email</a></li>
+<li class="style4"><a class="style2" href="index.html">Home</a></li>
+</ul>
+<br/><br/>
+<div class="style62">VBA Code to load the AdventureWorks database into Access 2010</div>
+<br/><br/>
+<font size=3><font face="arial">
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Option Compare Database
+
+    Sub instawdb()
+
+    '/*============================================================================
+    '
+    '  Creates the AdventureWorks 2008R2 OLTP sample database in Access 2010 using VBA
+    '
+    '  All data in this database is ficticious.
+    '
+    '  This is the load module
+    '
+    '============================================================================*/
+    '
+    Dim sSqlSamplesDatabasePath As String
+    sSqlSamplesDatabasePath = "C:\AWOA\"
+    Dim sSqlSamplesSourceDataPath As String
+    sSqlSamplesSourceDataPath = "C:\AWOA\"
+    Dim sSQL As String
+
+    Open sSqlSamplesSourceDataPath & "instawdb.log" For Output As #1
+    Print #1, "***"
+    Print #1, "*** Started - " & Format(Now(), "dd/mm/yyyy hh:mm:ss")
+    Print #1, "***"
+
+'GoTo labelDocument
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "Address.csv", "\t", "&\n")
+
+    sSQL = _
+    "INSERT INTO [Address]( " & _
+    "[AddressID]," & _
+    "[AddressLine1]," & _
+    "[AddressLine2]," & _
+    "[City]," & _
+    "[StateProvinceID]," & _
+    "[PostalCode]," & _
+    "[SpatialLocation]," & _
+    "[rowguid]," & _
+    "[ModifiedDate] " & _
+    ") " & _
+    "SELECT " & _
+    "CLng([f1]) AS Expr1," & _
+    "[f2] AS Expr2," & _
+    "[f3] AS Expr3," & _
+    "[f4] AS Expr4," & _
+    "CLng([f5]) AS Expr5," & _
+    "[f6] AS Expr6," & _
+    "[f7] AS Expr7," & _
+    "[f8] AS Expr8," & _
+    "CDate(Mid([f9],1,19)) AS Expr9 " & _
+    "FROM tblBulkInsert;"
+
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+    DoCmd.RunSQL sSQL
+
+labelAddressType:
+
+    Call fnBulkInsertTab(sSqlSamplesSourceDataPath & "addresstype.csv")
+    DoCmd.RunSQL "INSERT INTO AddressType ( [AddressTypeID], [Name], [rowguid], [ModifiedDate] ) SELECT CLng([f1]) AS Expr1, tblBulkInsert.f2, tblBulkInsert.f3, CDate(Mid([f4],1,19)) AS Expr2 FROM tblBulkInsert;"
+
+    Call fnBulkInsertTab(sSqlSamplesSourceDataPath & "awbuildversion.csv")
+    DoCmd.RunSQL "INSERT INTO AWBuildVersion ( [SystemInformationID], [Database Version], [VersionDate], [ModifiedDate] ) SELECT CLng([f1]) AS Expr1, tblBulkInsert.f2, CDate(Mid([f3],1,19)) AS Expr2, CDate(Mid([f4],1,19)) AS Expr3 FROM tblBulkInsert;"
+
+labelBillOfMaterials:
+
+    Call fnBulkInsertTab(sSqlSamplesSourceDataPath & "BillOfMaterials.csv")
+    sSQL = "INSERT INTO BillOfMaterials ( " & _
+     "[BillOfMaterialsID], " & _
+     "[ProductAssemblyID], " & _
+     "[ComponentID], " & _
+     "[StartDate], " & _
+     "[EndDate], " & _
+     "[UnitMeasureCode], " & _
+     "[BOMLevel], " & _
+     "[PerAssemblyQty], " & _
+     "[ModifiedDate] " & _
+     ") SELECT " & _
+     "IIf(Len([f1])=0,CLng('0'),CLng([f1])) AS Expr1," & _
+     "IIf(Len([f2])=0,CLng('0'),CLng([f2])) AS Expr2," & _
+     "IIf(Len([f3])=0,CLng('0'),CLng([f3])) AS Expr3," & _
+     "IIf(Len([f4])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f4],1,19))) AS Expr4, " & _
+     "IIf(Len([f5])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f5],1,19))) AS Expr5, " & _
+     "f6, " & _
+     "IIf(Len([f7])=0,CLng('0'),CLng([f7])) AS Expr7," & _
+     "IIf(Len([f8])=0,CLng('0'),CLng([f8])) AS Expr8," & _
+     "IIf(Len([f9])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f9],1,19))) AS Expr9 FROM tblBulkInsert;"
+    DoCmd.RunSQL sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "BusinessEntity.csv", "+|", "&|/n")
+    sSQL = "INSERT INTO BusinessEntity ([BusinessEntityID],[rowguid],[ModifiedDate]) SELECT CLng([f1]) AS Expr1, [f2] AS Expr2, CDate(Mid([f3],1,19)) AS Expr3 FROM tblBulkInsert;"
+    DoCmd.RunSQL sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "BusinessEntityAddress.csv", "+|", "&|/n")
+    sSQL = "INSERT INTO BusinessEntityAddress ([BusinessEntityID],[AddressID],[AddressTypeID],[rowguid],[ModifiedDate]) SELECT CLng([f1]) AS Expr1, CLng([f2]) AS Expr2, CLng([f3]) AS Expr3, [f4] AS Expr4, CDate(Mid([f5],1,19)) AS Expr5 FROM tblBulkInsert;"
+    DoCmd.RunSQL sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "BusinessEntityContact.csv", "+|", "&|/n")
+    sSQL = "INSERT INTO BusinessEntityContact( [BusinessEntityID],[PersonID],[ContactTypeID],[rowguid],[ModifiedDate]) SELECT CLng([f1]) AS Expr1, CLng([f2]) AS Expr2, CLng([f3]) AS Expr3, [f4] AS Expr4, CDate(Mid([f5],1,19)) AS Expr5 FROM tblBulkInsert;"
+    DoCmd.RunSQL sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ContactType.csv", "\t", "&\n")
+    sSQL = "INSERT INTO ContactType([ContactTypeID],[Name],[ModifiedDate]) SELECT CLng([f1]) AS Expr1, [f2] AS Expr2, CDate(Mid([f3],1,19)) AS Expr3 FROM tblBulkInsert;"
+    DoCmd.RunSQL sSQL
+
+labelCountryCurrency:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "CountryCurrency.csv", "\t", "&\n")
+    sSQL = "INSERT INTO CountryCurrency([CountryRegionCode],[CurrencyCode],[ModifiedDate]) SELECT [f1] AS Expr1, [f2] AS Expr2, CDate(Mid([f3],1,19)) AS Expr3 FROM tblBulkInsert;"
+    DoCmd.RunSQL sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "CountryRegion.csv", "\t", "&\n")
+    sSQL = "INSERT INTO CountryRegion([CountryRegionCode],[Name],[ModifiedDate]) SELECT [f1] AS Expr1, [f2] AS Expr2, CDate(Mid([f3],1,19)) AS Expr3 FROM tblBulkInsert;"
+    DoCmd.RunSQL sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "CountryRegionCurrency.csv", "\t", "&\n")
+    sSQL = "INSERT INTO CountryRegionCurrency([CountryRegionCode],[CurrencyCode],[ModifiedDate]) SELECT [f1] AS Expr1, [f2] AS Expr2, CDate(Mid([f3],1,19)) AS Expr3 FROM tblBulkInsert;"
+    DoCmd.RunSQL sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "CreditCard.csv", "\t", "&\n")
+    sSQL = "INSERT INTO CreditCard([CreditCardID],[CardType],[CardNumber],[ExpMonth],[ExpYear],[ModifiedDate]) SELECT CLng([f1]) AS Expr1, [f2] AS Expr2, [f3] AS Expr3, CLng([f4]) AS Expr4, CLng([f5]) AS Expr5, CDate(Mid([f6],1,19)) AS Expr6 FROM tblBulkInsert;"
+    DoCmd.RunSQL sSQL
+
+labelCulture:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "Culture.csv", "\t", "&\n")
+
+    sSQL = _
+    "INSERT INTO [Culture]( " & _
+    "[CultureID]," & _
+    "[Name]," & _
+    "[ModifiedDate] " & _
+    ") " & _
+    "SELECT " & _
+    "[f1] AS Expr1," & _
+    "[f2] AS Expr2," & _
+    "CDate(Mid([f3],1,19)) AS Expr3 " & _
+    "FROM tblBulkInsert;"
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+    DoCmd.RunSQL sSQL
+
+labelCurrency:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "Currency.csv", "\t", "&\n")
+
+    sSQL = _
+        "INSERT INTO [Currency] ( " & _
+        "[CurrencyCode]," & _
+        "[Name]," & _
+        "[ModifiedDate] " & _
+    ") " & _
+    "SELECT " & _
+    "[f1] AS Expr1," & _
+    "[f2] AS Expr2," & _
+    "CDate(Mid([f3],1,19)) AS Expr3 " & _
+    "FROM tblBulkInsert;"
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+    DoCmd.RunSQL sSQL
+
+LabelCurrencyRate:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "CurrencyRate.csv", "\t", "&\n")
+
+    sSQL = _
+        "INSERT INTO [CurrencyRate] ( " & _
+        "[CurrencyRateID]," & _
+        "[CurrencyRateDate]," & _
+        "[FromCurrencyCode]," & _
+        "[ToCurrencyCode]," & _
+        "[AverageRate]," & _
+        "[EndOfDayRate]," & _
+        "[ModifiedDate] " & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "CDate(Mid([f2],1,19)) AS Expr2, " & _
+        "[f3] AS Expr3," & _
+        "[f4] AS Expr4," & _
+        "CDbl([f5]) AS Expr5," & _
+        "CDbl([f6]) AS Expr6," & _
+        "CDate(Mid([f7],1,19)) AS Expr7 " & _
+        "FROM tblBulkInsert;"
+
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+    DoCmd.RunSQL sSQL
+
+labelCustomer:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "Customer.csv", "\t", "&\n")
+
+    sSQL = _
+        "INSERT INTO [Customer] ( " & _
+        "[CustomerID]," & _
+        "[PersonID]," & _
+        "[StoreID]," & _
+        "[TerritoryID]," & _
+        "[AccountNumber]," & _
+        "[rowguid]," & _
+        "[ModifiedDate] " & _
+        ") " & _
+        "SELECT " & _
+        "IIf(Len([f1])=0,CLng('0'),CLng([f1])) AS Expr1," & _
+        "IIf(Len([f2])=0,CLng('0'),CLng([f2])) AS Expr2," & _
+        "IIf(Len([f3])=0,CLng('0'),CLng([f3])) AS Expr3," & _
+        "IIf(Len([f4])=0,CLng('0'),CLng([f4])) AS Expr4," & _
+        "[f5] AS Expr5," & _
+        "[f6] AS Expr6," & _
+        "CDate(Mid([f7],1,19)) AS Expr7 " & _
+        "FROM tblBulkInsert;"
+
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+        DoCmd.RunSQL sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "Department.csv", "\t", "&\n")
+
+    sSQL = _
+        "INSERT INTO [Department] ( " & _
+        "[DepartmentID]," & _
+        "[Name]," & _
+        "[GroupName]," & _
+        "[ModifiedDate] " & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "CDate(Mid([f4],1,19)) AS Expr4 " & _
+        "FROM tblBulkInsert;"
+
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+        DoCmd.RunSQL sSQL
+
+labelDocument:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "Document.csv", "+|", "&|\n")
+
+    sSQL = _
+       "INSERT INTO [Document]( " & _
+       "[DocumentNode],[DocumentLevel]," & _
+       "[Title],[Owner]," & _
+       "[FolderFlag],[FileName]," & _
+       "[FileExtension],[Revision]," & _
+       "[ChangeNumber],[Status]," & _
+       "[DocumentSummary],[Document],[rowguid],[ModifiedDate] " & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "fnCLng([f2]) AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "fnCLng([f4]) AS Expr4," & _
+        "CBool([f5]) AS Expr5," & _
+        "[f6] AS Expr6," & _
+        "[f7] AS Expr7," & _
+        "[f8] AS Expr8," & _
+        "fnCLng([f9]) AS Expr9," & _
+        "fnCLng([f10]) AS Expr10," & _
+        "[f11] AS Expr11," & _
+        "[f12] AS Expr12," & _
+        "[f13] AS Expr13," & _
+        "fnCDate([f14]) AS Expr14 " & _
+        "FROM tblBulkInsert;"
+
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+        DoCmd.RunSQL sSQL
+
+labelEmailAddress:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "EmailAddress.csv", "+|", "&|\n")
+
+    sSQL = _
+    "INSERT INTO [EmailAddress]( " & _
+        "[BusinessEntityID]," & _
+        "[EmailAddressID]," & _
+        "[EmailAddress]," & _
+        "[rowguid]," & _
+        "[ModifiedDate] " & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "fnCLng([f2]) AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "[f4] AS Expr4," & _
+        "fnCDate([f5]) AS Expr5 " & _
+        "FROM tblBulkInsert;"
+
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+        DoCmd.RunSQL sSQL
+
+labelEmployee:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "Employee.csv", "\t", "&\n")
+
+    sSQL = _
+    "INSERT INTO [Employee]( " & _
+        "[BusinessEntityID],[NationalIDNumber],[LoginID],[OrganizationNode]," & _
+        "[OrganizationLevel],[JobTitle],[BirthDate],[MaritalStatus]," & _
+        "[Gender],[HireDate],[SalariedFlag],[VacationHours]," & _
+        "[SickLeaveHours],[CurrentFlag],[rowguid],[ModifiedDate] " & _
+        ") SELECT " & _
+        "IIf(Len([f1])=0,CLng('0'),CLng([f1])) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "[f4] AS Expr4," & _
+        "[f5] AS Expr5," & _
+        "[f6] AS Expr6," & _
+        "CDate(Mid([f7],1,19)) AS Expr7, " & _
+        "[f8] AS Expr8," & _
+        "[f9] AS Expr9," & _
+        "CDate(Mid([f10],1,19)) AS Expr10, " & _
+        "[f11] AS Expr11," & _
+        "IIf(Len([f12])=0,CLng('0'),CLng([f12])) AS Expr12," & _
+        "IIf(Len([f13])=0,CLng('0'),CLng([f13])) AS Expr13," & _
+        "[f14] AS Expr14," & _
+        "[f15] AS Expr15," & _
+        "CDate(Mid([f16],1,19)) AS Expr16 " & _
+        "FROM tblBulkInsert;"
+
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+        DoCmd.RunSQL sSQL
+
+labelEmployeeDepartmentHistory:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "EmployeeDepartmentHistory.csv", "\t", "&\n")
+
+    sSQL = _
+    "INSERT INTO [EmployeeDepartmentHistory]( " & _
+        "[BusinessEntityID]," & _
+        "[DepartmentID]," & _
+        "[ShiftID]," & _
+        "[StartDate]," & _
+        "[EndDate]," & _
+        "[ModifiedDate] " & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "CLng([f2]) AS Expr2," & _
+        "CLng([f3]) AS Expr3," & _
+        "IIf(Len([f4])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f4],1,19))), " & _
+        "IIf(Len([f5])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f5],1,19))), " & _
+        "IIf(Len([f6])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f6],1,19))) " & _
+        "FROM tblBulkInsert;"
+
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+        DoCmd.RunSQL sSQL
+
+labelEmployeePayHistory:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "EmployeePayHistory.csv", "\t", "&\n")
+
+    sSQL = _
+    "INSERT INTO [EmployeePayHistory]( " & _
+        "[BusinessEntityID]," & _
+        "[RateChangeDate]," & _
+        "[Rate]," & _
+        "[PayFrequency]," & _
+        "[ModifiedDate] " & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "CDate(Mid([f2],1,19)) AS Expr2, " & _
+        "CDbl([f3]) AS Expr3," & _
+        "CLng([f4]) AS Expr4," & _
+        "CDate(Mid([f5],1,19)) AS Expr5 " & _
+        "FROM tblBulkInsert;"
+
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+        DoCmd.RunSQL sSQL
+
+labelIllustration:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "Illustration.csv", "+|", "&|\n")
+
+    sSQL = "INSERT INTO [Illustration]( " & _
+        "[IllustrationID]," & _
+        "[Diagram]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "fnCDate([f3]) AS Expr3 " & _
+        "FROM tblBulkInsert;"
+
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+        DoCmd.RunSQL sSQL
+
+labelJobCandidate:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "JobCandidate.csv", "+|", "&|\n")
+
+    sSQL = "INSERT INTO [JobCandidate]( " & _
+        "[JobCandidateID]," & _
+        "[BusinessEntityID]," & _
+        "[Resume]," & _
+        "[ModifiedDate] " & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "fnCLng([f2]) AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "fnCDate([f4]) AS Expr4 " & _
+        "FROM tblBulkInsert;"
+     Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+        DoCmd.RunSQL sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "Location.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [Location]( " & _
+        "[LocationID]," & _
+        "[Name]," & _
+        "[CostRate]," & _
+        "[Availability]," & _
+        "[ModifiedDate] " & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "CDbl([f3]) AS Expr3," & _
+        "CDbl([f4]) AS Expr4," & _
+        "CDate(Mid([f5],1,19)) AS Expr5 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+        Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelPassword:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "Password.csv", "+|", "&|\n")
+
+    sSQL = "INSERT INTO [Password]( " & _
+        "[BusinessEntityID]," & _
+        "[PasswordHash]," & _
+        "[PasswordSalt]," & _
+        "[rowguid]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "[f4] AS Expr4," & _
+        "fnCDate([f5]) AS Expr5 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelPerson:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "Person.csv", "+|", "&|\n")
+
+    sSQL = "INSERT INTO [Person]( " & _
+        "[BusinessEntityID], [PersonType]," & _
+        "[NameStyle],[Title]," & _
+        "[FirstName],[MiddleName]," & _
+        "[LastName],[Suffix]," & _
+        "[EmailPromotion],   [AdditionalContactInfo]," & _
+        "[Demographics],     [rowguid]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "fnCLng([f3]) AS Expr3," & _
+        "[f4] AS Expr4," & _
+        "[f5] AS Expr5," & _
+        "[f6] AS Expr6," & _
+        "[f7] AS Expr7," & _
+        "[f8] AS Expr8," & _
+        "fnCLng([f9]) AS Expr9," & _
+        "[f10] AS Expr10," & _
+        "[f11] AS Expr11," & _
+        "[f12] AS Expr12," & _
+        "fnCDate([f13]) AS Expr13 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "PersonCreditCard.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [PersonCreditCard]( " & _
+        "[BusinessEntityID]," & _
+        "[CreditCardID]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "CLng([f2]) AS Expr2," & _
+        "CDate(Mid([f3],1,19)) AS Expr3 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+        Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelPersonPhone:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "PersonPhone.csv", "+|", "&|\n")
+
+    sSQL = "INSERT INTO [PersonPhone]( " & _
+        "[BusinessEntityID]," & _
+        "[PhoneNumber]," & _
+        "[PhoneNumberTypeID]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "fnCLng([f3]) AS Expr3," & _
+        "fnCDate([f4]) AS Expr4 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+        Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+LabelPhoneNumberType:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "PhoneNumberType.csv", "+|", "&|\n")
+
+    sSQL = "INSERT INTO [PhoneNumberType]( " & _
+        "[PhoneNumberTypeID]," & _
+        "[Name]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "fnCDate(Mid([f3],1,19)) AS Expr3 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+        Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelProduct:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "Product.csv", "\t", "&\n")
+
+' Two halves because the SQL is too long for 255 character text variable
+' The NOT NULLs are the problem, have to add them all at once
+
+' This is the create statement from T-SQL
+'CREATE TABLE [Production].[Product](
+'    [ProductID] [int] IDENTITY (1, 1) NOT NULL,
+'    [Name] [Name] NOT NULL,
+'    [ProductNumber] [nvarchar](25) NOT NULL,
+'    [MakeFlag] [Flag] NOT NULL CONSTRAINT [DF_Product_MakeFlag] DEFAULT (1),
+'    [FinishedGoodsFlag] [Flag] NOT NULL CONSTRAINT [DF_Product_FinishedGoodsFlag] DEFAULT (1),
+'    [Color] [nvarchar](15) NULL,
+'    [SafetyStockLevel] [smallint] NOT NULL,
+'    [ReorderPoint] [smallint] NOT NULL,
+'    [StandardCost] [money] NOT NULL,
+'    [ListPrice] [money] NOT NULL,
+'    [Size] [nvarchar](5) NULL,
+'    [SizeUnitMeasureCode] [nchar](3) NULL,
+'    [WeightUnitMeasureCode] [nchar](3) NULL,
+'    [Weight] [decimal](8, 2) NULL,
+'    [DaysToManufacture] [int] NOT NULL,
+'    [ProductLine] [nchar](2) NULL,
+'    [Class] [nchar](2) NULL,
+'    [Style] [nchar](2) NULL,
+'    [ProductSubcategoryID] [int] NULL,
+'    [ProductModelID] [int] NULL,
+'    [SellStartDate] [datetime] NOT NULL,
+'    [SellEndDate] [datetime] NULL,
+'    [DiscontinuedDate] [datetime] NULL,
+'    [rowguid] uniqueidentifier ROWGUIDCOL NOT NULL CONSTRAINT [DF_Product_rowguid] DEFAULT (NEWID()),
+'    [ModifiedDate] [datetime] NOT NULL CONSTRAINT [DF_Product_ModifiedDate] DEFAULT (GETDATE()),
+'    CONSTRAINT [CK_Product_SafetyStockLevel] CHECK ([SafetyStockLevel] > 0),
+'    CONSTRAINT [CK_Product_ReorderPoint] CHECK ([ReorderPoint] > 0),
+'    CONSTRAINT [CK_Product_StandardCost] CHECK ([StandardCost] >= 0.00),
+'    CONSTRAINT [CK_Product_ListPrice] CHECK ([ListPrice] >= 0.00),
+'    CONSTRAINT [CK_Product_Weight] CHECK ([Weight] > 0.00),
+'    CONSTRAINT [CK_Product_DaysToManufacture] CHECK ([DaysToManufacture] >= 0),
+'    CONSTRAINT [CK_Product_ProductLine] CHECK (UPPER([ProductLine]) IN ('S', 'T', 'M', 'R') OR [ProductLine] IS NULL),
+'    CONSTRAINT [CK_Product_Class] CHECK (UPPER([Class]) IN ('L', 'M', 'H') OR [Class] IS NULL),
+'    CONSTRAINT [CK_Product_Style] CHECK (UPPER([Style]) IN ('W', 'M', 'U') OR [Style] IS NULL),
+'    CONSTRAINT [CK_Product_SellEndDate] CHECK (([SellEndDate] >= [SellStartDate]) OR ([SellEndDate] IS NULL)),
+') ON [PRIMARY];
+
+' This is the create statement for Access
+'    "CREATE TABLE [Product](
+'       1  "[ProductID] INTEGER NOT NULL, " & _
+'       2  "[Name] CHAR NOT NULL,
+'       3  "[ProductNumber] VARCHAR(25) NOT NULL, " & _
+'       4  "[MakeFlag] CHAR NOT NULL,
+'       5  "[FinishedGoodsFlag] CHAR NOT NULL, " & _
+'       6  "[Color] VARCHAR(15) NULL,
+'       7  "[SafetyStockLevel] INTEGER NOT NULL, " & _
+'       8  "[ReorderPoint] INTEGER NOT NULL,
+'       9  "[StandardCost] MONEY NOT NULL, " & _
+'      10  "[ListPrice] MONEY NOT NULL,
+'      11  "[Size] VARCHAR(5) NULL, " & _
+'      12  "[SizeUnitMeasureCode] CHAR(3) NULL,
+'      13  "[WeightUnitMeasureCode] CHAR(3) NULL, " & _
+'      14  "[Weight] DOUBLE NULL,
+'      15  "[DaysToManufacture] INTEGER NOT NULL, " & _
+'      16  "[ProductLine] CHAR(2) NULL,
+'      17  "[Class] CHAR(2) NULL, " & _
+'      18  "[Style] CHAR(2) NULL,
+'      19  "[ProductSubcategoryID] INTEGER NULL, " & _
+'      20  "[ProductModelID] INTEGER NULL,
+'      21  "[SellStartDate] DATETIME NOT NULL, " & _
+'      22  "[SellEndDate] DATETIME NULL,
+'      23  "[DiscontinuedDate] DATETIME NULL, " & _
+'      24  "[rowguid] CHAR(36) NOT NULL,
+'      25  "[ModifiedDate] DATETIME NOT NULL  );"
+
+' NOT NULL fields
+' 1i 2c 3c 4c 5c 7i 8i 9m 10m 15i 21d 24c 25d
+
+    sSQL = "INSERT INTO [Product](" & _
+      "[ProductID],[Name],[ProductNumber],[MakeFlag],[FinishedGoodsFlag]," & _
+      "[SafetyStockLevel]," & _
+      "[ReorderPoint]," & _
+      "[StandardCost]," & _
+      "[ListPrice]," & _
+      "[DaysToManufacture]," & _
+      "[SellStartDate]," & _
+      "[rowguid]," & _
+      "[ModifiedDate]" & _
+      ") SELECT " & _
+      "CLng([f1]) AS Expr1, " & _
+      "[f2] AS Expr2, " & _
+      "[f3] AS Expr3, " & _
+      "[f4] AS Expr4, " & _
+      "[f5] AS Expr5, " & _
+      "CLng([f7]) AS Expr7, " & _
+      "CLng([f8]) AS Expr8, " & _
+      "CDbl([f9]) AS Expr9, " & _
+      "CDbl([f10]) AS Expr10, " & _
+      "CLng([f15]) AS Expr15, " & _
+      "CDate(Mid([f21],1,19)), " & _
+      "[f24] AS Expr24, " & _
+      "CDate(Mid([f25],1,19)) " & _
+      "FROM tblBulkInsert;"
+
+       DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+' This is the create statement for Access
+'    "CREATE TABLE [Product](
+'       1  "[ProductID] INTEGER NOT NULL, " & _
+'       2  "[Name] CHAR NOT NULL,
+'       3  "[ProductNumber] VARCHAR(25) NOT NULL, " & _
+'       4  "[MakeFlag] CHAR NOT NULL,
+'       5  "[FinishedGoodsFlag] CHAR NOT NULL, " & _
+'       6  "[Color] VARCHAR(15) NULL,
+'       7  "[SafetyStockLevel] INTEGER NOT NULL, " & _
+'       8  "[ReorderPoint] INTEGER NOT NULL,
+'       9  "[StandardCost] MONEY NOT NULL, " & _
+'      10  "[ListPrice] MONEY NOT NULL,
+'      11  "[Size] VARCHAR(5) NULL, " & _
+'      12  "[SizeUnitMeasureCode] CHAR(3) NULL,
+'      13  "[WeightUnitMeasureCode] CHAR(3) NULL, " & _
+'      14  "[Weight] DOUBLE NULL,
+'      15  "[DaysToManufacture] INTEGER NOT NULL, " & _
+'      16  "[ProductLine] CHAR(2) NULL,
+'      17  "[Class] CHAR(2) NULL, " & _
+'      18  "[Style] CHAR(2) NULL,
+'      19  "[ProductSubcategoryID] INTEGER NULL, " & _
+'      20  "[ProductModelID] INTEGER NULL,
+'      21  "[SellStartDate] DATETIME NOT NULL, " & _
+'      22  "[SellEndDate] DATETIME NULL,
+'      23  "[DiscontinuedDate] DATETIME NULL, " & _
+'      24  "[rowguid] CHAR(36) NOT NULL,
+'      25  "[ModifiedDate] DATETIME NOT NULL  );"
+
+' NULL fields
+' 6c 11c 12c 13c 14dbl 16c 17c 18c 19i 20i 22d 23d
+
+     sSQL = "UPDATE [Product] INNER JOIN tblBulkInsert ON Product.ProductID = CLng(tblBulkInsert.f1) SET " & _
+               "[Product].[Color] = [tblBulkInsert].[f6], " & _
+               "[Product].[Size] = [tblBulkInsert].[f11], " & _
+               "[Product].[SizeUnitMeasureCode] = [tblBulkInsert].[f12], " & _
+               "[Product].[WeightUnitMeasureCode] = [tblBulkInsert].[f13], " & _
+               "[Product].[ProductLine] = [tblBulkInsert].[f16], " & _
+               "[Product].[Class] = [tblBulkInsert].[f17], " & _
+               "[Product].[Style] = [tblBulkInsert].[f18], " & _
+               "[Product].[ProductSubcategoryID] = IIf(Len([f19])=0,CLng('0'),CLng([tblBulkInsert].[f19])), " & _
+               "[Product].[ProductModelID] = IIf(Len([f20])=0,CLng('0'),CLng([tblBulkInsert].[f20])), " & _
+               "[Product].[Weight] = IIf(Len([f14])=0,CDbl('0.0000'),CDbl([tblBulkInsert].[f14])), " & _
+               "[Product].[SellEndDate] = IIf(Len([f22])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f22],1,19))), " & _
+               "[Product].[DiscontinuedDate] = IIf(Len([f23])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f23],1,19)));"
+
+       DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelProductCategory:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ProductCategory.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [ProductCategory]( " & _
+       "[ProductCategoryID]," & _
+       "[Name]," & _
+       "[rowguid]," & _
+       "[ModifiedDate]" & _
+       ") " & _
+       "SELECT " & _
+       "CLng([f1]) AS Expr1," & _
+       "[f2] AS Expr2," & _
+       "[f3] AS Expr3," & _
+       "CDate(Mid([f4],1,19)) AS Expr4 " & _
+       "FROM tblBulkInsert;"
+
+       DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelProductCostHistory:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ProductCostHistory.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [ProductCostHistory]( " & _
+        "[ProductID]," & _
+        "[StartDate]," & _
+        "[EndDate]," & _
+        "[StandardCost]," & _
+        "[ModifiedDate]  " & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "IIf(Len([f2])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f2],1,19))), " & _
+        "IIf(Len([f3])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f3],1,19))), " & _
+        "CDbl([f4]) AS Expr4," & _
+        "IIf(Len([f5])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f5],1,19))) " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+        Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelProductDescription:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ProductDescription.csv", "\t", "&\n")
+
+'' Line with number 1607 confuses the input routine so only read first half of the file
+
+    sSQL = "INSERT INTO [ProductDescription]( " & _
+        "[ProductDescriptionID]," & _
+        "[Description]," & _
+        "[rowguid]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT TOP 50 PERCENT " & _
+        "CLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "CDate(Mid([f4],1,19)) AS Expr4 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelProductDocument:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ProductDocument.csv", "\t", "&\n")
+
+sSQL = "INSERT INTO [ProductDocument]( " & _
+        "[ProductID]," & _
+        "[DocumentNode]," & _
+        "[ModifiedDate]  " & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "CDate(Mid([f3],1,19)) AS Expr3 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelProductInventory:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ProductInventory.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [ProductInventory]( " & _
+        "[ProductID]," & _
+        "[LocationID]," & _
+        "[Shelf]," & _
+        "[Bin]," & _
+        "[Quantity]," & _
+        "[rowguid]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "CLng([f2]) AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "CLng([f4]) AS Expr4," & _
+        "CLng([f5]) AS Expr5," & _
+        "[f6] AS Expr6," & _
+        "CDate(Mid([f7],1,19)) AS Expr7 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+        Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelProductListPriceHistory:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ProductListPriceHistory.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [ProductListPriceHistory]( " & _
+        "[ProductID]," & _
+        "[StartDate]," & _
+        "[EndDate]," & _
+        "[ListPrice]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "IIf(Len([f2])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f2],1,19))), " & _
+        "IIf(Len([f3])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f3],1,19))), " & _
+        "CDbl([f4]) AS Expr4," & _
+        "IIf(Len([f5])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f5],1,19))) " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelProductModel:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ProductModel.csv", "+|", "&|\n")
+
+    sSQL = "INSERT INTO [ProductModel]( " & _
+        "[ProductModelID]," & _
+        "[Name]," & _
+        "[CatalogDescription]," & _
+        "[Instructions]," & _
+        "[rowguid]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "[f4] AS Expr4," & _
+        "[f5] AS Expr5," & _
+        "fnCDate(Mid([f6],1,19)) AS Expr6 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ProductModelIllustration.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [ProductModelIllustration]( " & _
+        "[ProductModelID]," & _
+        "[IllustrationID]," & _
+        "[ModifiedDate] " & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "CLng([f2]) AS Expr2," & _
+        "CDate(Mid([f3],1,19)) AS Expr3 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelPMPDC:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ProductModelProductDescriptionCulture.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [ProductModelProductDescriptionCulture]( " & _
+        "[ProductModelID]," & _
+        "[ProductDescriptionID]," & _
+        "[CultureID]," & _
+        "[ModifiedDate] " & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "CLng([f2]) AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "CDate(Mid([f4],1,19)) AS Expr4 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelProductPhoto:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ProductPhoto.csv", "+|", "&|/n")
+
+    sSQL = "INSERT INTO [ProductPhoto]( " & _
+        "[ProductPhotoID]," & _
+        "[ThumbnailPhotoFileName]," & _
+        "[LargePhotoFileName]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "[f3] AS Expr3," & _
+        "[f5] AS Expr5," & _
+        "CDate(Mid([f6],1,19)) AS Expr6 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ProductProductPhoto.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [ProductProductPhoto]( " & _
+        "[ProductID]," & _
+        "[ProductPhotoID]," & _
+        "[Primary]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "CLng([f2]) AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "CDate(Mid([f4],1,19)) AS Expr4 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelProductReview:
+
+'    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ProductReview.csv", "\t", "&\n")
+' Not required each record is inserted as is
+
+    sSQL = "INSERT INTO [ProductReview]( " & _
+        "[ProductReviewID]," & _
+        "[ProductID]," & _
+        "[ReviewerName]," & _
+        "[ReviewDate]," & _
+        "[EmailAddress]," & _
+        "[Rating]," & _
+        "[Comments]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng('1') AS Expr1," & _
+        "CLng('709') AS Expr2," & _
+        "'John Smith' AS Expr3," & _
+        "CDate(Mid('2007-10-20 00:00:00.000',1,19)) AS Expr4," & _
+        "'john@fourthcoffee.com' AS Expr5," & _
+        "CLng('5') AS Expr6," & _
+        "'I can t believe I m singing the praises of a pair of socks, but I just came back from a grueling 3-day ride and these socks really helped make the trip a blast. They re lightweight yet really cushioned my feet all day. The reinforced toe is nearly bullet-proof and I didn t experience any problems with rubbing or blisters like I have with other brands. I know it sounds silly, but it s always the little stuff (like comfortable feet) that makes or breaks a long trip.I won t go on another trip without them!' AS Expr7," & _
+        "CDate(Mid('2007-10-20 00:00:00.000',1,19)) AS Expr8"
+
+        DoCmd.RunSQL sSQL
+
+    sSQL = "INSERT INTO [ProductReview]( " & _
+        "[ProductReviewID]," & _
+        "[ProductID]," & _
+        "[ReviewerName]," & _
+        "[ReviewDate]," & _
+        "[EmailAddress]," & _
+        "[Rating]," & _
+        "[Comments]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng('2') AS Expr1," & _
+        "CLng('937') AS Expr2," & _
+        "'David' AS Expr3," & _
+        "CDate(Mid('2007-12-15 00:00:00.000',1,19)) AS Expr4," & _
+        "'david@graphicdesigninstitute.com' AS Expr5," & _
+        "CLng('4') AS Expr6," & _
+        "'A little on the heavy side, but overall the entry/exit is easy in all conditions. I ve used these pedals for more than 3 years and I ve never had a problem. Cleanup is easy. Mud and sand don t get trapped. I would like them even better if there was a weight reduction. Maybe in the next design. Still, I would recommend them to a friend.' AS Expr7," & _
+        "CDate(Mid('2007-12-15 00:00:00.000',1,19)) AS Expr8"
+
+        DoCmd.RunSQL sSQL
+
+    sSQL = "INSERT INTO [ProductReview]( " & _
+        "[ProductReviewID]," & _
+        "[ProductID]," & _
+        "[ReviewerName]," & _
+        "[ReviewDate]," & _
+        "[EmailAddress]," & _
+        "[Rating]," & _
+        "[Comments]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng('3') AS Expr1," & _
+        "CLng('937') AS Expr2," & _
+        "'Jill' AS Expr3," & _
+        "CDate(Mid('2007-12-17 00:00:00.000',1,19)) AS Expr4," & _
+        "'jill@margiestravel.com' AS Expr5," & _
+        "CLng('2') AS Expr6," & _
+        "'Maybe it s just because I m new to mountain biking, but I had a terrible time getting use to these pedals. In my first outing, I wiped out trying to release my foot. Any suggestions on ways I can adjust the pedals, or is it just a learning curve thing?' AS Expr7," & _
+        "CDate(Mid('2007-12-17 00:00:00.000',1,19)) AS Expr8"
+
+        DoCmd.RunSQL sSQL
+
+    sSQL = "INSERT INTO [ProductReview]( " & _
+        "[ProductReviewID]," & _
+        "[ProductID]," & _
+        "[ReviewerName]," & _
+        "[ReviewDate]," & _
+        "[EmailAddress]," & _
+        "[Rating]," & _
+        "[Comments]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng('4') AS Expr1," & _
+        "CLng('798') AS Expr2," & _
+        "'Laura Norman' AS Expr3," & _
+        "CDate(Mid('2007-12-17 00:00:00.000',1,19)) AS Expr4," & _
+        "'laura@treyresearch.net' AS Expr5," & _
+        "CLng('5') AS Expr6," & _
+        "'See below' AS Expr7," & _
+        "CDate(Mid('2007-12-17 00:00:00.000',1,19)) AS Expr8"
+'
+' Removed from the text string above
+'
+' The Road-550-W from Adventure Works Cycles is everything it s advertised to be.
+' Finally, a quality bike that is actually built for a woman and provides control and comfort in one neat package.
+' The top tube is shorter, the suspension is weight-tuned and there s a much shorter reach to the brake levers.
+' All this adds up to a great mountain bike that is sure to accommodate any woman s anatomy.
+' In addition to getting the size right, the saddle is incredibly comfortable.
+' Attention to detail is apparent in every aspect from the frame finish to the careful design of each component.
+' Each component is a solid performer without any fluff.
+' The designers clearly did their homework and thought about size, weight, and funtionality throughout.
+' And at less than 19 pounds, the bike is manageable for even the most petite cyclist.
+
+        DoCmd.RunSQL sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ProductSubcategory.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [ProductSubcategory]( " & _
+        "[ProductSubcategoryID]," & _
+        "[ProductCategoryID]," & _
+        "[Name]," & _
+        "[rowguid]," & _
+        "[ModifiedDate] " & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "CLng([f2]) AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "[f4] AS Expr4," & _
+        "CDate(Mid([f5],1,19)) AS Expr5 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelProductVendor:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ProductVendor.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [ProductVendor]( " & _
+        "[ProductID], [BusinessEntityID]," & _
+        "[AverageLeadTime], [StandardPrice]," & _
+        "[LastReceiptCost], [LastReceiptDate]," & _
+        "[MinOrderQty], [MaxOrderQty]," & _
+        "[OnOrderQty], [UnitMeasureCode]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "IIf(Len([f1])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f1],1,19))) AS Expr1," & _
+        "IIf(Len([f2])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f2],1,19))) AS Expr2," & _
+        "IIf(Len([f3])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f3],1,19))) AS Expr3," & _
+        "CDbl([f4]) AS Expr4," & _
+        "CDbl([f5]) AS Expr5," & _
+        "CDate(Mid([f6],1,19)) AS Expr6, " & _
+        "IIf(Len([f7])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f7],1,19))) AS Expr7," & _
+        "IIf(Len([f8])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f8],1,19))) AS Expr8," & _
+        "IIf(Len([f9])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f9],1,19))) AS Expr9," & _
+        "[f10] AS Expr10," & _
+        "CDate(Mid([f11],1,19)) AS Expr11 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "PurchaseOrderDetail.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [PurchaseOrderDetail]( " & _
+        "[PurchaseOrderID], [PurchaseOrderDetailID], [DueDate], [OrderQty]," & _
+        "[ProductID], [UnitPrice], [LineTotal], [ReceivedQty]," & _
+        "[RejectedQty], [StockedQty], [ModifiedDate] " & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "CLng([f2]) AS Expr2," & _
+        "CDate(Mid([f3],1,19)) AS Expr3, " & _
+        "CLng([f4]) AS Expr4," & _
+        "CLng([f5]) AS Expr5," & _
+        "CDbl([f6]) AS Expr6," & _
+        "CDbl([f7]) AS Expr7," & _
+        "CDbl([f8]) AS Expr8," & _
+        "CDbl([f9]) AS Expr9," & _
+        "CDbl([f10]) AS Expr10," & _
+        "CDate(Mid([f11],1,19)) AS Expr11 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "PurchaseOrderHeader.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [PurchaseOrderHeader]( " & _
+        "[PurchaseOrderID], [RevisionNumber], [Status], [EmployeeID]," & _
+        "[VendorID], [ShipMethodID], [OrderDate], [ShipDate]," & _
+        "[SubTotal], [TaxAmt], [Freight], [TotalDue]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "CLng([f2]) AS Expr2," & _
+        "CLng([f3]) AS Expr3," & _
+        "CLng([f4]) AS Expr4," & _
+        "CLng([f5]) AS Expr5," & _
+        "CLng([f6]) AS Expr6," & _
+        "CDate(Mid([f7],1,19)) AS Expr7, " & _
+        "CDate(Mid([f8],1,19)) AS Expr8, " & _
+        "CDbl([f9]) AS Expr9," & _
+        "CDbl([f10]) AS Expr10," & _
+        "CDbl([f11]) AS Expr11," & _
+        "CDbl([f12]) AS Expr12," & _
+        "CDate(Mid([f13],1,19)) AS Expr13 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+        Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelSalesOrderDetail:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "SalesOrderDetail.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [SalesOrderDetail]( " & _
+        "[SalesOrderID],[SalesOrderDetailID]," & _
+        "[CarrierTrackingNumber]," & _
+        "[OrderQty]," & _
+        "[ProductID]," & _
+        "[SpecialOfferID]," & _
+        "[UnitPrice]," & _
+        "[UnitPriceDiscount]," & _
+        "[LineTotal]," & _
+        "[rowguid]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "CLng([f2]) AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "CLng([f4]) AS Expr4," & _
+        "CLng([f5]) AS Expr5," & _
+        "CLng([f6]) AS Expr6," & _
+        "CDbl([f7]) AS Expr7," & _
+        "CDbl([f8]) AS Expr8," & _
+        "CDbl([f9]) AS Expr9," & _
+        "[f10] AS Expr10," & _
+        "CDate(Mid([f11],1,19)) AS Expr11 " & _
+       "FROM tblBulkInsert;"
+
+       DoCmd.RunSQL sSQL
+        Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+LabelSalesOrderHeader:
+
+' Needs to be done in two halves as the SQL statement is too big for a text variable
+'
+' This is the CREATE TABLE statement from T-SQL
+'
+'CREATE TABLE [Sales].[SalesOrderHeader](
+' 1    [SalesOrderID] [int] IDENTITY (1, 1) NOT FOR REPLICATION NOT NULL,
+' 2   [RevisionNumber] [tinyint] NOT NULL CONSTRAINT [DF_SalesOrderHeader_RevisionNumber] DEFAULT (0),
+' 3   [OrderDate] [datetime] NOT NULL CONSTRAINT [DF_SalesOrderHeader_OrderDate] DEFAULT (GETDATE()),
+' 4   [DueDate] [datetime] NOT NULL,
+' 5   [ShipDate] [datetime] NULL,
+' 6   [Status] [tinyint] NOT NULL CONSTRAINT [DF_SalesOrderHeader_Status] DEFAULT (1),
+' 7   [OnlineOrderFlag] [Flag] NOT NULL CONSTRAINT [DF_SalesOrderHeader_OnlineOrderFlag] DEFAULT (1),
+' 8   [SalesOrderNumber] AS ISNULL(N'SO' + CONVERT(nvarchar(23), [SalesOrderID]), N'*** ERROR ***'),
+' 9   [PurchaseOrderNumber] [OrderNumber] NULL,
+' 10   [AccountNumber] [AccountNumber] NULL,
+' 11   [CustomerID] [int] NOT NULL,
+' 12   [SalesPersonID] [int] NULL,
+' 13   [TerritoryID] [int] NULL,
+' 14   [BillToAddressID] [int] NOT NULL,
+' 15   [ShipToAddressID] [int] NOT NULL,
+' 16   [ShipMethodID] [int] NOT NULL,
+' 17   [CreditCardID] [int] NULL,
+' 18   [CreditCardApprovalCode] [varchar](15) NULL,
+' 19   [CurrencyRateID] [int] NULL,
+' 20   [SubTotal] [money] NOT NULL CONSTRAINT [DF_SalesOrderHeader_SubTotal] DEFAULT (0.00),
+' 21   [TaxAmt] [money] NOT NULL CONSTRAINT [DF_SalesOrderHeader_TaxAmt] DEFAULT (0.00),
+' 22   [Freight] [money] NOT NULL CONSTRAINT [DF_SalesOrderHeader_Freight] DEFAULT (0.00),
+' 23   [TotalDue] AS ISNULL([SubTotal] + [TaxAmt] + [Freight], 0),
+' 24   [Comment] [nvarchar](128) NULL,
+' 25   [rowguid] uniqueidentifier ROWGUIDCOL NOT NULL CONSTRAINT [DF_SalesOrderHeader_rowguid] DEFAULT (NEWID()),
+' 26   [ModifiedDate] [datetime] NOT NULL CONSTRAINT [DF_SalesOrderHeader_ModifiedDate] DEFAULT (GETDATE()),
+'
+' NOT NULL 1i 2i 3d 4d 6i 7c 11i 14i 15i 16i 20m 21m 22m 25c 26d
+' NULL 5d 8c 9c 10c 12i 13i 17i 18c 19i 23m 24c
+'
+'    CONSTRAINT [CK_SalesOrderHeader_Status] CHECK ([Status] BETWEEN 0 AND 8),
+'    CONSTRAINT [CK_SalesOrderHeader_DueDate] CHECK ([DueDate] >= [OrderDate]),
+'    CONSTRAINT [CK_SalesOrderHeader_ShipDate] CHECK (([ShipDate] >= [OrderDate]) OR ([ShipDate] IS NULL)),
+'    CONSTRAINT [CK_SalesOrderHeader_SubTotal] CHECK ([SubTotal] >= 0.00),
+'    CONSTRAINT [CK_SalesOrderHeader_TaxAmt] CHECK ([TaxAmt] >= 0.00),
+'    CONSTRAINT [CK_SalesOrderHeader_Freight] CHECK ([Freight] >= 0.00)
+') ON [PRIMARY];
+'
+' This is the Access create table statement
+'
+'    sSQL = "CREATE TABLE [SalesOrderHeader](         [SalesOrderID] INTEGER NOT NULL, " & _
+'        "[RevisionNumber] INTEGER NOT NULL,         [OrderDate] DATETIME NOT NULL, " & _
+'        "[DueDate] DATETIME NOT NULL,         [ShipDate] DATETIME NULL, " & _
+'        "[Status] INTEGER NOT NULL,         [OnlineOrderFlag] CHAR NOT NULL, " & _
+'        "[SalesOrderNumber] VARCHAR(23),         [PurchaseOrderNumber] VARCHAR(25) NULL, " & _
+'        "[AccountNumber] CHAR(30) NULL,         [CustomerID] INTEGER NOT NULL, " & _
+'        "[SalesPersonID] INTEGER NULL,         [TerritoryID] INTEGER NULL, " & _
+'        "[BillToAddressID] INTEGER NOT NULL,         [ShipToAddressID] INTEGER NOT NULL, " & _
+'        "[ShipMethodID] INTEGER NOT NULL,         [CreditCardID] INTEGER NULL, " & _
+'        "[CreditCardApprovalCode] VARCHAR(15) NULL,         [CurrencyRateID] INTEGER NULL, " & _
+'        "[SubTotal] MONEY NOT NULL,         [TaxAmt] MONEY NOT NULL, " & _
+'        "[Freight] MONEY NOT NULL,         [TotalDue] MONEY, " & _
+'        "[Comment] VARCHAR(128) NULL,         [rowguid] CHAR(36) NOT NULL, " & _
+'        "[ModifiedDate] DATETIME NOT NULL " & _
+'  ");"
+'
+' 26 fields
+
+   Call fnBulkInsert(sSqlSamplesSourceDataPath & "SalesOrderHeader.csv", "\t", "&\n")
+
+'' NOT NULL 1i 2i 3d 4d 6i 7c 11i 14i 15i 16i 20m 21m 22m 25c 26d
+
+    sSQL = "INSERT INTO [SalesOrderHeader]( " & _
+       "[SalesOrderID],[RevisionNumber],[OrderDate],[DueDate],[Status]," & _
+       "[OnlineOrderFlag],[CustomerID],[BillToAddressID],[ShipToAddressID],[ShipMethodID]," & _
+       "[SubTotal],[TaxAmt],[Freight],[rowguid],[ModifiedDate] " & _
+       ") SELECT " & _
+       "CLng([f1]) AS Expr1," & _
+       "CLng([f2]) AS Expr2," & _
+       "CDate(Mid([f3],1,19)) AS Expr3," & _
+       "CDate(Mid([f4],1,19)) AS Expr4," & _
+       "CLng([f6]) AS Expr6," & _
+       "[f7] AS Expr7," & _
+       "CLng([f11]) AS Expr11," & _
+       "CLng([f14]) AS Expr14," & _
+       "CLng([f15]) AS Expr15," & _
+       "CLng([f16]) AS Expr16," & _
+       "CDbl([f20]) AS Expr20," & _
+       "CDbl([f21]) AS Expr21," & _
+       "CDbl([f22]) AS Expr22," & _
+       "[f25] AS Expr25," & _
+       "CDate(Mid([f26],1,19)) AS Expr26 " & _
+       "FROM tblBulkInsert;"
+
+       DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+' NULL 5d 8c 9c 10c 12i 13i 17i 18c 19i 23m 24c
+
+     sSQL = "UPDATE [SalesOrderHeader] INNER JOIN tblBulkInsert ON SalesOrderHeader.SalesOrderID = CLng(tblBulkInsert.f1) SET " & _
+      "[SalesOrderHeader].[ShipDate] = IIf(Len([f5])=0,#01/01/1900#,CDate(Mid([tblBulkInsert].[f5],1,19))), " & _
+      "[SalesOrderHeader].[SalesOrderNumber] = [tblBulkInsert].[f8], " & _
+      "[SalesOrderHeader].[PurchaseOrderNumber] = [tblBulkInsert].[f9], " & _
+      "[SalesOrderHeader].[AccountNumber] = [tblBulkInsert].[f10], " & _
+      "[SalesOrderHeader].[SalesPersonID] = IIf(Len([f12])=0,CLng('0'),CLng([tblBulkInsert].[f12])), " & _
+      "[SalesOrderHeader].[TerritoryID] = IIf(Len([f13])=0,CLng('0'),CLng([tblBulkInsert].[f13])), " & _
+      "[SalesOrderHeader].[CreditCardID] = IIf(Len([f17])=0,CLng('0'),CLng([tblBulkInsert].[f17])), " & _
+      "[SalesOrderHeader].[CreditCardApprovalCode] = [tblBulkInsert].[f18], " & _
+      "[SalesOrderHeader].[CurrencyRateID] = IIf(Len([f19])=0,CLng('0'),CLng([tblBulkInsert].[f19])), " & _
+      "[SalesOrderHeader].[TotalDue] = IIf(Len([f23])=0,CDbl('0.0000'),CDbl([tblBulkInsert].[f23])), " & _
+      "[SalesOrderHeader].[Comment] = [tblBulkInsert].[f24]; "
+
+       DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+LabelSalesOrderHeaderSalesReason:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "SalesOrderHeaderSalesReason.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [SalesOrderHeaderSalesReason]( " & _
+        "[SalesOrderID]," & _
+        "[SalesReasonID]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "CLng([f2]) AS Expr2," & _
+        "CDate(Mid([f3],1,19)) AS Expr3 " & _
+        "FROM tblBulkInsert;"
+
+       DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelSalesPerson:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "SalesPerson.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [SalesPerson]( " & _
+        "[BusinessEntityID]," & _
+        "[TerritoryID]," & _
+        "[SalesQuota]," & _
+        "[Bonus]," & _
+        "[CommissionPct]," & _
+        "[SalesYTD]," & _
+        "[SalesLastYear]," & _
+        "[rowguid]," & _
+        "[ModifiedDate] " & _
+       ") " & _
+       "SELECT " & _
+       "fnCLng([f1]) AS Expr1," & _
+       "fnCLng([f2]) AS Expr2," & _
+       "fnCDbl([f3]) AS Expr3," & _
+       "fnCDbl([f4]) AS Expr4," & _
+       "fnCDbl([f5]) AS Expr5," & _
+       "fnCDbl([f6]) AS Expr6," & _
+       "fnCDbl([f7]) AS Expr7," & _
+       "[f8] AS Expr8," & _
+       "fnCDate([f9]) AS Expr9 " & _
+       "FROM tblBulkInsert;"
+
+       DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelSalesPersonQuotaHistory:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "SalesPersonQuotaHistory.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [SalesPersonQuotaHistory]( " & _
+        "[BusinessEntityID]," & _
+        "[QuotaDate]," & _
+        "[SalesQuota]," & _
+        "[rowguid]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "fnCDate([f2]) AS Expr2," & _
+        "fnCDbl([f3]) AS Expr3," & _
+        "[f4] AS Expr4," & _
+        "fnCDate(Mid([f5],1,19)) AS Expr5 " & _
+        "FROM tblBulkInsert;"
+
+       DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+LabelSalesReason:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "SalesReason.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [SalesReason]( " & _
+        "[SalesReasonID]," & _
+        "[Name]," & _
+        "[ReasonType]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "CDate(Mid([f4],1,19)) AS Expr4 " & _
+        "FROM tblBulkInsert;"
+
+       DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "SalesTaxRate.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [SalesTaxRate]( " & _
+        "[SalesTaxRateID]," & _
+        "[StateProvinceID]," & _
+        "[TaxType]," & _
+        "[TaxRate]," & _
+        "[Name]," & _
+        "[rowguid]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "CLng([f2]) AS Expr2," & _
+        "CLng([f3]) AS Expr3," & _
+        "CDbl([f4]) AS Expr4," & _
+        "[f5] AS Expr5," & _
+        "[f6] AS Expr6," & _
+        "CDate(Mid([f7],1,19)) AS Expr7 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "SalesTerritory.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [SalesTerritory]( " & _
+        "[TerritoryID]," & _
+        "[Name]," & _
+        "[CountryRegionCode]," & _
+        "[Group]," & _
+        "[SalesYTD]," & _
+        "[SalesLastYear]," & _
+        "[CostYTD]," & _
+        "[CostLastYear]," & _
+        "[rowguid]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "[f4] AS Expr4," & _
+        "CDbl([f5]) AS Expr5," & _
+        "CDbl([f6]) AS Expr6," & _
+        "CDbl([f7]) AS Expr7," & _
+        "CDbl([f8]) AS Expr8," & _
+        "[f9] AS Expr9," & _
+        "CDate(Mid([f10],1,19)) AS Expr10 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+LabelSalesTerritoryHistory:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "SalesTerritoryHistory.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [SalesTerritoryHistory]( " & _
+        "[BusinessEntityID]," & _
+        "[TerritoryID]," & _
+        "[StartDate]," & _
+        "[EndDate]," & _
+        "[rowguid]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "fnCLng([f2]) AS Expr2," & _
+        "fnCDate([f3]) AS Expr3," & _
+        "fnCDate([f4]) AS Expr4," & _
+        "[f5] AS Expr5," & _
+        "fnCDate(Mid([f6],1,19)) AS Expr6 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+        Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ScrapReason.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [ScrapReason]( " & _
+        "[ScrapReasonID]," & _
+        "[Name]," & _
+        "[ModifiedDate]" & _
+       ") " & _
+       "SELECT " & _
+       "CLng([f1]) AS Expr1," & _
+       "[f2] AS Expr2," & _
+       "CDate(Mid([f3],1,19)) AS Expr3 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelShift:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "Shift.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [Shift]( " & _
+        "[ShiftID]," & _
+        "[Name]," & _
+        "[StartTime]," & _
+        "[EndTime]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "fnCDate(Mid([f3],1,8)) AS Expr3," & _
+        "fnCDate(Mid([f4],1,8)) AS Expr4," & _
+        "fnCDate(Mid([f5],1,19)) AS Expr5 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ShipMethod.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [ShipMethod]( " & _
+        "[ShipMethodID]," & _
+        "[Name]," & _
+        "[ShipBase]," & _
+        "[ShipRate]," & _
+        "[rowguid]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "CDbl([f3]) AS Expr3," & _
+        "CDbl([f4]) AS Expr4," & _
+        "[f5] AS Expr5," & _
+        "CDate(Mid([f6],1,19)) AS Expr6 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+LabelShoppingCartItem:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "ShoppingCartItem.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [ShoppingCartItem]( " & _
+        "[ShoppingCartItemID]," & _
+        "[ShoppingCartID]," & _
+        "[Quantity]," & _
+        "[ProductID]," & _
+        "[DateCreated]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "fnCLng([f2]) AS Expr2," & _
+        "fnCLng([f3]) AS Expr3," & _
+        "fnCLng([f4]) AS Expr4," & _
+        "fnCDate([f5]) AS Expr5," & _
+        "fnCDate([f6]) AS Expr6 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelSpecialOffer:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "SpecialOffer.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [SpecialOffer]( " & _
+        "[SpecialOfferID],[Description],[DiscountPct],[Type]," & _
+        "[Category],[StartDate],[EndDate],[MinQty]," & _
+        "[MaxQty],[rowguid],[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "fnCDbl([f3]) AS Expr3," & _
+        "[f4] AS Expr4," & _
+        "[f5] AS Expr5," & _
+        "fnCDate([f6]) AS Expr6," & _
+        "fnCDate([f7]) AS Expr7," & _
+        "fnCLng([f8]) AS Expr8," & _
+        "fnCLng([f9]) AS Expr9," & _
+        "[f10] AS Expr10," & _
+        "fnCDate([f11]) AS Expr11 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "SpecialOfferProduct.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [SpecialOfferProduct]( " & _
+        "[SpecialOfferID]," & _
+        "[ProductID]," & _
+        "[rowguid]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "CLng([f2]) AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "CDate(Mid([f4],1,19)) AS Expr4 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "StateProvince.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [StateProvince]( " & _
+        "[StateProvinceID]," & _
+        "[StateProvinceCode]," & _
+        "[CountryRegionCode]," & _
+        "[IsOnlyStateProvinceFlag]," & _
+        "[Name]," & _
+        "[TerritoryID]," & _
+        "[rowguid]," & _
+        "[ModifiedDate]  " & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "[f4] AS Expr4," & _
+        "[f5] AS Expr5," & _
+        "CLng([f6]) AS Expr6," & _
+        "[f7] AS Expr7," & _
+        "CDate(Mid([f8],1,19)) AS Expr8 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelStore:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "Store.csv", "+|", "&|\n")
+
+    sSQL = "INSERT INTO [Store]( " & _
+        "[BusinessEntityID]," & _
+        "[Name]," & _
+        "[SalesPersonID]," & _
+        "[Demographics]," & _
+        "[rowguid]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "fnCLng([f3]) AS Expr3," & _
+        "[f4] AS Expr4," & _
+        "[f5] AS Expr5," & _
+        "fnCDate(Mid([f6],1,19)) AS Expr6 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelTransactionHistory:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "TransactionHistory.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [TransactionHistory]( " & _
+        "[TransactionID]," & _
+        "[ProductID]," & _
+        "[ReferenceOrderID]," & _
+        "[ReferenceOrderLineID]," & _
+        "[TransactionDate]," & _
+        "[TransactionType]," & _
+        "[Quantity]," & _
+        "[ActualCost]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "fnCLng([f2]) AS Expr2," & _
+        "fnCLng([f3]) AS Expr3," & _
+        "fnCLng([f4]) AS Expr4," & _
+        "fnCDate([f5]) AS Expr5," & _
+        "[f6] AS Expr6," & _
+        "fnCLng([f7]) AS Expr7," & _
+        "fnCDbl([f8]) AS Expr8," & _
+        "fnCDate([f9]) AS Expr9 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+LabelTransactionHistoryArchive:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "TransactionHistoryArchive.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [TransactionHistoryArchive]( " & _
+        "[TransactionID]," & _
+        "[ProductID]," & _
+        "[ReferenceOrderID]," & _
+        "[ReferenceOrderLineID]," & _
+        "[TransactionDate]," & _
+        "[TransactionType]," & _
+        "[Quantity]," & _
+        "[ActualCost]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "fnCLng([f2]) AS Expr2," & _
+        "fnCLng([f3]) AS Expr3," & _
+        "fnCLng([f4]) AS Expr4," & _
+        "fnCDate([f5]) AS Expr5," & _
+        "[f6] AS Expr6," & _
+        "fnCLng([f7]) AS Expr7," & _
+        "fnCDbl([f8]) AS Expr8," & _
+        "fnCDate([f9]) AS Expr9 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "UnitMeasure.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [UnitMeasure]( " & _
+        "[UnitMeasureCode]," & _
+        "[Name]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "[f1] AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "CDate(Mid([f3],1,19)) AS Expr3 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "Vendor.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [Vendor]( " & _
+        "[BusinessEntityID]," & _
+        "[AccountNumber]," & _
+        "[Name]," & _
+        "[CreditRating]," & _
+        "[PreferredVendorStatus]," & _
+        "[ActiveFlag]," & _
+        "[PurchasingWebServiceURL]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "CLng([f1]) AS Expr1," & _
+        "[f2] AS Expr2," & _
+        "[f3] AS Expr3," & _
+        "CLng([f4]) AS Expr4," & _
+        "[f5] AS Expr5," & _
+        "[f6] AS Expr6," & _
+        "[f7] AS Expr7," & _
+        "CDate(Mid([f8],1,19)) AS Expr8 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelWorkOrder:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "WorkOrder.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [WorkOrder]( " & _
+        "[WorkOrderID]," & _
+        "[ProductID]," & _
+        "[OrderQty]," & _
+        "[StockedQty]," & _
+        "[ScrappedQty]," & _
+        "[StartDate]," & _
+        "[EndDate]," & _
+        "[DueDate]," & _
+        "[ScrapReasonID]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "fnCLng([f2]) AS Expr2," & _
+        "fnCLng([f3]) AS Expr3," & _
+        "fnCLng([f4]) AS Expr4," & _
+        "fnCLng([f5]) AS Expr5," & _
+        "fnCDate([f6]) AS Expr6," & _
+        "fnCDate([f7]) AS Expr7," & _
+        "fnCDate([f8]) AS Expr8," & _
+        "fnCLng([f9]) AS Expr9," & _
+        "fnCDate([f10]) AS Expr10 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+    Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+LabelWorkOrderRouting:
+
+    Call fnBulkInsert(sSqlSamplesSourceDataPath & "WorkOrderRouting.csv", "\t", "&\n")
+
+    sSQL = "INSERT INTO [WorkOrderRouting]( [WorkOrderID]," & _
+        "[ProductID],[OperationSequence]," & _
+        "[LocationID],[ScheduledStartDate]," & _
+        "[ScheduledEndDate],[ActualStartDate]," & _
+        "[ActualEndDate],[ActualResourceHrs]," & _
+        "[PlannedCost],[ActualCost]," & _
+        "[ModifiedDate]" & _
+        ") " & _
+        "SELECT " & _
+        "fnCLng([f1]) AS Expr1," & _
+        "fnCLng([f2]) AS Expr2," & _
+        "fnCLng([f3]) AS Expr3," & _
+        "fnCLng([f4]) AS Expr4," & _
+        "fnCDate([f5]) AS Expr5," & _
+        "fnCDate([f6]) AS Expr6," & _
+        "fnCDate([f7]) AS Expr7," & _
+        "fnCDate([f8]) AS Expr8," & _
+        "fnCDbl([f9]) AS Expr9," & _
+        "fnCDbl([f10]) AS Expr10," & _
+        "fnCDbl([f11]) AS Expr11," & _
+        "fnCDate([f12]) AS Expr12 " & _
+        "FROM tblBulkInsert;"
+
+        DoCmd.RunSQL sSQL
+        Print #1, "*** SQL - " & Format(Now(), "dd/mm/yyyy hh:mm:ss") & sSQL
+
+labelEndSub:
+
+    Print #1, "***"
+    Print #1, "*** Finished - " & Format(Now(), "dd/mm/yyyy hh:mm:ss")
+    Print #1, "***"
+    Close #1
+
+    End Sub
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+</b>
+</font>
+<script type="text/javascript" src="analytics.js"></script>
+</body
+</html>
+

@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>VBA functions to deal with missing values in CLng CDbl and CDate</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4"><a class="style2" href="email.html">Email</a></li>
+<li class="style4"><a class="style2" href="index.html">Home</a></li>
+</ul>
+<br/><br/>
+<div class="style62">VBA functions to deal with missing values in CLng CDbl and CDate</div>
+<br/><br/>
+<font size=3><font face="arial">
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Public Function fnCDate(sInput As String) As Date
+On Error GoTo Exit_Function
+ fnCDate = #1/1/1900#
+ If Len(sInput) = 0 Then
+  GoTo Exit_Function
+ Else
+  fnCDate = CDate(Mid(sInput, 1, 19))
+ End If
+Exit_Function:
+End Function
+
+Public Function fnCLng(sInput As String) As Long
+On Error GoTo Exit_Function
+ fnCLng = 0
+ If Len(sInput) = 0 Then
+  GoTo Exit_Function
+ Else
+  fnCLng = CLng(sInput)
+ End If
+Exit_Function:
+End Function
+
+Public Function fnCDbl(sInput As String) As Double
+On Error GoTo Exit_Function
+ fnCDbl = 0#
+ If Len(sInput) = 0 Then
+  GoTo Exit_Function
+ Else
+  fnCDbl = CDbl(sInput)
+ End If
+Exit_Function:
+End Function
+
+Public Function fnTableExists(sTablename As String) As Boolean
+ On Error GoTo Exit_Function
+ fnTableExists = False
+ If IsObject(CurrentDb.TableDefs(sTablename)) Then fnTableExists = True
+Exit_Function:
+End Function
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+</b>
+</font>
+<script type="text/javascript" src="analytics.js"></script>
+</body
+</html>
+

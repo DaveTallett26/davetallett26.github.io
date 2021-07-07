@@ -1,0 +1,826 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>VBA Code to create the Adventure Works database in Access 2010</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4"><a class="style2" href="email.html">Email</a></li>
+<li class="style4"><a class="style2" href="index.html">Home</a></li>
+</ul>
+<br/><br/>
+<div class="style62">VBA Code to create the Adventure Works database in Access 2010</div>
+<br/><br/>
+<font size=3><font face="arial">
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Option Compare Database
+
+    Sub instawdb()
+    '/*============================================================================
+    '
+    '  Creates the AdventureWorks 2008R2 OLTP sample database in Access 2010 using VBA
+    '
+    '  All data in this database is ficticious.
+    '
+    '  This is the CREATE TABLES module
+    '
+    '============================================================================*/
+    '
+    Dim sSqlSamplesDatabasePath As String
+    sSqlSamplesDatabasePath = "C:\AWOA\"
+    Dim sSqlSamplesSourceDataPath As String
+    sSqlSamplesSourceDataPath = "C:\AWOA\"
+    Dim sSQL As String
+
+    Open sSqlSamplesSourceDataPath & "instawdb.log" For Output As #1
+    Print #1, "***"
+    Print #1, "*** Started - " & Format(Now(), "dd/mm/yyyy hh:MM:ss");
+'
+'    -- ******************************************************
+'    -- Create tables
+'    -- ******************************************************
+'
+'GoTo labelCulture
+
+    sSQL = "create table [Address] (addressid integer, addressline1 char, addressline2 char, city char, stateprovinceid integer, postalcode char, spatiallocation char, rowguid char, modifieddate datetime);"
+    DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [AddressType](" & _
+        "[AddressTypeID] INTEGER NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[rowguid] CHAR NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL); " 'CONSTRAINT DEFAULT (GETDATE())
+    DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [AWBuildVersion](" & _
+        "[SystemInformationID] INTEGER NOT NULL, " & _
+        "[Database Version] CHAR NOT NULL, " & _
+        "[VersionDate] DATETIME NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL); "
+        DoCmd.RunSQL sSQL
+
+    sSQL = _
+        "CREATE TABLE [BillOfMaterials]( " & _
+        "[BillOfMaterialsID] INTEGER NOT NULL," & _
+        "[ProductAssemblyID] INTEGER," & _
+        "[ComponentID] INTEGER NOT NULL," & _
+        "[StartDate] DATETIME NOT NULL," & _
+        "[EndDate] DATETIME NULL," & _
+        "[UnitMeasureCode] CHAR NOT NULL," & _
+        "[BOMLevel] SMALLINT NOT NULL," & _
+        "[PerAssemblyQty] FLOAT NOT NULL," & _
+        "[ModifiedDate] DATETIME NOT NULL" & _
+        ");"
+        DoCmd.RunSQL sSQL
+
+    sSQL = _
+       "CREATE TABLE [BusinessEntity]( " & _
+        "[BusinessEntityID] INTEGER, " & _
+        "[rowguid] CHAR, " & _
+        "[ModifiedDate] DATETIME " & _
+        ");"
+        DoCmd.RunSQL sSQL
+
+    sSQL = _
+        "CREATE TABLE [BusinessEntityAddress]( " & _
+        "[BusinessEntityID] INTEGER," & _
+        "[AddressID] INTEGER," & _
+        "[AddressTypeID] INTEGER," & _
+        "[rowguid] CHAR," & _
+        "[ModifiedDate] DATETIME)"
+        DoCmd.RunSQL sSQL
+
+    sSQL = _
+        "CREATE TABLE [BusinessEntityContact]( " & _
+        "[BusinessEntityID] INTEGER, " & _
+        "[PersonID] INTEGER, " & _
+        "[ContactTypeID] INTEGER, " & _
+        "[rowguid] CHAR, " & _
+        "[ModifiedDate] DATETIME)"
+
+        DoCmd.RunSQL sSQL
+
+    sSQL = _
+        "CREATE TABLE [ContactType]( " & _
+        "[ContactTypeID] INTEGER, " & _
+        "[Name] CHAR, " & _
+        "[ModifiedDate] DATETIME)"
+
+        DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [CountryCurrency](" & _
+        "[CountryRegionCode] CHAR(2), " & _
+        "[CurrencyCode] CHAR(3), " & _
+        "[ModifiedDate] DATETIME);"
+    DoCmd.RunSQL sSQL
+
+    sSQL = _
+        "CREATE TABLE [CountryRegionCurrency]( " & _
+        "[CountryRegionCode] CHAR, " & _
+        "[CurrencyCode] CHAR, " & _
+        "[ModifiedDate] DATETIME)"
+
+        DoCmd.RunSQL sSQL
+
+    sSQL = _
+        "CREATE TABLE [CountryRegion]( " & _
+        "[CountryRegionCode] CHAR, " & _
+        "[Name] CHAR, " & _
+        "[ModifiedDate] DATETIME)"
+
+        DoCmd.RunSQL sSQL
+
+    sSQL = _
+        "CREATE TABLE [CreditCard]( " & _
+        "[CreditCardID] INTEGER, " & _
+        "[CardType] CHAR(50), " & _
+        "[CardNumber] CHAR(25), " & _
+        "[ExpMonth] INTEGER, " & _
+        "[ExpYear] INTEGER, " & _
+        "[ModifiedDate] DATETIME);"
+        DoCmd.RunSQL sSQL
+
+labelCulture:
+    sSQL = _
+        "CREATE TABLE [Culture]( " & _
+        "[CultureID] VARCHAR, " & _
+        "[Name] VARCHAR, " & _
+        "[ModifiedDate] DATETIME);"
+        DoCmd.RunSQL sSQL
+
+'GoTo labelEndSub
+
+    sSQL = _
+        "CREATE TABLE [Currency] ( " & _
+        "[CurrencyCode] VARCHAR, " & _
+        "[Name] VARCHAR, " & _
+        "[ModifiedDate] DATETIME);"
+        DoCmd.RunSQL sSQL
+
+    sSQL = _
+        "CREATE TABLE [CurrencyRate] ( " & _
+        "[CurrencyRateID] INTEGER, " & _
+        "[CurrencyRateDate] DATETIME, " & _
+        "[FromCurrencyCode] CHAR(3), " & _
+        "[ToCurrencyCode] CHAR(3), " & _
+        "[AverageRate] MONEY, " & _
+        "[EndOfDayRate] MONEY, " & _
+        "[ModifiedDate] DATETIME );"
+        DoCmd.RunSQL sSQL
+
+    sSQL = _
+        "CREATE TABLE [Customer] ( " & _
+        "[CustomerID] INTEGER, " & _
+        "[PersonID] INTEGER, " & _
+        "[StoreID] INTEGER, " & _
+        "[TerritoryID] INTEGER, " & _
+        "[AccountNumber] CHAR(10), " & _
+        "[rowguid] CHAR(36), " & _
+        "[ModifiedDate] DATETIME );"
+        DoCmd.RunSQL sSQL
+
+    sSQL = _
+        "CREATE TABLE [Department] ( " & _
+        "[DepartmentID] INTEGER, " & _
+        "[Name] CHAR, " & _
+        "[GroupName] CHAR, " & _
+        "[ModifiedDate] DATETIME );"
+        DoCmd.RunSQL sSQL
+
+    sSQL = _
+    "CREATE TABLE [Document]( " & _
+       "[DocumentNode] INTEGER NOT NULL, " & _
+       "[DocumentLevel] INTEGER, " & _
+       "[Title] VARCHAR NOT NULL, " & _
+       "[Owner] INTEGER NOT NULL, " & _
+       "[FolderFlag] BIT NOT NULL, " & _
+       "[FileName] VARCHAR NOT NULL, " & _
+       "[FileExtension] VARCHAR NOT NULL, " & _
+       "[Revision] CHAR(5)  NOT NULL, " & _
+       "[ChangeNumber] INTEGER NOT NULL, " & _
+       "[Status] INTEGER NOT NULL, " & _
+       "[DocumentSummary] VARCHAR NULL, " & _
+       "[Document] VARCHAR NULL, " & _
+       "[rowguid] CHAR(36) NOT NULL, " & _
+       "[ModifiedDate] DATETIME NOT NULL " & _
+        ");"
+
+        DoCmd.RunSQL sSQL
+
+    sSQL = _
+    "CREATE TABLE [EmailAddress]( " & _
+        "[BusinessEntityID] INTEGER NOT NULL, " & _
+        "[EmailAddressID] INTEGER NOT NULL, " & _
+        "[EmailAddress] VARCHAR(50) NULL, " & _
+        "[rowguid] CHAR(36) NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+        ");"
+        DoCmd.RunSQL sSQL
+
+    sSQL = _
+    "CREATE TABLE [Employee]( " & _
+        "[BusinessEntityID] INTEGER NOT NULL, " & _
+        "[NationalIDNumber] VARCHAR(15) NOT NULL, " & _
+        "[LoginID] VARCHAR(255) NOT NULL, " & _
+        "[OrganizationNode] VARCHAR NULL, " & _
+        "[OrganizationLevel] VARCHAR, " & _
+        "[JobTitle] VARCHAR(50) NOT NULL, " & _
+        "[BirthDate] DATETIME NOT NULL, " & _
+        "[MaritalStatus] CHAR(1) NOT NULL, " & _
+        "[Gender] CHAR(1) NOT NULL, " & _
+        "[HireDate] DATETIME NOT NULL, " & _
+        "[SalariedFlag] CHAR(1) NOT NULL, " & _
+        "[VacationHours] INTEGER NOT NULL, " & _
+        "[SickLeaveHours] INTEGER NOT NULL, " & _
+        "[CurrentFlag] CHAR(1) NOT NULL, " & _
+        "[rowguid] CHAR(36) NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+        ");"
+        DoCmd.RunSQL sSQL
+
+    sSQL = _
+    "CREATE TABLE [EmployeeDepartmentHistory]( " & _
+        "[BusinessEntityID] INTEGER NOT NULL, " & _
+        "[DepartmentID] INTEGER NOT NULL, " & _
+        "[ShiftID] INTEGER NOT NULL, " & _
+        "[StartDate] DATETIME NOT NULL, " & _
+        "[EndDate] DATETIME NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+        ");"
+        DoCmd.RunSQL sSQL
+
+    sSQL = _
+    "CREATE TABLE [EmployeePayHistory]( " & _
+        "[BusinessEntityID] INTEGER NOT NULL, " & _
+        "[RateChangeDate] DATETIME NOT NULL, " & _
+        "[Rate] MONEY NOT NULL, " & _
+        "[PayFrequency] INTEGER NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+        ");"
+        DoCmd.RunSQL sSQL
+
+
+    sSQL = "CREATE TABLE [Illustration]( " & _
+        "[IllustrationID] INTEGER NOT NULL, " & _
+        "[Diagram] MEMO NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+        ");"
+        DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [JobCandidate]( " & _
+        "[JobCandidateID] INTEGER NOT NULL, " & _
+        "[BusinessEntityID] INTEGER NULL, " & _
+        "[Resume] MEMO NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+        ");"
+        DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [Location]( " & _
+        "[LocationID] INTEGER NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[CostRate] MONEY NOT NULL, " & _
+        "[Availability] DOUBLE NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [Password]( " & _
+        "[BusinessEntityID] INTEGER NOT NULL, " & _
+        "[PasswordHash] VARCHAR(128) NOT NULL, " & _
+        "[PasswordSalt] VARCHAR(10) NOT NULL, " & _
+        "[rowguid] CHAR(36) NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [Person]( " & _
+        "[BusinessEntityID] INTEGER NOT NULL, " & _
+        "[PersonType] CHAR(2) NOT NULL, " & _
+        "[NameStyle] INTEGER NOT NULL, " & _
+        "[Title] VARCHAR(8) NULL, " & _
+        "[FirstName] CHAR NOT NULL, " & _
+        "[MiddleName] CHAR NULL, " & _
+        "[LastName] CHAR NOT NULL, " & _
+        "[Suffix] VARCHAR(10) NULL, " & _
+        "[EmailPromotion] INTEGER NOT NULL, " & _
+        "[AdditionalContactInfo] MEMO NULL, " & _
+        "[Demographics] MEMO NULL, " & _
+        "[rowguid] CHAR(36) NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [PersonCreditCard]( " & _
+        "[BusinessEntityID] INTEGER NOT NULL, " & _
+        "[CreditCardID] INTEGER NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+    sSQL = "CREATE TABLE [PersonPhone]( " & _
+        "[BusinessEntityID] INTEGER NOT NULL, " & _
+        "[PhoneNumber] CHAR NOT NULL, " & _
+        "[PhoneNumberTypeID] INTEGER NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+    sSQL = "CREATE TABLE [PhoneNumberType]( " & _
+        "[PhoneNumberTypeID] INTEGER NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [Product](         [ProductID] INTEGER NOT NULL, " & _
+        "[Name] CHAR NOT NULL,         [ProductNumber] VARCHAR(25) NOT NULL, " & _
+        "[MakeFlag] CHAR NOT NULL,         [FinishedGoodsFlag] CHAR NOT NULL, " & _
+        "[Color] VARCHAR(15) NULL,         [SafetyStockLevel] INTEGER NOT NULL, " & _
+        "[ReorderPoint] INTEGER NOT NULL,         [StandardCost] MONEY NOT NULL, " & _
+        "[ListPrice] MONEY NOT NULL,         [Size] VARCHAR(5) NULL, " & _
+        "[SizeUnitMeasureCode] CHAR(3) NULL,         [WeightUnitMeasureCode] CHAR(3) NULL, " & _
+        "[Weight] DOUBLE NULL,         [DaysToManufacture] INTEGER NOT NULL, " & _
+        "[ProductLine] CHAR(2) NULL,         [Class] CHAR(2) NULL, " & _
+        "[Style] CHAR(2) NULL,         [ProductSubcategoryID] INTEGER NULL, " & _
+        "[ProductModelID] INTEGER NULL,         [SellStartDate] DATETIME NOT NULL, " & _
+        "[SellEndDate] DATETIME NULL,         [DiscontinuedDate] DATETIME NULL, " & _
+        "[rowguid] CHAR(36) NOT NULL,         [ModifiedDate] DATETIME NOT NULL  );"
+
+
+  DoCmd.RunSQL sSQL
+
+
+    sSQL = "CREATE TABLE [ProductCategory]( " & _
+        "[ProductCategoryID] INTEGER NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[rowguid] CHAR(36) NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [ProductCostHistory]( " & _
+        "[ProductID] INTEGER NOT NULL, " & _
+        "[StartDate] DATETIME NOT NULL, " & _
+        "[EndDate] DATETIME NULL, " & _
+        "[StandardCost] MONEY NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [ProductDescription]( " & _
+        "[ProductDescriptionID] INTEGER NOT NULL, " & _
+        "[Description] VARCHAR(255) NOT NULL, " & _
+        "[rowguid] CHAR(36) NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+    sSQL = "CREATE TABLE [ProductDocument]( " & _
+        "[ProductID] INTEGER NOT NULL, " & _
+        "[DocumentNode] VARCHAR NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+
+  DoCmd.RunSQL sSQL
+
+
+    sSQL = "CREATE TABLE [ProductInventory]( " & _
+        "[ProductID] INTEGER NOT NULL, " & _
+        "[LocationID] INTEGER NOT NULL, " & _
+        "[Shelf] VARCHAR(10) NOT NULL, " & _
+        "[Bin] INTEGER NOT NULL, " & _
+        "[Quantity] INTEGER NOT NULL, " & _
+        "[rowguid] CHAR(36)  NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+    sSQL = "CREATE TABLE [ProductListPriceHistory]( " & _
+        "[ProductID] INTEGER NOT NULL, " & _
+        "[StartDate] DATETIME NOT NULL, " & _
+        "[EndDate] DATETIME NULL, " & _
+        "[ListPrice] MONEY NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [ProductModel]( " & _
+        "[ProductModelID] INTEGER NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[CatalogDescription] MEMO NULL, " & _
+        "[Instructions] MEMO NULL, " & _
+        "[rowguid] CHAR(36)  NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [ProductModelIllustration]( " & _
+        "[ProductModelID] INTEGER NOT NULL, " & _
+        "[IllustrationID] INTEGER NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+    sSQL = "CREATE TABLE [ProductModelProductDescriptionCulture]( " & _
+        "[ProductModelID] INTEGER NOT NULL, " & _
+        "[ProductDescriptionID] INTEGER NOT NULL, " & _
+        "[CultureID] CHAR(6) NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [ProductPhoto]( " & _
+        "[ProductPhotoID] INTEGER NOT NULL, " & _
+        "[ThumbNailPhoto] IMAGE NULL, " & _
+        "[ThumbnailPhotoFileName] VARCHAR(50) NULL, " & _
+        "[LargePhoto] IMAGE NULL, " & _
+        "[LargePhotoFileName] VARCHAR(50) NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [ProductProductPhoto]( " & _
+        "[ProductID] INTEGER NOT NULL, " & _
+        "[ProductPhotoID] INTEGER NOT NULL, " & _
+        "[Primary] CHAR NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [ProductReview]( " & _
+        "[ProductReviewID] INTEGER NOT NULL, " & _
+        "[ProductID] INTEGER NOT NULL, " & _
+        "[ReviewerName] CHAR NOT NULL, " & _
+        "[ReviewDate] DATETIME NOT NULL, " & _
+        "[EmailAddress] VARCHAR(50) NOT NULL, " & _
+        "[Rating] INTEGER NOT NULL, " & _
+        "[Comments] MEMO, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [ProductSubcategory]( " & _
+        "[ProductSubcategoryID] INTEGER NOT NULL, " & _
+        "[ProductCategoryID] INTEGER NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[rowguid] CHAR(36) NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+    sSQL = "CREATE TABLE [ProductVendor]( " & _
+        "[ProductID] INTEGER NOT NULL, " & _
+        "[BusinessEntityID] INTEGER NOT NULL, " & _
+        "[AverageLeadTime] INTEGER NOT NULL, " & _
+        "[StandardPrice] MONEY NOT NULL, " & _
+        "[LastReceiptCost] MONEY NULL, " & _
+        "[LastReceiptDate] DATETIME NULL, " & _
+        "[MinOrderQty] INTEGER NOT NULL, " & _
+        "[MaxOrderQty] INTEGER NOT NULL, " & _
+        "[OnOrderQty] INTEGER NULL, " & _
+        "[UnitMeasureCode] CHAR(3) NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+    sSQL = "CREATE TABLE [PurchaseOrderDetail]( " & _
+        "[PurchaseOrderID] INTEGER NOT NULL, " & _
+        "[PurchaseOrderDetailID] INTEGER NOT NULL, " & _
+        "[DueDate] DATETIME NOT NULL, " & _
+        "[OrderQty] INTEGER NOT NULL, " & _
+        "[ProductID] INTEGER NOT NULL, " & _
+        "[UnitPrice] MONEY NOT NULL, " & _
+        "[LineTotal] MONEY, " & _
+        "[ReceivedQty] DOUBLE NOT NULL, " & _
+        "[RejectedQty] DOUBLE NOT NULL, " & _
+        "[StockedQty] DOUBLE, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+    sSQL = "CREATE TABLE [PurchaseOrderHeader]( " & _
+        "[PurchaseOrderID] INTEGER NOT NULL, " & _
+        "[RevisionNumber] INTEGER NOT NULL, " & _
+        "[Status] INTEGER NOT NULL, " & _
+        "[EmployeeID] INTEGER NOT NULL, " & _
+        "[VendorID] INTEGER NOT NULL, " & _
+        "[ShipMethodID] INTEGER NOT NULL, " & _
+        "[OrderDate] DATETIME NOT NULL, " & _
+        "[ShipDate] DATETIME NULL, " & _
+        "[SubTotal] MONEY NOT NULL, " & _
+        "[TaxAmt] MONEY NOT NULL, " & _
+        "[Freight] MONEY NOT NULL, " & _
+        "[TotalDue] MONEY NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [SalesOrderDetail]( " & _
+        "[SalesOrderID] INTEGER NOT NULL, " & _
+        "[SalesOrderDetailID] INTEGER NOT NULL, " & _
+        "[CarrierTrackingNumber] VARCHAR(25) NULL, " & _
+        "[OrderQty] INTEGER NOT NULL, " & _
+        "[ProductID] INTEGER NOT NULL, " & _
+        "[SpecialOfferID] INTEGER NOT NULL, " & _
+        "[UnitPrice] MONEY NOT NULL, " & _
+        "[UnitPriceDiscount] MONEY NOT NULL, " & _
+        "[LineTotal] DOUBLE, " & _
+        "[rowguid] CHAR(36) NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [SalesOrderHeader](         [SalesOrderID] INTEGER NOT NULL, " & _
+        "[RevisionNumber] INTEGER NOT NULL,         [OrderDate] DATETIME NOT NULL, " & _
+        "[DueDate] DATETIME NOT NULL,         [ShipDate] DATETIME NULL, " & _
+        "[Status] INTEGER NOT NULL,         [OnlineOrderFlag] CHAR NOT NULL, " & _
+        "[SalesOrderNumber] VARCHAR(23),         [PurchaseOrderNumber] VARCHAR(25) NULL, " & _
+        "[AccountNumber] CHAR(30) NULL,         [CustomerID] INTEGER NOT NULL, " & _
+        "[SalesPersonID] INTEGER NULL,         [TerritoryID] INTEGER NULL, " & _
+        "[BillToAddressID] INTEGER NOT NULL,         [ShipToAddressID] INTEGER NOT NULL, " & _
+        "[ShipMethodID] INTEGER NOT NULL,         [CreditCardID] INTEGER NULL, " & _
+        "[CreditCardApprovalCode] VARCHAR(15) NULL,         [CurrencyRateID] INTEGER NULL, " & _
+        "[SubTotal] MONEY NOT NULL,         [TaxAmt] MONEY NOT NULL, " & _
+        "[Freight] MONEY NOT NULL,         [TotalDue] MONEY, " & _
+        "[Comment] VARCHAR(128) NULL,         [rowguid] CHAR(36) NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [SalesOrderHeaderSalesReason]( " & _
+        "[SalesOrderID] INTEGER NOT NULL, " & _
+        "[SalesReasonID] INTEGER NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [SalesPerson]( " & _
+        "[BusinessEntityID] INTEGER NOT NULL, " & _
+        "[TerritoryID] INTEGER NULL, " & _
+        "[SalesQuota] MONEY NULL, " & _
+        "[Bonus] MONEY NOT NULL, " & _
+        "[CommissionPct] MONEY NOT NULL, " & _
+        "[SalesYTD] MONEY NOT NULL, " & _
+        "[SalesLastYear] MONEY NOT NULL, " & _
+        "[rowguid] CHAR(36)  NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [SalesPersonQuotaHistory]( " & _
+        "[BusinessEntityID] INTEGER NOT NULL, " & _
+        "[QuotaDate] DATETIME NOT NULL, " & _
+        "[SalesQuota] MONEY NOT NULL, " & _
+        "[rowguid] CHAR(36)  NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [SalesReason]( " & _
+        "[SalesReasonID] INTEGER NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[ReasonType] CHAR NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+    sSQL = "CREATE TABLE [SalesTaxRate]( " & _
+        "[SalesTaxRateID] INTEGER NOT NULL, " & _
+        "[StateProvinceID] INTEGER NOT NULL, " & _
+        "[TaxType] INTEGER NOT NULL, " & _
+        "[TaxRate] MONEY NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[rowguid] CHAR(36) NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+    sSQL = "CREATE TABLE [SalesTerritory]( " & _
+        "[TerritoryID] INTEGER NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[CountryRegionCode] VARCHAR(3) NOT NULL, " & _
+        "[Group] VARCHAR(50) NOT NULL, " & _
+        "[SalesYTD] MONEY NOT NULL, " & _
+        "[SalesLastYear] MONEY NOT NULL, " & _
+        "[CostYTD] MONEY NOT NULL, " & _
+        "[CostLastYear] MONEY NOT NULL, " & _
+        "[rowguid] CHAR(36)  NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+    sSQL = "CREATE TABLE [SalesTerritoryHistory]( " & _
+        "[BusinessEntityID] INTEGER NOT NULL," & _
+        "[TerritoryID] INTEGER NOT NULL, " & _
+        "[StartDate] DATETIME NOT NULL, " & _
+        "[EndDate] DATETIME NULL, " & _
+        "[rowguid] CHAR(36)  NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+    sSQL = "CREATE TABLE [ScrapReason]( " & _
+        "[ScrapReasonID] INTEGER NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+
+    sSQL = "CREATE TABLE [Shift]( " & _
+        "[ShiftID] INTEGER NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[StartTime] DATETIME NOT NULL, " & _
+        "[EndTime] DATETIME NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+    sSQL = "CREATE TABLE [ShipMethod]( " & _
+        "[ShipMethodID] INTEGER NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[ShipBase] MONEY NOT NULL, " & _
+        "[ShipRate] MONEY NOT NULL, " & _
+        "[rowguid] CHAR(36) NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+
+    sSQL = "CREATE TABLE [ShoppingCartItem]( " & _
+        "[ShoppingCartItemID] INTEGER NOT NULL, " & _
+        "[ShoppingCartID] VARCHAR(50) NOT NULL, " & _
+        "[Quantity] INTEGER NOT NULL, " & _
+        "[ProductID] INTEGER NOT NULL, " & _
+        "[DateCreated] DATETIME NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+
+    sSQL = "CREATE TABLE [SpecialOffer]( " & _
+        "[SpecialOfferID] INTEGER NOT NULL, " & _
+        "[Description] VARCHAR(255) NOT NULL, " & _
+        "[DiscountPct] MONEY NOT NULL, " & _
+        "[Type] VARCHAR(50) NOT NULL, " & _
+        "[Category] VARCHAR(50) NOT NULL, " & _
+        "[StartDate] DATETIME NOT NULL, " & _
+        "[EndDate] DATETIME NOT NULL, " & _
+        "[MinQty] INTEGER NOT NULL, " & _
+        "[MaxQty] INTEGER NULL, " & _
+        "[rowguid] CHAR(36) NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+
+    sSQL = "CREATE TABLE [SpecialOfferProduct]( " & _
+        "[SpecialOfferID] INTEGER NOT NULL, " & _
+        "[ProductID] INTEGER NOT NULL, " & _
+        "[rowguid] CHAR(36)  NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+
+    sSQL = "CREATE TABLE [StateProvince]( " & _
+        "[StateProvinceID] INTEGER NOT NULL, " & _
+        "[StateProvinceCode] CHAR(3) NOT NULL, " & _
+        "[CountryRegionCode] VARCHAR(3) NOT NULL, " & _
+        "[IsOnlyStateProvinceFlag] CHAR NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[TerritoryID] INTEGER NOT NULL, " & _
+        "[rowguid] CHAR(36)  NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL" & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+
+    sSQL = "CREATE TABLE [Store]( " & _
+        "[BusinessEntityID] INTEGER NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[SalesPersonID] INTEGER NULL, " & _
+        "[Demographics] MEMO NULL, " & _
+        "[rowguid] CHAR(36) NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+
+    sSQL = "CREATE TABLE [TransactionHistory]( " & _
+        "[TransactionID] INTEGER NOT NULL, " & _
+        "[ProductID] INTEGER NOT NULL, " & _
+        "[ReferenceOrderID] INTEGER NOT NULL, " & _
+        "[ReferenceOrderLineID] INTEGER NOT NULL, " & _
+        "[TransactionDate] DATETIME NOT NULL, " & _
+        "[TransactionType] CHAR(1) NOT NULL, " & _
+        "[Quantity] INTEGER NOT NULL, " & _
+        "[ActualCost] MONEY NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+
+    sSQL = "CREATE TABLE [TransactionHistoryArchive]( " & _
+        "[TransactionID] INTEGER NOT NULL, " & _
+        "[ProductID] INTEGER NOT NULL, " & _
+        "[ReferenceOrderID] INTEGER NOT NULL, " & _
+        "[ReferenceOrderLineID] INTEGER NOT NULL, " & _
+        "[TransactionDate] DATETIME NOT NULL, " & _
+        "[TransactionType] CHAR(1) NOT NULL, " & _
+        "[Quantity] INTEGER NOT NULL, " & _
+        "[ActualCost] MONEY NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [UnitMeasure]( " & _
+        "[UnitMeasureCode] CHAR(3) NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+  ");"
+  DoCmd.RunSQL sSQL
+
+
+    sSQL = "CREATE TABLE [Vendor]( " & _
+        "[BusinessEntityID] INTEGER NOT NULL, " & _
+        "[AccountNumber] CHAR NOT NULL, " & _
+        "[Name] CHAR NOT NULL, " & _
+        "[CreditRating] INTEGER NOT NULL, " & _
+        "[PreferredVendorStatus] CHAR NOT NULL, " & _
+        "[ActiveFlag] CHAR NOT NULL, " & _
+        "[PurchasingWebServiceURL] MEMO NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+        ");"
+  DoCmd.RunSQL sSQL
+
+
+    sSQL = "CREATE TABLE [WorkOrder]( " & _
+        "[WorkOrderID] INTEGER NOT NULL, " & _
+        "[ProductID] INTEGER NOT NULL, " & _
+        "[OrderQty] INTEGER NOT NULL, " & _
+        "[StockedQty] INTEGER, " & _
+        "[ScrappedQty] INTEGER NOT NULL, " & _
+        "[StartDate] DATETIME NOT NULL, " & _
+        "[EndDate] DATETIME NULL, " & _
+        "[DueDate] DATETIME NOT NULL, " & _
+        "[ScrapReasonID] INTEGER NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+        ");"
+  DoCmd.RunSQL sSQL
+
+    sSQL = "CREATE TABLE [WorkOrderRouting]( " & _
+        "[WorkOrderID] INTEGER NOT NULL, " & _
+        "[ProductID] INTEGER NOT NULL, " & _
+        "[OperationSequence] INTEGER NOT NULL, " & _
+        "[LocationID] INTEGER NOT NULL, " & _
+        "[ScheduledStartDate] DATETIME NOT NULL, " & _
+        "[ScheduledEndDate] DATETIME NOT NULL, " & _
+        "[ActualStartDate] DATETIME NULL, " & _
+        "[ActualEndDate] DATETIME NULL, " & _
+        "[ActualResourceHrs] DOUBLE NULL, " & _
+        "[PlannedCost] MONEY NOT NULL, " & _
+        "[ActualCost] MONEY NULL, " & _
+        "[ModifiedDate] DATETIME NOT NULL " & _
+        ");"
+  DoCmd.RunSQL sSQL
+
+    Print #1, "*** Finished - " & Format(Now(), "dd/mm/yyyy hh:MM:ss");
+    Close #1
+
+labelEndSub:
+    End Sub
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+</b>
+</font>
+<script type="text/javascript" src="analytics.js"></script>
+</body
+</html>
+
