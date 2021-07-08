@@ -1,0 +1,359 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Simple Torch Android App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/><br/>Simple Torch Android App</div>
+
+<div class="style84">
+<br/><br/>
+This code is about the simplest thing you can program to do something useful on an Android phone. The app turns the back mounted flash light on and off. Nevertheless because of the proliferation of cameras everywhere on phones nowadays this has become more complicated and a new package manager has been written, CameraManager, to support phones with multiple cameras. This code is the simplest use of the new package.
+</div>
+<br/><br/>
+<div class="style62">
+Here it is on <a href="https://play.google.com/store/apps/details?id=net.gingercatwebdesign.dave.simpletorch">The Google Play Store</a>
+</div>
+<br/>
+<table width=100%>
+<td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+    
+    
+    AndroidManifest.xml
+    ===================
+    
+    
+    ^?xml version="1.0" encoding="utf-8"?>
+    ^manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="net.gingercatwebdesign.dave.simpletorch">
+
+    ^uses-permission android:name="android.permission.CAMERA"/>
+    ^uses-permission android:name="android.permission.FLASHLIGHT"/>
+
+    ^application
+        android:allowBackup="false"
+        android:icon="@mipmap/light"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        ^activity android:name=".MainActivity">
+            ^intent-filter>
+                ^action android:name="android.intent.action.MAIN" />
+                ^category android:name="android.intent.category.LAUNCHER" />
+            ^/intent-filter>
+        ^/activity>
+        ^activity android:label="@string/app_name" android:name=".AboutActivity"/>
+    ^/application>
+
+    ^/manifest>
+
+
+    AboutActivity.java
+    ==================
+
+    package net.gingercatwebdesign.dave.simpletorch;
+
+    import android.os.Bundle;
+    import android.support.v7.app.AppCompatActivity;
+
+    public class AboutActivity extends AppCompatActivity {
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.about);
+        }
+    }
+
+
+    MainActivity.java
+    ==================
+
+
+    package net.gingercatwebdesign.dave.simpletorch;
+    
+    import android.content.Context;
+    import android.content.Intent;
+    import android.content.pm.PackageManager;
+    import android.hardware.camera2.CameraAccessException;
+    import android.hardware.camera2.CameraManager;
+    import android.support.v7.app.AppCompatActivity;
+    import android.os.Bundle;
+    import android.view.Menu;
+    import android.view.MenuItem;
+    import android.view.View;
+    import android.widget.Toast;
+    
+    public class MainActivity extends AppCompatActivity {
+    
+        //public static Camera cam = null;
+        CameraManager mCameraManager;
+        String mCameraId;
+    
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+        }
+    
+        @Override
+        public boolean onCreateOptionsMenu(Menu menu) {
+            // Inflate the menu; this adds items to the action bar if it is present.
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+            return true;
+        }
+    
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            // Handle action bar item clicks here. The action bar will
+            // automatically handle clicks on the Home/Up button, so long
+            // as you specify a parent activity in AndroidManifest.xml.
+            int id = item.getItemId();
+    
+            //noinspection SimpSlifiableIfStatement
+            if (id == R.id.action_settings) {
+    
+                Intent myIntent = new Intent(MainActivity.this, AboutActivity.class);
+                MainActivity.this.startActivity(myIntent);
+    
+                return true;
+            }
+    
+            return super.onOptionsItemSelected(item);
+        }
+    
+        public void flashLightOn(View view)
+        {
+            mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+            try
+            {
+                assert mCameraManager != null;
+                mCameraId = mCameraManager.getCameraIdList()[0];
+            }
+            catch (CameraAccessException e)
+            {
+                e.printStackTrace();
+                Toast.makeText(getBaseContext(), "Exception flashLightOn()",
+                        Toast.LENGTH_SHORT).show();
+            }
+    
+            try
+            {
+                if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH))
+                {
+                    mCameraManager.setTorchMode(mCameraId, true);   //Turn ON
+                }
+            }
+            catch (CameraAccessException e)
+            {
+                e.printStackTrace();
+                Toast.makeText(getBaseContext(), "Exception flashLightOn()",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    
+        public void flashLightOff(View view)
+        {
+            mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+            try
+            {
+                assert mCameraManager != null;
+                mCameraId = mCameraManager.getCameraIdList()[0];
+            }
+            catch (CameraAccessException e)
+            {
+                e.printStackTrace();
+                Toast.makeText(getBaseContext(), "Exception flashLightOff()",
+                        Toast.LENGTH_SHORT).show();
+            }
+    
+            try
+            {
+                if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH))
+                {
+                    mCameraManager.setTorchMode(mCameraId, false);   //Turn OFF
+                }
+            }
+            catch (CameraAccessException e)
+            {
+                e.printStackTrace();
+                Toast.makeText(getBaseContext(), "Exception flashLightOff()",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        /*
+         * Switch the torch on.
+         */
+        public void switchTorchOn(View v) {
+            flashLightOn(v);
+            Toast.makeText(MainActivity.this,"Torch is ON", Toast.LENGTH_LONG).show();
+        }
+        /*
+         * Switch the torch off.
+         */
+        public void switchTorchOff(View v) {
+            flashLightOff(v);
+            Toast.makeText(MainActivity.this,"Torch is OFF", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    About.xml
+    =========
+
+
+    ^?xml version="1.0" encoding="utf-8"?>
+    ^android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    
+        ^LinearLayout
+            android:id="@+id/screenLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+    
+            ^TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="@string/about_simple_torch"
+                android:textColor="#616161"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+    
+            ^TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="@string/version"
+                android:textColor="#616161"
+                android:textSize="14sp" />
+    
+            ^TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="@string/simple_torch_is_a_torch_application"
+                android:textColor="#616161"
+                android:textSize="14sp" />
+    
+            ^TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="@string/by_dave_tallett"
+                android:textColor="#616161"
+                android:textSize="14sp" />
+    
+            ^TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="@string/email_dave_gingercatwebdesign_net"
+                android:textColor="#616161"
+                android:textSize="14sp" />
+    
+            ^TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="@string/all_rights_reserved"
+                android:textColor="#616161"
+                android:textSize="14sp" />
+    
+            ^TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="@string/please_rate_our_app_on_the_play_store"
+                android:textColor="#616161"
+                android:textSize="14sp" />
+        ^/LinearLayout>
+    ^/android.support.constraint.ConstraintLayout>
+    
+
+    activity_main.xml
+    =================
+
+
+    ^?xml version="1.0" encoding="utf-8"?>
+    
+    ^!-- Layout for the simple torch. -->
+    ^RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+    
+        ^LinearLayout
+            android:id="@+id/screenLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+    
+            ^!-- top button to switch the torch on -->
+            ^Button
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:layout_marginTop="48dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginBottom="8dp"
+                android:onClick="switchTorchOn"
+                android:text="@string/switch_torch_on" />
+    
+            ^Button
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:layout_marginTop="48dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginBottom="8dp"
+                android:onClick="switchTorchOff"
+                android:text="@string/switch_torch_off" />
+    
+        ^/LinearLayout>
+    
+    ^/RelativeLayout>
+    
+</pre>
+</td>
+<td width=25%>
+</td>
+</table>
+
+.
+<br/><br/>
+</body>
+</html>
