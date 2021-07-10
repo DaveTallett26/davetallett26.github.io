@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Hello World in Perl</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/><br/>Hello World in Perl</div>
+<div class="style84">
+<br/><br/>
+Here is the Hello World program for Perl on my MacBook. This is simpler in one way in that the Perl interpreter comes with Mac OS X withput the need to download Xcode, an SDK or interpreter. However it runs within Terminal and so to do anything useful straight onto the Mac screen without using Cocoa (the OS X forms package) would be a lot of work - but watch this space! The code below is really two programs the second part <a href="http://www.comp.leeds.ac.uk/Perl/filehandling.html">outputs to a file</a> so it does a little more than the simple Hello World. The hash character denotes a comment line.
+<br/><br/>
+<pre>
+#!/usr/bin/perl
+#print "Hello World\n";
+#enter the hash character using alt-3 on your Mac keyboard
+
+$file = "a.txt";		# Name the file
+open(INFO, ">$file");		# Open the file
+print INFO "Hello World\n";
+close(INFO);			# Close the file
+
+</pre>
+Open a Terminal window and type in the program using the Nano text editor.
+<br/>Start the editor with the command nano (!)
+<br/><br/>
+Enter the command <b>chmod +x hello.pl</b> to give to operating system permission to execute the file.
+
+
+<br/><br/>
+Execute the program with the command <b>./hello.pl</b> in the Terminal window
+<br/><br/>
+<a href="http://www.macinstruct.com/node/437">Macinstruct - Getting started with Perl on Mac OS X</a>
+<br/><br/>
+Tags - Apple MacBook Pro (13 inch, Mid 2010), OS X Yosemite Version 10.10.1, Perl, Hello World, Macinstruct,
+</div>
+<script type="text/javascript" src="analytics.js"></script>
+</body>
+</html>
