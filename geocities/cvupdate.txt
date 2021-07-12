@@ -1,0 +1,77 @@
+Martin Tallett          CV Update - 10th November 2000
+
+Available               1st February 2001
+
+E-mail                  martintallett@hotmail.com
+
+CV Updates              http://www.martintallett.com
+
+Mobile & Voicemail      07958 525446
+
+Preferred Work Areas    UK Europe
+
+I have worked at all levels from business analyst to programmer on manufacturing, banking and distribution systems for clients in the Midlands, City of London and France. My recent experience consists of analysis and programming using Microsoft Access, VBA, and VB6 and I am a Microsoft Certified Professional on Windows 98. I also have 15 years experience as a contractor using Powerhouse, COBOL and BASIC on VMS.
+
+Recent Career Summary
+
+Dates                   1st November to date
+Client                  De La Rue Currency
+Job Title               Analyst programmer
+Platform                VMS Powerhouse COBOL
+Application Area        Manufacturing
+Project Description     Maintenance and development for De La Rue's banknote manufacturing system
+
+Dates                   29th August to 6th October 2000
+Client                  Amerada Hess
+Job Title               Troubleshooter
+Platform                Microsoft Access 97 Visual BASIC 6
+Application Area        Utilities deregulation
+Project Description     Taken on to support a failing, mission critical Microsoft Access system, 			it was backed out and reverted to an existing "organically grown" Visual
+			BASIC system.
+
+Dates                   10th April 2000 to 18th August 2000
+Client                  Barclays Premier
+Job Title               Tester and programmer
+Platform                Microsoft Access 97 VBA Windows NT4
+Application Area        Financial Services Retail Banking
+Project Description     Testing of a sales reporting and targeting system for Barclays Premier. 
+
+Dates                   1st December 1999 to March 31st
+Client                  Claremont Capital
+Job Title               Business analyst and programmer
+Platform                Access 2000 
+Application Area        Financial
+Project Description     Development of the Claremont Materials Finance system. 
+
+Dates                   24th May 1999 to 26th November 1999
+Client                  Michelin
+Job Title               Analyst Programmer
+Platform                Access 97 VB5 VMS Powerhouse RMS Rdb 
+Application Area        Financial
+Project Description     Member of a team of three providing support for Michelin financial
+			systems.
+
+Dates                   6th April 1998 to 21st May 1999
+Client                  Softlab
+Job Title               Senior Analyst
+Platform                VMS COBOL Powerhouse RMS
+Application Area        Manufacturing
+Project Description     Member of a team of ten providing support and maintenance for Rover 
+			Build Control Systems to ISO9000 standards.
+
+Dates                   6th May 1997 to 3rd April 1998
+Client                  BMG Distribution Ltd
+Job Title               Helpdesk Analyst and Programmer
+Platform                Data General AOS/VS COBOL INFOS
+                        Data General UNIX Powerhouse Interbase 
+Application Area        Distribution EDI Helpdesk
+Project Description     Member of a team of ten providing support and development for BMG's
+			order processing and distribution systems.
+
+Dates                   28th October 1996 to 2nd May 1997
+Client                  N M Rothschild & Sons
+Job Title               Support Programmer
+Platform                VMS COBOL RDB DBMS TDMS Powerhouse
+Application Area        Merchant Banking
+Project Description     Member of a team of four providing support and maintenance for
+			Rothschild's systems.

@@ -1,0 +1,36 @@
+<HTML>
+<HEAD>
+</HEAD>
+<BODY>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function valid(form) {
+  var field = form.age;  
+  var userAge = parseInt(field.value);   
+  if (!userAge) {
+    alert("You must indicate your age.");
+    return false;
+  } else if (userAge >= 18) {  
+      alert("Thank your for your resume.");  
+      return true;
+    } else {
+        alert("You are only " + userAge + ". Try again when you are 18."); 
+        field.focus();
+        field.select();
+        return false;
+      }
+}
+// --> 
+</SCRIPT>
+
+<FORM METHOD="POST"
+      ACTION="mailto:you@yourdomain.com"
+      ENCTYPE="text/plain"
+      onSubmit="return valid(this)">
+Your age:<BR><INPUT TYPE="text" NAME="age" SIZE="2"><BR>
+Desired Job:<BR><INPUT TYPE="text" NAME="job" SIZE="40"><BR>
+Resume:<BR><TEXTAREA NAME="resume" COLS="40" ROWS="5"></TEXTAREA><BR>
+<INPUT TYPE="submit" VALUE="Send Resume">
+</FORM>
+</BODY>
+</HTML>
