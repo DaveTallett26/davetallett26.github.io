@@ -1,0 +1,200 @@
+Dates                   10th April 2000 to 18th August 2000
+Client                  Barclays Premier
+Job Title               Test Team Leader
+Platform                Microsoft Access 97 DAO 3.5 VBA Windows NT4
+Application Area        Financial Services
+Project Description     Testing of a sales reporting and targeting system for Barclays Premier.
+
+Dates                   1st December 1999 to March 31st
+Client                  Claremont Capital
+Job Title               Analyst Programmer
+Platform                Access 2000 
+Application Area        Financial
+Project Description     Specification and development of the Claremont Materials Finance system.
+
+Dates                   24th May 1999 to 26th November 1999
+Client                  Michelin
+Job Title               Analyst Programmer
+Platform                Access 97 VB5 VMS Powerhouse RMS Rdb 
+Application Area        Financial
+Project Description     Member of a team of three providing support for Michelin financial systems
+
+Dates                   6th April 1998 to 21st May 1999
+Client                  Softlab
+Job Title               Analyst Programmer
+Platform                VMS COBOL Powerhouse RMS
+Application Area        Manufacturing
+Project Description     Member of a team of ten providing support and maintenance for Rover 
+			Build Control Systems to ISO9000 standards.
+
+Dates                   6th May 1997 to 3rd April 1998
+Client                  BMG Distribution Ltd
+Job Title               Analyst Programmer
+Platform                Data General AOS/VS COBOL INFOS
+                        Data General UNIX Powerhouse Interbase 
+Application Area        Distribution EDI Helpdesk
+Project Description     Member of a team of ten providing support and development for BMG's
+			order processing and distribution systems.
+
+Dates                   28th October 1996 to 2nd May 1997
+Client                  N M Rothschild & Sons
+Job Title               Analyst Programmer
+Platform                VMS COBOL RDB DBMS TDMS Powerhouse
+Application Area        Banking
+Project Description     Member of a team of four providing support and maintenance for
+			Rothschild's systems.
+
+Dates                   1st July 1994 to 25th October 1996
+Client                  AT&T lstel
+Job Title               Analyst Programmer
+Platform                VAX VMS Powerhouse RMS COBOL
+Application Area        Manufacturing
+Project Description     Providing support and maintenance for Rover Build Control
+                                                        Systems to TICKIT/ISO90001/BS5750 standards
+
+Dates                   1st July 1991 to 1st July 1994
+Client                  Potterton Myson Ltd
+Job Title               Analyst Programmer
+Platform                VAX VMS Powerhouse Rdb, InQuizitive, SERVASURE package,
+                                                      Microsoft Visual BASIC
+Application Areas       Service, Sales Order Processing
+Project Description     Providing support and maintenance for a Service System and
+                        development on a Sales Order Processing system
+
+Dates                   4th September 1990 to 7th June 1991
+Client                  National Rivers Authority - Thames Region
+Job Title               Business Systems Analyst
+Application Areas       Computer Aided Design, Mathematical Modelling, Mapping,
+                        River Maintenance Planning & Control
+Project Description     Member of the IT Group providing project management.
+                                                       Led the introduction of a PC Clipper system.
+
+Dates                   11th February 1990 to 27th July 1990
+Client                  Devonport Management Ltd
+Job Title               System Manager
+Platform                VAX VMS ACMS & general system management
+Project Description     Member of a team of twelve providing systems
+                        management for over 40 VAXes at Devonport Dockyards
+ 
+Dates                   January to February 1990
+Client                  4th Dimension Systems
+Job Title               Programmer
+Platform                VAX VMS BASIC RMS
+Project Description     Programming work on a tour booking system for Trafalgar Tours
+
+Dates                   November 1989 to January 1990
+Client                  Computer Systems Development Ltd
+Job Title               Systems Analyst
+Platform                VAX VMS Powerhouse COBOL RMS
+Project Description     Extensions to the IMPCON Manufacturing Package to provide a
+                        plant maintenance module for the Icelandic Aluminum Company.
+
+Dates                   August 1989 to September 1989
+Client                  GEC Plessey Telecommunications
+Job Title               Systems Analyst
+Analysis Method         SSADM
+Platform                VAX VMS ACMS RDB
+Project Description     Stage 4 and 5 work for an Engineering & Manufacturing Database
+                        system for all GPT components
+
+Dates                   November 1988 to July 1989
+Client                  Istel
+Job Title               Business Analyst
+Analysis Method         TIP Plan, TIP Define
+Platform                VAX VMS Powerhouse BASIC RMS
+Project Description     Business Proposal and Functional Specification for a Vehicle
+                        Inventory Management System for Land Rover. Carried out full
+                                                     logical and physical database design.
+
+Dates                   April 1988 to October 1988
+Client                  DEC
+Job Title               ACMS & TDMS Consultant and Analyst Programmer
+Analysis Method         Gane & Sarson
+Platform                VAX VMS ACMS Pascal TDMS Rdb MMS CMS
+Project Description     Design and programming for the DEC European Personnel
+                                                     System
+
+Dates                   January 1988 to April 1988
+Client                  Centrefile
+Job Title               Analyst Programmer
+Platform                VAX VMS BASIC ACMS TDMS RMS Datatrieve
+Project Description     Programming work on the Household Insurance System for 
+                                                      Nat West Insurance Services Bristol
+
+Dates                   April 1987 to December 1987
+Client                  Istel
+Job Title               Programmer
+Platform                VAX VMS BASIC ACMS TDMS Unifile RMS Datatrieve
+                                  VAX Powerhouse QUICK QUIZ
+Analysis Method         Jackson
+Application Areas       Manufacturing
+Project Description     Manufacturing Order Control System for Land Rover
+ 
+Dates                   January 1987 to March 1987
+Client                  Plessey
+Job Title               Analyst Programmer
+Platform                VAX VMS BASIC FORTRAN
+Application Area        Project Management
+Project Description     Manplan Project Management Package. Conversion of an existing
+                                                     single user suite of programs to multi user operation.
+
+Dates                   November 1986 to December 1986
+Client                  lstel
+Job Title               Analyst Programmer
+Platform                VAX VMS Powerhouse BASIC RMS
+Application Area        Manufacturing
+Project Description     Paint Shop Production Sequencing System for Land Rover
+
+Dates                   January 1986 to October 1986
+Client                  lstel
+Job Title               Analyst Programmer
+Platform                VAX VMS BASIC ACMS CDD TDMS Unifile
+Application Area        Manufacturing
+Project Description     Manufacturing Order Control System for Land Rover
+
+Dates                   October 1985 to December 1985
+Client                  lstel
+Job Title               Analyst Programmer
+Platform                VAX VMS BASIC TDMS
+Application Area        Manufacturing
+Project Description     Paint Shop Management System for Land Rover
+
+Dates                   May 1985 to October 1985
+Client                  lstel
+Job Title               Analyst
+Platform                PDP 11 RSX IIM MACRO 11
+Application Area        Manufacturing
+Project Description     Engine Handling System Rationalization for Land Rover
+
+Dates                   February 1985 to April 1985
+Client                  ICI
+Job Title               Analyst Programmer
+Platform                PDP 11 Micro RSX 11 FORTRAN 77
+Application Area        Chemical Industry
+Project Description     Process Plant Monitoring System
+
+Dates                   November 1984 to January 1985
+Client                  ICI
+Job Title               Analyst Programmer
+Platform                PDP II RSXIIM FORTRAN IV
+                        Husky Portable Computer BASIC
+Application Area        Chemical Industry
+Project Description     Communications Package for downloading programs from PDP to
+                                  Husky Data Entry programs for the Husky
+ 
+Dates                   July 1984 to November 1984
+Client                  Techno Electronics
+Job Title               Data Communications Manager
+Platform                Micro PDP II Micro RSX II FORTRAN 77
+                        Allen Bradley PLCs
+Application Area        Manufacturing Automation
+Project Description     Automation Contract for H J Heinz
+
+Dates                   January 1982 to June 1984
+Client                  INCO Alloy Products
+Job Title               Computer Services Manager
+Platform                IBM 370 PDP 11 HP 9826 Apple 11
+                        FORTRAN IV HP BASIC Microsoft BASIC & FORTRAN 
+Application Area        Heavy Engineering
+Project Description     Provision of Computer Services to
+                        INCO Alloy Products Technology Centre
