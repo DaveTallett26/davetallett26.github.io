@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!-- created by wapprofit.com WML Editor 1.0 -->
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN" "http://www.wapforum.org/DTD/wml_1.1.xml">
+<wml>
+<head><meta http-equiv="Cache-Control" content="no-cache"/></head>
+<card id= "main" title = "Hello">
+<p>
+Welcome to Martin Tallett's WAP site.
+<br>
+Coming soon...
+</p>
+</card>
+</wml>

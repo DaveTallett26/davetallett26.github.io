@@ -1,0 +1,18 @@
+"Mr R P Hill","Abraxas","47 Eastcastle St","London","W1N 7PF",,
+"Tim Skelding","Apex Computer Recruitment","Cheapside House","138 Cheapside","London","EC2V 6BJ",
+"Ben Bramley-Brett","Best International","1 Bedford Avenue","London","WC1B 3AS",,
+"D Peet","Compucare","Oak Lane","Twickenham","TW1 3PE",,
+"Managing Director","Computer Futures","2 Fouberts Place","Regent Street","London","W1V 2AD",
+"Managing Director","Progressive Computer Recruitment","St Georges House","5 St Georges Road","London","SW19 4DR",
+"Mike Smith","Huxley Associates","1 America House","2 America Square","London","EC3N 2AH",
+"Jason Leggat","Pathway IT Resourcing","2nd Floor","Old Inn House","2 Carshalton Road","Sutton","SM1 4RA"
+"Mick Buttle","Computer People","33 Regent Street","London","SW1Y 4NB",,
+"Managing Director ","DP Connect","Gerrard House","2 Homesdale Road","Bromley ","Kent","BR2 9QJ"
+"P Anthony","Elan","Elan House","5-11 Fetter Lane","London","EC4A 1QX",
+"D Treacher","Harvey Nash","13 Bruton Street","London","W1X 7AH",,
+"Managing Director","Modis Consulting","Project House","110-113 Tottenham Court Road","PO Box 1BX","London","W1A 1BX"
+"Lindsey Campbell","Manpower plc","International House","66 Chiltern Street","London","W1M 1PR",
+"Matthew Perrett","Monroe Systems","75 Bell Street ","Reigate ","Surrey","RH2 7AN",
+"Managing Director","MSB International","Hanover Place","8 Ravensbourne Road","Bromley ","Kent","BR1 1HP"
+"Steve Sanderson","Parity Resources","Orchard Fields","Maylands Avenue","Hemel Hempstead","Herts","HP2 7DF"
+"L Duncan","QA Myriad","10 Apex Court","Woodlands Lane","Almondsbury","Bristol","BS32 4JT"
