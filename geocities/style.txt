@@ -1,0 +1,36 @@
+<html><head>
+<title>Martin Tallett - My Style Template</title>
+</head>
+<body bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#0000ff">
+<table width=600><td width=150 align=left valign=top>
+<a href="yoir35.html">
+<img src="Mechanic1.gif" BORDER=0 WIDTH=60 HEIGHT=60 ALT="How can I help you ?"></A><br></td>
+<td width=450 valign=top>
+<center>
+<br>
+<font size=4>
+<font face="arial black">
+My Style Template
+</font>
+</center>
+</td>
+</table>
+<TABLE width="100%" bgcolor="#FFB300" border=0 CELLPADDING=5 CELLSPACING=0 width-100%>
+<tr>
+<td>
+<div align="right">
+<a href="next.html">next</a> | 
+<a href="back.html">back</a> | 
+<a href="construct.html">join</a> | 
+<a href="ir35.html">IR35</a> | 
+<a href="yoir35.html">mini yahoo</a> | 
+<a href="mailto:martin_tallett@hotmail.com">feedback</a>
+</div>
+</td>
+</tr>
+</table>
+<br>
+The Department of Trade and Industry is sponsoring the Information Society Initiative designed to acheive the laudable aim of making the UK the hub of e-commerce in Europe. The web site provides some email addresses so that we can alert them to the effect of IR35.
+</body>
+</html> 
+
