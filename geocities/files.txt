@@ -1,0 +1,33 @@
+SOHO~1   HTM           521  03/01/00  20:58 soho.html
+SPEECH~1 HTM         1,044  07/04/99   0:00 speech.html
+STAND~1  HTM        16,348  21/11/99  12:30 stand.html
+STATUE~1 HTM           586  21/11/99  12:30 statue.html
+STOCK~1  HTM         2,284  21/11/99  12:30 stock.html
+STYLE~1  HTM         1,232  14/07/99  15:30 style.html
+SUNTZU~1 HTM           465  16/11/99  14:40 suntzu.html
+TALLET~1 HTM         1,068  21/11/99  12:29 tallett.html
+TALLIN~1 HTM         1,607  21/11/99  12:29 tallinks.html
+TEXT~1   HTM           177  06/12/99  12:51 text.html
+
+TT9908~1 HTM         3,201  13/08/99  14:47 tt990811.html
+VERSIO~1 HTM           459  21/11/99  12:30 version.html
+WALLAC~1 HTM         2,624  21/11/99  12:26 wallace.html
+WEBCV0~1 HTM         1,750  21/11/99  12:30 webcv01.html
+WEBCV0~2 HTM         1,590  21/11/99  12:30 webcv02.html
+WEBCV0~3 HTM         1,682  21/11/99  12:30 webcv03.html
+WEBCV0~4 HTM         1,879  21/11/99  12:30 webcv04.html
+WEBCV0~5 HTM         2,045  21/11/99  12:30 webcv05.html
+WEBCV0~6 HTM         1,935  21/11/99  12:30 webcv06.html
+WEBCV0~7 HTM         1,968  21/11/99  12:30 webcv07.html
+WEBCV0~8 HTM         2,048  21/11/99  12:30 webcv08.html
+WELCOM~1 HTM         3,014  21/11/99  12:26 welcome.html
+WHATSN~1 HTM         1,917  21/11/99  12:26 whatsnew.html
+WINPOP~1 HTM         1,108  15/09/98   0:00 winpop.html
+XMASCA~1 HTM           175  03/01/00  20:58 xmascard.html
+YAHOO~1  HTM         6,028  03/01/00  20:58 yahoo.html
+YO10~1   HTM         2,902  03/01/00  20:58 yo10.html
+YOGEOC~1 HTM         4,379  03/01/00  20:58 yogeocities.html
+YOIR35~1 HTM         6,943  03/01/00  20:58 yoir35.html
+ZIP~1    HTM           177  09/12/99  21:31 zip.html
+       149 file(s)        537,395 bytes
+         0 dir(s)          851.36 MB free

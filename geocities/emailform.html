@@ -1,0 +1,63 @@
+<html><head><title>Martin Tallett - Email Form</title></head>
+<body bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#0000ff">
+<!-- http://www.javascriptguide.com/forms.html#valid -->
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function validateform() 
+{
+	FormObj = document.EmailForm;
+	if (FormObj.email.value == "")
+	{
+		alert("You have not entered your email address");
+		return false;
+	}
+	else
+	{
+		if (FormObj.message.value == "")
+		{
+			alert("You have not entered your message");
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+}
+// --> 
+</SCRIPT>
+<TABLE width="100%" bgcolor="#FFB300" border=0 CELLPADDING=5 CELLSPACING=0 width-100%><tr><td><div align="right">
+<font face=arial>
+<font size=2>
+<b><a href="index.html">home</a> | 
+<a href="yahoo.html">mini yahoo</a> | 
+<a href="help.html">Help!</a>
+</b>
+</font>
+</div>
+</td>
+</tr>
+</table><table width=100%><td width=25% align=left valign=top>
+<a href="index.html">
+<img src="Mechanic1.gif" BORDER=0 WIDTH=60 HEIGHT=60 ALT="How can I help you ?"></A><br></td>
+<td width=50% valign=top>
+<center>
+<br>
+<font size=3><font face="arial"><b>Email Form</b></font>
+</center>
+</td>
+<td width=25%></td>
+</table>
+<font face=arial>
+<font size=2>
+<b>
+<center>
+<FORM NAME="EmailForm" METHOD="POST" ACTION="mailto:martin_tallett@yahoo.com" ENCTYPE="text/plain" onSubmit="return validateform()">
+Your Email Address:<BR><BR>
+<INPUT TYPE="text" NAME="email" SIZE="50"><BR><BR>
+Your Message:<BR><BR>
+<TEXTAREA NAME="message" COLS="45" ROWS="5"></TEXTAREA><BR><BR>
+<INPUT TYPE="submit" VALUE="Send Message">
+</FORM>
+</BODY>
+</HTML>
