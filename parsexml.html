@@ -33,10 +33,12 @@
 <pre>
 Public Function fParseXML(sTag01 As String, sTag02 As String, sToParse As String) As String
  Dim pStart As Integer
+ Dim pEnd As Integer
  Dim pLen As Integer
  If InStr(1, sToParse, sTag01) Then
   pStart = InStr(1, sToParse, sTag01) + Len(sTag01)
-  pLen = InStr(1, sToParse, sTag02) - pStart
+  pEnd = InStr(pStart, sToParse, sTag02)
+  pLen = pEnd - pStart
   fParseXML = Mid(sToParse, pStart, pLen)
   Exit Function
  Else
@@ -44,6 +46,16 @@ Public Function fParseXML(sTag01 As String, sTag02 As String, sToParse As String
   Exit Function
  End If
 End Function
+
+'Usage:
+
+Sub TestIt()
+ ' "F) GND G) FL240)"
+ MsgBox "**" + fParseXML("F)", "G)", "F) GND G) FL240)") + "**"
+ MsgBox "**" + fParseXML("G)", ")", "F) GND G) FL240)") + "**"
+End Sub
+
+
 </pre>
 </font>
 </font>
