@@ -41,8 +41,14 @@ Dim sFilename3 As String
 Dim sLockFilename As String
 
 sFilename1 = fnFileDialog
-sFilename2 = Mid(sFilename1, 1, InStr(1, sFilename1, ".") - 1) & " Compact " & Format(Now(), "yyyymmddHHMMSS") & Mid(sFilename1, InStr(1, sFilename1, "."), Len(sFilename1))
-sFilename3 = Mid(sFilename1, 1, InStr(1, sFilename1, ".") - 1) & " Old " & Format(Now(), "yyyymmddHHMMSS") & Mid(sFilename1, InStr(1, sFilename1, "."), Len(sFilename1))
+sFilename2 = Mid(sFilename1, 1, InStr(1, sFilename1, ".") - 1) & _
+    " Compact " & Format(Now(), "yyyymmddHHMMSS") & _
+    Mid(sFilename1, InStr(1, sFilename1, "."), Len(sFilename1))
+
+sFilename3 = Mid(sFilename1, 1, InStr(1, sFilename1, ".") - 1) & _
+    " Old " & Format(Now(), "yyyymmddHHMMSS") & _
+    Mid(sFilename1, InStr(1, sFilename1, "."), Len(sFilename1))
+
 sLockFilename = Mid(sFilename1, 1, InStr(1, sFilename1, ".") - 1) & ".laccdb"
 'MsgBox sLockFilename
 'MsgBox sFilename1
@@ -50,19 +56,24 @@ sLockFilename = Mid(sFilename1, 1, InStr(1, sFilename1, ".") - 1) & ".laccdb"
 'MsgBox sFilename3
     
 If fnFileExists(sLockFilename) Then
- MsgBox "This database is being used - exiting function - this database will NOT be compacted " & vbCr & vbLf & vbCr & vbLf & sFilename1
+ MsgBox "This database is being used - exiting function - this database will NOT be compacted " _
+    & vbCr & vbLf & vbCr & vbLf & sFilename1
  Exit Function
 Else
- MsgBox "This database will be compacted " & vbCr & vbLf & vbCr & vbLf & sFilename1
+ MsgBox "This database will be compacted " & _
+    vbCr & vbLf & vbCr & vbLf & sFilename1
 End If
 
  Application.CompactRepair sFilename1, sFilename2
  Name sFilename1 As sFilename3    ' Rename file .accdb to Old  .accdb
  Name sFilename2 As sFilename1    ' Rename file Compact .accdb to .accdb
 
- MsgBox "Database has been compacted." & vbCr & vbLf & vbCr & vbLf & "Please buy me a coffee! " & vbCr & vbLf & vbCr & vbLf & "https://ko-fi.com/dave2988504"
+ MsgBox "Database has been compacted." & _
+    vbCr & vbLf & vbCr & vbLf & "Please buy me a coffee! " & _
+    vbCr & vbLf & vbCr & vbLf & "https://ko-fi.com/dave2988504"
 
 error_handler:
+' simple error handler it either works or it doesn't
 End Function
 
 Public Function fnFileDialog() As String
@@ -93,7 +104,6 @@ Public Function fnFileDialog() As String
    End With
  
 End Function
-
 </pre>
 </td>
 <td width=25%>
