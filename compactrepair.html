@@ -21,89 +21,89 @@
 <font size=3>
 <font face="arial">
 <pre>
- Option Compare Database
- Option Explicit
+     Option Compare Database
+     Option Explicit
 
- Sub sbRunMe()
-  Call fnCompactRepairDatabase
- End Sub
+     Sub sbRunMe()
+      Call fnCompactRepairDatabase
+     End Sub
 
- Public Function fnFileExists(ByVal path_ As String) As Boolean
- ' https://stackoverflow.com/questions/44434199/access-vba-check-if-file-exists
-     fnFileExists = (Len(Dir(path_)) > 0)
- End Function
+     Public Function fnFileExists(ByVal path_ As String) As Boolean
+     ' https://stackoverflow.com/questions/44434199/access-vba-check-if-file-exists
+         fnFileExists = (Len(Dir(path_)) > 0)
+     End Function
 
- Public Function fnCompactRepairDatabase()
- On Error GoTo error_handler
- Dim sFilename1 As String
- Dim sFilename2 As String
- Dim sFilename3 As String
- Dim sLockFilename As String
+     Public Function fnCompactRepairDatabase()
+     On Error GoTo error_handler
+     Dim sFilename1 As String
+     Dim sFilename2 As String
+     Dim sFilename3 As String
+     Dim sLockFilename As String
 
- sFilename1 = fnFileDialog
- sFilename2 = Mid(sFilename1, 1, InStr(1, sFilename1, ".") - 1) & _
-     " Compact " & Format(Now(), "yyyymmddHHMMSS") & _
-     Mid(sFilename1, InStr(1, sFilename1, "."), Len(sFilename1))
+     sFilename1 = fnFileDialog
+     sFilename2 = Mid(sFilename1, 1, InStr(1, sFilename1, ".") - 1) & _
+         " Compact " & Format(Now(), "yyyymmddHHMMSS") & _
+         Mid(sFilename1, InStr(1, sFilename1, "."), Len(sFilename1))
 
- sFilename3 = Mid(sFilename1, 1, InStr(1, sFilename1, ".") - 1) & _
-     " Old " & Format(Now(), "yyyymmddHHMMSS") & _
-     Mid(sFilename1, InStr(1, sFilename1, "."), Len(sFilename1))
+     sFilename3 = Mid(sFilename1, 1, InStr(1, sFilename1, ".") - 1) & _
+         " Old " & Format(Now(), "yyyymmddHHMMSS") & _
+         Mid(sFilename1, InStr(1, sFilename1, "."), Len(sFilename1))
 
- sLockFilename = Mid(sFilename1, 1, InStr(1, sFilename1, ".") - 1) & ".laccdb"
- 'MsgBox sLockFilename
- 'MsgBox sFilename1
- 'MsgBox sFilename2
- 'MsgBox sFilename3
+     sLockFilename = Mid(sFilename1, 1, InStr(1, sFilename1, ".") - 1) & ".laccdb"
+     'MsgBox sLockFilename
+     'MsgBox sFilename1
+     'MsgBox sFilename2
+     'MsgBox sFilename3
     
- If fnFileExists(sLockFilename) Then
-  MsgBox "This database is being used - exiting function - this database will NOT be compacted " _
-     & vbCr & vbLf & vbCr & vbLf & sFilename1
-  Exit Function
- Else
-  MsgBox "This database will be compacted " & _
-     vbCr & vbLf & vbCr & vbLf & sFilename1
- End If
+     If fnFileExists(sLockFilename) Then
+      MsgBox "This database is being used - exiting function - this database will NOT be compacted " _
+         & vbCr & vbLf & vbCr & vbLf & sFilename1
+      Exit Function
+     Else
+      MsgBox "This database will be compacted " & _
+         vbCr & vbLf & vbCr & vbLf & sFilename1
+     End If
 
-  Application.CompactRepair sFilename1, sFilename2
-  Name sFilename1 As sFilename3    ' Rename file .accdb to Old  .accdb
-  Name sFilename2 As sFilename1    ' Rename file Compact .accdb to .accdb
+      Application.CompactRepair sFilename1, sFilename2
+      Name sFilename1 As sFilename3    ' Rename file .accdb to Old  .accdb
+      Name sFilename2 As sFilename1    ' Rename file Compact .accdb to .accdb
 
-  MsgBox "Database has been compacted." & _
-     vbCr & vbLf & vbCr & vbLf & "Please buy me a coffee! " & _
-     vbCr & vbLf & vbCr & vbLf & "https://ko-fi.com/dave2988504"
+      MsgBox "Database has been compacted." & _
+         vbCr & vbLf & vbCr & vbLf & "Please buy me a coffee! " & _
+         vbCr & vbLf & vbCr & vbLf & "https://ko-fi.com/dave2988504"
 
- error_handler:
- ' simple error handler it either works or it doesn't
- End Function
+     error_handler:
+     ' simple error handler it either works or it doesn't
+     End Function
 
- Public Function fnFileDialog() As String
+     Public Function fnFileDialog() As String
  
-  ' https://docs.microsoft.com/en-us/office/vba/api/office.msofiledialogtype
-  Dim msoFileDialogFilePicker As Long
-  msoFileDialogFilePicker = 3
-  Dim objFileDialog As Object
-  Set objFileDialog = Application.FileDialog(msoFileDialogFilePicker)
-  Dim varFile As Variant
+      ' https://docs.microsoft.com/en-us/office/vba/api/office.msofiledialogtype
+      Dim msoFileDialogFilePicker As Long
+      msoFileDialogFilePicker = 3
+      Dim objFileDialog As Object
+      Set objFileDialog = Application.FileDialog(msoFileDialogFilePicker)
+      Dim varFile As Variant
  
-    With objFileDialog
-       .allowmultiselect = False
-       .Title = "Please select an Access database"
-       .Filters.Clear
-       .Filters.Add "Access Databases", "*.accdb"
-       ' Show the dialog box. If the .Show method returns True, the
-       ' user picked at least one file. If the .Show method returns
-       ' False, the user clicked Cancel.
-       If .show = True Then
-          'Loop through each file selected and add it to our list box.
-          For Each varFile In .selecteditems
-             fnFileDialog = varFile
-          Next
-       Else
-          fnFileDialog = ""
-       End If
-    End With
+        With objFileDialog
+           .allowmultiselect = False
+           .Title = "Please select an Access database"
+           .Filters.Clear
+           .Filters.Add "Access Databases", "*.accdb"
+           ' Show the dialog box. If the .Show method returns True, the
+           ' user picked at least one file. If the .Show method returns
+           ' False, the user clicked Cancel.
+           If .show = True Then
+              'Loop through each file selected and add it to our list box.
+              For Each varFile In .selecteditems
+                 fnFileDialog = varFile
+              Next
+           Else
+              fnFileDialog = ""
+           End If
+        End With
  
- End Function
+     End Function
 </pre>
 </td>
 <td width=25%>
