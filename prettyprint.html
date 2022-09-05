@@ -2,25 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-72474361-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'UA-72474361-1');
-</script>
 <title>Pretty Print VBA</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <ul class="style1">
-<!--
-<li class="style4">
-<a class="style2" href="email.html">Email &nbsp;</a>
-</li>
--->
 <li class="style4">
 <a class="style2" href="index.html">&nbsp; Home</a>
 </li>
@@ -42,6 +29,11 @@ Access 97, Microsoft, function, Excel 2010, Excel 2007, Excel 2002, Excel XP, Ex
 <font size=3>
 <font face="arial">
 <pre>
+Sub RunMe()
+    Call fnPrettyPrint("C:\Users\david\Desktop\a.txt")
+End Sub
+ 
+ 
 Public Function fnPrettyPrint(sFilename As String)
     ' Avoid reserved words in your labels eg Next_Line
     Dim sOutFilename As String
@@ -147,9 +139,18 @@ Public Function fnPrettyPrint(sFilename As String)
             Print #11, Spc(i); Trim(sInputLine)
             GoTo Label_Next_Line
         End If
+        If InStr(1, Trim(sInputLine), "With") = 1 Then
+            Print #11, Spc(i); Trim(sInputLine)
+            i = i + 4
+            GoTo Label_Next_Line
+        End If
+        If InStr(1, Trim(sInputLine), "End With") = 1 Then
+            i = i - 4
+            Print #11, Spc(i); Trim(sInputLine)
+            GoTo Label_Next_Line
+        End If
         If InStr(1, Trim(sInputLine), "If") = 1 Then
-            If Mid(Trim(sInputLine), Len(Trim(sInputLine)) - 3, 4) = _
-                "Then" Then
+            If Mid(Trim(sInputLine), Len(Trim(sInputLine)) - 3, 4) = "Then" Then
                 Print #11, Spc(i); Trim(sInputLine)
                 i = i + 4
                 GoTo Label_Next_Line
@@ -174,7 +175,7 @@ Label_Next_Line:
 fnPrettyPrint_Exit_Routine:
     Close #10
     Close #11
-    Exit Function 
+    Exit Function
 End Function
 </pre>
 </font>
