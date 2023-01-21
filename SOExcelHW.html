@@ -148,6 +148,35 @@
   OK
   <br/>
   <br/>
+  =====
+  <br/>
+  Simple using the Macro Recorder
+<br/>
+  Blank Workbook
+<br/>
+  Developer > Record Macro > OK
+<br/>
+  Enter "Hello" in A1
+<br/>
+  Enter "World" in A2
+<br/>
+  Developer > Stop Recording
+<br/>
+  Developer > Visual Basic > Expand + Modules
+<br/>
+  double click Module1
+<br/>
+  macro generated
+<br/>
+  <pre>
+  Sub Macro1()
+    ActiveCell.FormulaR1C1 = "Hello"
+    Range("A2").Select
+    ActiveCell.FormulaR1C1 = "World"
+    Range("A3").Select
+  End Sub
+  </pre>
+<br/><br/>
   </div>
   <br/>
   <br/>
