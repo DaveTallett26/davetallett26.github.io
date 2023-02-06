@@ -1,0 +1,53 @@
+Sub sbMakeMarkdown()
+' https://daringfireball.net/projects/markdown/syntax#html
+Dim iRow, iColumn, iHeader As Long
+Dim iRows, iColumns As Long
+Dim sFilename, sValue As String
+iRows = 4
+iColumns = 3
+sFilename = "C:\Users\david\Desktop\" & Format(Now(), "yyyymmddHHMMSS") & ".txt" '".html"
+Open sFilename For Output As #1
+
+' | ShipperID | CompanyName | Phone |
+' | --- | --- | --- |
+' | 1   | Speedy Express | (503) 555-9831 |
+' | 2   | United Package | (503) 555-3199 |
+' | 3   | Federal Shipping | (503) 555-9931 |
+
+For iRow = 1 To iRows
+ If iRow = 2 Then
+  For iHeader = 1 To iColumns
+   Print #1, " | ---";
+  Next iHeader
+  Print #1, " | "
+ End If
+ For iColumn = 1 To iColumns
+  sValue = Cells(iRow, iColumn)
+  Print #1, " | "; sValue;
+ Next iColumn
+ Print #1, " | "
+Next iRow
+
+Close #1
+
+' MsgBox Raise Error"
+' Err.Raise 2424
+'' Should never get here
+' MsgBox "!!!"
+
+Command32_Click_Exit_Routine:
+ Exit Sub
+
+Command32_Click_Error_Routine:
+ Open sFilename For Output As #1
+ Print #1, "Dave - Error Log - 28th February 2023"
+ Print #1, Now()
+' Print #1, Me.Name
+ Print #1, Err.Number
+ Print #1, Err.Description
+' Print #1, CurrentDb.Name
+ Print #1, "**END**"
+ Close #1
+ Resume Command32_Click_Exit_Routine
+
+End Sub
