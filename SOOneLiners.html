@@ -21,6 +21,9 @@
 Copy and paste values
 <b><pre> Range("B1:B3").Select: Selection.Copy: Range("P1").Select: Selection.PasteSpecial Paste:=xlPasteValues: Application.CutCopyMode = False: Range("A1").Select</pre></b>
 <br/><br/>
+Delay subroutine
+<b><pre> Sub sbDelay(delay As Long): Dim i As Long: For i = 1 To delay: DoEvents: Next i: End Sub</pre></b>
+<br/><br/>
 </div>
 <br/>
 <br/>
