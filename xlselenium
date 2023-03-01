@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Excel VBA to login to Wordpress using Selenium</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>Excel VBA to login to Wordpress using Selenium</div>
+<br/><br/>
+<table width=100%>
+<tr><td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+Option Explicit
+
+Private Sub Login()
+    Dim driver As ChromeDriver
+    Set driver = New ChromeDriver
+    ' this works using either edge or Chrome
+    Call driver.Start("edge", "https://wordpress.com/")
+'    Call driver.Start("Chrome", "https://wordpress.com/")
+    driver.get ("/wp-login.php")
+    driver.Window.Maximize
+    sbDelay (100000)
+    driver.FindElementByClass("cookie-banner__accept-all-button").Click
+    sbDelay (100000)
+    driver.FindElementById("usernameOrEmail").Clear
+    driver.FindElementById("usernameOrEmail").SendKeys "your username or email"
+    sbDelay (100000)
+    driver.FindElementByClass("button").Click 'Continue
+    sbDelay (100000)
+    driver.FindElementById("password").Clear
+    driver.FindElementById("password").SendKeys "your password"
+    sbDelay (100000)
+    driver.FindElementByClass("button").Click 'Continue
+    sbDelay (1000000)
+    driver.Quit
+End Sub
+
+Sub sbDelay(delay As Long): Dim i As Long: For i = 1 To delay:  DoEvents: Next i: End Sub 'old skool delay
+</pre>
+
+I used the VBA type library that Microsoft support
+
+https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
+
+I used MS Edge - the Selenium version must match the version of edge that you have installed.
+
+Edge Version 110.0.1587.57
+
+You will need to browse to the type library for your machine either 32 or 64 bit.
+
+Tools > References > Selenium Type Library (Selenium64.tlb)
+
+</font>
+</font>
+</td>
+<td width=25%>
+</td>
+</tr>
+</table>
+</body>
+</html>
