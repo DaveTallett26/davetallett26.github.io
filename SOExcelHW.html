@@ -201,4 +201,21 @@
   </div>
   <br/>
   <br/>
+Call Excel from Python
+<pre>
+import time
+import win32com.client
+xl=win32com.client.Dispatch("Excel.Application")
+xl.Workbooks.Open(Filename=r"C:\Users\david\Desktop\xl_HW.xlsm",ReadOnly=1)
+xl.Application.Run("sbHelloWorld")
+xl.Workbooks(1).Close(SaveChanges=0)
+xl.Application.Quit()
+xl=0
+time.sleep(10)
+</pre>
+Windows 22H2 Build 22621.1194 64 bit - Python 3.11.2 - Microsoft® Excel® for Microsoft 365 MSO (Version 2302 Build 16.0.16130.20186) 64-bit
+<br/>
+I needed python -m pip install pywin32 for the win32com.client  
+<br/>
+<br/>
 .
