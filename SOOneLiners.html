@@ -28,6 +28,9 @@ Excel VBA Selenium Edge verification
 <b><pre> Sub sbBing(): Dim wd As New WebDriver: wd.Start "edge", "https://www.bing.com": wd.Get "/": sbDelay (200000):End Sub
 </pre></b>
 <br/><br/>
+Print to File subroutine
+<b><pre> Sub sbPrint(sText As String): Open "C:\tmp\z-" & Format(Now(), "HHMMSS") & ".txt" For Output As #1: Print #1, sText: Close #1: End Sub</pre></b>
+<br/><br/>
 </div>
 <br/>
 <br/>
