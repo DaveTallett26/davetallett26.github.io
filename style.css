@@ -1,8 +1,8 @@
   .style1 {float:right;width:100%;padding:0;margin:0;list-style-type:none;background-color:#ffb300;}
   .style2 {float:right;width:6em;text-decoration:none;color:black;background-color:#ffb300;padding:0.2em 0.6em;border-left:4px solid white;font-family:Arial;font-size:14px;font-weight:bold;text-align:center;}
   .a:hover {background-color:#ffffff;}
-  .style3 {float:right;width:6em;text-decoration:none;}
-  .style4 {display:inline;}
+  .style3 {float: right; width: 6em; text-decoration: none;}
+  .style4 {display: inline;}
   .style6 {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; margin-left: 15%; margin-right: 15%; text-align:center;}
   .style7 {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px; text-align:center;}
   .style8 {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px; text-align:center; font-style:italic;}
@@ -16,5 +16,6 @@
   .style81 {font-family: Arial; font-size: 12px; margin-left: 4%; margin-right: 4%; text-align:left;}
   .style83 {text-align: center;}
   .style82 {font-family: Arial; text-align: center;}
-  .style84 {font-family: Arial; margin-left: auto; margin-right: auto; width: 80%; text-align:left;}
-  .style94 {font-family: Arial; margin-left: auto; margin-right: auto; width: 80%; text-align:center;color:white;background-color:black;}
+  .style84 {font-family: Arial; margin-left: auto; margin-right: auto; width: 80%; text-align: left;}
+  .style94 {font-family: Arial; margin-left: auto; margin-right: auto; width: 80%; text-align: center; color: white; background-color: black;}
+  .style99 {font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold; margin-left: 15%; margin-right: 15%; text-align: center; color: white; background-color: black;}
