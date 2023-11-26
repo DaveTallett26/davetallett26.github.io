@@ -24,19 +24,14 @@
 <font face="arial">
 <pre>
 Option Explicit
+
 Sub sbMakeMarkdown()
  ' https://daringfireball.net/projects/markdown/syntax#html
  ' https://stackoverflow.com/questions/72806674/how-copy-text-from-vba-to-windows-clipbaord/72857101#comment134719963_72857101
  ' https://stackoverflow.com/questions/76528307/how-to-transfer-data-from-table-to-another-in-2-different-worksheets
-
- ' | ShipperID | CompanyName | Phone |
- ' | --- | --- | --- |
- ' | 1   | Speedy Express | (503) 555-9831 |
- ' | 2   | United Package | (503) 555-3199 |
- ' | 3   | Federal Shipping | (503) 555-9931 |
-
+ ' https://learn.microsoft.com/en-us/office/vba/api/excel.range.text
  Dim iRows, iColumns, iRow, iColumn, iHeader As Long
- Dim sValue, sMarkdown As String
+ Dim sValue, sMarkdown, sText As String
  Dim rSelectedRange As Range
  Set rSelectedRange = Application.Selection
  iColumns = rSelectedRange.Columns.Count
@@ -50,8 +45,8 @@ Sub sbMakeMarkdown()
    sMarkdown = sMarkdown & " | " & vbCrLf
   End If
   For iColumn = 1 To iColumns
-   sValue = Cells(iRow, iColumn)
-   sMarkdown = sMarkdown & " | " & sValue
+   sText = Cells(iRow, iColumn).Text
+   sMarkdown = sMarkdown & " | " & sText
   Next iColumn
   sMarkdown = sMarkdown & " | " & vbCrLf
  Next iRow
