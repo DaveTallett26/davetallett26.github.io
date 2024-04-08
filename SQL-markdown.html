@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>T-SQL to make Markdown table</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>T-SQL to make Markdown table</div>
+<br/><br/>
+<table width=100%>
+<tr><td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+USE [TestMD]
+GO
+/****** Object:  StoredProcedure [dbo].[Select2MD]    Script Date: 27/03/2024 07:50:32 ******/
+SET ANSI_DEFAULTS ON
+GO
+ALTER PROCEDURE [dbo].[Select2MD]
+/*
+Author: Tomaz Kastrun and David Tallett
+Date: 26.Mar.2024
+Description: Turns result set of selected table into Markdown suitable for use on StackOverflow
+Usage:
+        EXEC dbo.select2MD
+                @table_name = 'TestForMD'
+               ,@schema_name = 'dbo'
+
+        DECLARE @text NVARCHAR(100)
+        SET @text = 'This is line 1.' + CHAR(13) + 'This is line 2.'
+        SELECT @text
+
+stackoverflow.com/questions/31057/how-to-insert-a-line-break-in-a-sql-server-varchar-nvarchar-string
+
+Tools > Options > Query Results > SQL Server > Results to Grid > Retain CR/LF on copy or save
+SQL Server Management Studio                        19.3.4.0
+
+ToDO:
+*/    @table_name VARCHAR(200)
+     ,@schema_name VARCHAR(20)
+AS 
+BEGIN
+        SET NOCOUNT ON;
+    -- get the columns of the table
+        SELECT 
+            c.Column_name
+            ,c.Ordinal_position
+            ,c.is_nullable
+            ,c.Data_Type
+        
+        INTO  #temp
+        
+        FROM INFORMATION_SCHEMA.TABLES AS  t
+        JOIN INFORMATION_SCHEMA.COLUMNS AS c 
+        ON t.table_name = c.table_name
+        AND t.table_schema = c.table_schema
+        AND t.table_Catalog = c.table_Catalog
+        WHERE
+        t.table_type = 'BASE TABLE'
+        AND t.Table_name = @table_name
+        AND t.table_schema = @schema_name
+
+            DECLARE @MD NVARCHAR(MAX)
+
+            -- header | name | name2 | name3 | name4 | name5 | name6 
+            DECLARE @header VARCHAR(MAX)
+            SELECT @header = COALESCE(@header + ' | ','') + column_name 
+            FROM #temp
+            ORDER BY Ordinal_position ASC
+            SELECT @header = ' | ' + @header + ' | '
+
+            -- delimiter | --- | --- | --- | --- | --- | --- 
+            DECLARE @nof_columns INT = (SELECT MAX(Ordinal_position) FROM #temp)
+            DECLARE @firstLine NVARCHAR(MAX) = (SELECT  REPLICATE('| --- ',@nof_columns) + '|')  
+            SET @MD = @header + CHAR(13) + CHAR(10) + CHAR(32) + @firstLine + CHAR(13) + CHAR(10)
+
+            -- body
+            DECLARE @body_sql NVARCHAR(MAX)
+            SET @body_sql = 'SELECT
+            ''| '' + CAST(' 
+            DECLARE @i INT = 1
+            WHILE @i <= @nof_columns
+            BEGIN
+                DECLARE @w VARCHAR(1000) =  (SELECT column_name FROM #temp WHERE Ordinal_position = @i)
+                    SET @body_sql = @body_sql + @w + ' AS VARCHAR(MAX))+ '' | '' + CAST( '
+                SET @i = @i + 1
+            END
+            SET @body_sql  = (SELECT SUBSTRING(@body_sql,1, LEN(@body_sql)-8))
+            SET @body_sql = @body_sql + ' FROM ' + @table_name
+
+            DECLARE @bodyTable TABLE(MD VARCHAR(MAX))
+            INSERT INTO @BodyTable
+            EXEC sp_executesql @body_sql
+
+            DECLARE @body2 NVARCHAR(MAX)
+            SELECT @body2 = COALESCE(@body2 + ' ', ' ') + MD + CHAR(13) + CHAR(10) 
+            FROM @bodyTable
+            SET @MD = @MD + @body2
+          
+            SELECT @MD
+END;
+</pre>
+</font>
+</font>
+</td>
+<td width=25%>
+</td>
+</tr>
+</table>
+</body>
+</html>
