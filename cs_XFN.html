@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Get Excel column name</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>Get Excel column name</div>
+<br/><br/>
+<table width=100%>
+<tr><td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+
+using System;
+
+namespace Method
+{
+
+    class Program 
+    {  
+ 
+// method declaration
+        public string fncGetABC(int iNumber)
+        {
+            if (iNumber < 0)
+            {
+				Console.WriteLine("{0} is less than 0", iNumber);
+				Console.ReadLine();
+                                return " ";
+            }
+            else if (iNumber > 26)
+            {
+				Console.WriteLine("{0} is greater than 26", iNumber);
+				Console.ReadLine();
+                                return " ";
+            }
+            else
+            {
+                string sAlpha = "Z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z";
+                string[] aAlpha = sAlpha.Split(' ');
+		Console.WriteLine("{0} is greater than 26", iNumber);
+		Console.WriteLine(sAlpha);
+		Console.ReadLine();
+                return aAlpha[iNumber];
+            }
+        }
+
+	public static void Main(string[] args) 
+        {
+            // create class object 
+            Program p1 = new Program();
+
+            //call method 
+            Console.WriteLine("14");
+            Console.WriteLine(p1.GetExcelColumnName(16384));
+            Console.ReadLine();
+        }
+
+	private string GetExcelColumnName(int columnNumber)
+	{
+	    string columnName = "";
+
+	    while (columnNumber > 0)
+	    {
+        	int modulo = (columnNumber - 1) % 26;
+	        columnName = Convert.ToChar('A' + modulo) + columnName;
+        	columnNumber = (columnNumber - modulo) / 26;
+	    } 
+
+	    return columnName;
+	}
+    }
+}
+
+</pre>
+</font>
+</font>
+</td>
+<td width=25%>
+</td>
+</tr>
+</table>
+</body>
+</html>
