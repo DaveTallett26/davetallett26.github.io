@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Using the Roslyn C# compiler on Windows</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>Using the Roslyn C# compiler on Windows</div>
+<br/><br/>
+<table width=100%>
+<tr><td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
+
+https://stackoverflow.com/questions/553143/compiling-executing-a-c-sharp-source-file-in-command-prompt/553155#comment137953830_553155
+
+In 2024 the steps are - 
+
+download .NET 4.8.1 and install it - 
+
+at the command line use C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /t:exe /out:cs_HelloWorld.exe cs_HelloWorld.cs
+
+here is the source code for my Hello World program
+
+// Hello World! program
+namespace HelloWorld
+{
+    class Hello {         
+        static void Main(string[] args)
+        {
+            System.Console.WriteLine("Hello World!");
+            System.Console.ReadKey(true);
+        }
+    }
+}
+
+</pre>
+</font>
+</font>
+</td>
+<td width=25%>
+</td>
+</tr>
+</table>
+</body>
+</html>
