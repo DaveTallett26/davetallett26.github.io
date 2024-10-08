@@ -1,0 +1,42 @@
+Option Explicit
+
+Sub MoveItems()
+ Dim myInbox As Outlook.folder
+ Dim mySubfolder As Outlook.folder
+ Dim myItems As Outlook.Items
+ Dim myItem As Outlook.MailItem
+ Dim olkstore As Outlook.Store
+ Dim olkRoot As Outlook.folder
+    For Each olkstore In Outlook.Session.Stores
+        If olkstore.DisplayName = "davidtallett29@gmail.com" Then
+            Set olkRoot = olkstore.GetRootFolder
+        End If
+    Next
+ Set myInbox = olkRoot.folders.Item("Inbox")
+ Set myItems = myInbox.Items
+ Set mySubfolder = myInbox.folders("Newsletters")
+' Set myItem = myItems.Find("[SenderName] = 'Everyone Active'")
+' Set myItem = myItems.Find("[SenderName] = 'Haaretz'")
+' Set myItem = myItems.Find("[SenderName] = 'Jet2holidays'")
+' Set myItem = myItems.Find("[SenderName] = 'Mumsnet Daily'")
+' Set myItem = myItems.Find("[SenderName] = 'Aston Villa'")
+' Set myItem = myItems.Find("[SenderName] = 'webuyanycar'")
+' Set myItem = myItems.Find("[SenderName] = 'Royal Mail'")
+' Set myItem = myItems.Find("[SenderName] = 'E.ON Next'")
+' Set myItem = myItems.Find("[SenderEmailAddress] = 'agea@noticias.clarin.com'")
+' Set myItem = myItems.Find("[SenderName] = 'Aston Villa Women'")
+' Set myItem = myItems.Find("[SenderName] = 'Costa Coffee'")
+' Set myItem = myItems.Find("[SenderName] = 'Rightmove Property Alerts'")
+' Set myItem = myItems.Find("[SenderName] = 'The Church of England Birmingham'")
+'' Set myItem = myItems.Find("[SenderName] = 'parkrun'")
+' Set myItem = myItems.Find("[SenderEmailAddress] = 'noreply@parkrun.com'")
+' Set myItem = myItems.Find("[SenderName] = 'Barclays'")
+' Set myItem = myItems.Find("[SenderName] = 'Rightmove Research'")
+' Set myItem = myItems.Find("[SenderName] = 'LinkedIn'")
+' Set myItem = myItems.Find("[SenderName] = 'Central Co-op'")
+ Set myItem = myItems.Find("[SenderEmailAddress] = 'elpais@novedades.elpais.com'")
+ While TypeName(myItem) <> "Nothing"
+  myItem.Move mySubfolder
+  Set myItem = myItems.FindNext
+ Wend
+End Sub
