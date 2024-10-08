@@ -1,3 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title>Excel VBA to move emails to subfolder in New Outlook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<ul class="style1">
+<li class="style4">
+<a class="style2" href="email.html">Email</a>
+</li>
+<li class="style4">
+<a class="style2" href="index.html">Home</a>
+</li>
+</ul>
+<div class="style62"><br/><br/>Excel VBA to move emails to subfolder in New Outlook</div>
+<br/><br/>
+<table width=100%>
+<tr><td width=25% align=left valign=top></td>
+<td width=50% valign=top bgcolor="#cccccc">
+<font size=3>
+<font face="arial">
+<pre>
 Option Explicit
 
 Sub MoveItems()
@@ -15,28 +40,21 @@ Sub MoveItems()
  Set myInbox = olkRoot.folders.Item("Inbox")
  Set myItems = myInbox.Items
  Set mySubfolder = myInbox.folders("Newsletters")
-' Set myItem = myItems.Find("[SenderName] = 'Everyone Active'")
-' Set myItem = myItems.Find("[SenderName] = 'Haaretz'")
-' Set myItem = myItems.Find("[SenderName] = 'Jet2holidays'")
-' Set myItem = myItems.Find("[SenderName] = 'Mumsnet Daily'")
-' Set myItem = myItems.Find("[SenderName] = 'Aston Villa'")
-' Set myItem = myItems.Find("[SenderName] = 'webuyanycar'")
 ' Set myItem = myItems.Find("[SenderName] = 'Royal Mail'")
-' Set myItem = myItems.Find("[SenderName] = 'E.ON Next'")
-' Set myItem = myItems.Find("[SenderEmailAddress] = 'agea@noticias.clarin.com'")
-' Set myItem = myItems.Find("[SenderName] = 'Aston Villa Women'")
-' Set myItem = myItems.Find("[SenderName] = 'Costa Coffee'")
-' Set myItem = myItems.Find("[SenderName] = 'Rightmove Property Alerts'")
-' Set myItem = myItems.Find("[SenderName] = 'The Church of England Birmingham'")
-'' Set myItem = myItems.Find("[SenderName] = 'parkrun'")
-' Set myItem = myItems.Find("[SenderEmailAddress] = 'noreply@parkrun.com'")
-' Set myItem = myItems.Find("[SenderName] = 'Barclays'")
-' Set myItem = myItems.Find("[SenderName] = 'Rightmove Research'")
-' Set myItem = myItems.Find("[SenderName] = 'LinkedIn'")
-' Set myItem = myItems.Find("[SenderName] = 'Central Co-op'")
- Set myItem = myItems.Find("[SenderEmailAddress] = 'elpais@novedades.elpais.com'")
+ Set myItem = myItems.Find("[SenderEmailAddress] = 'agea@noticias.clarin.com'")
  While TypeName(myItem) <> "Nothing"
   myItem.Move mySubfolder
   Set myItem = myItems.FindNext
  Wend
 End Sub
+</pre>
+</font>
+</font>
+</td>
+<td width=25%>
+</td>
+</tr>
+</table>
+</body>
+</html>
+
