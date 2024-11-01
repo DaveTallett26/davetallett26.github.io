@@ -25,7 +25,12 @@
 <pre>
 Option Explicit
 
-Sub MoveItems()
+Sub sbUsage()
+ Dim iRow As Long
+ Dim iRows As Long
+ Dim iCol As Long
+ Dim iItem As Long
+ Dim iItems As Long
  Dim myInbox As Outlook.folder
  Dim mySubfolder As Outlook.folder
  Dim myItems As Outlook.Items
@@ -37,15 +42,44 @@ Sub MoveItems()
             Set olkRoot = olkstore.GetRootFolder
         End If
     Next
- Set myInbox = olkRoot.folders.Item("Inbox")
+ Set myInbox = olkRoot.Folders.Item("Inbox")
+ Set mySubfolder = myInbox.Folders("Newsletters")
  Set myItems = myInbox.Items
- Set mySubfolder = myInbox.folders("Newsletters")
-' Set myItem = myItems.Find("[SenderName] = 'Royal Mail'")
- Set myItem = myItems.Find("[SenderEmailAddress] = 'agea@noticias.clarin.com'")
- While TypeName(myItem) <> "Nothing"
-  myItem.Move mySubfolder
-  Set myItem = myItems.FindNext
- Wend
+
+ If myItems.Count = 0 Then
+    MsgBox "No items to process ..."
+    Exit Sub
+ End If
+    
+    iCol = 1
+    iRows = ActiveSheet.UsedRange.Rows.Count
+    iItems = myItems.Count
+    MsgBox "iItems " & iItems
+    MsgBox "iRows " & iRows
+    iItem = iItems ' start at the bottom of the Inbox
+Start_loop:
+    If iItem = 0 Then GoTo Exit_Sub
+    DoEvents
+    Set myItem = myItems(iItem)
+    MsgBox "myItem.SenderEmailAddress " & myItem.SenderEmailAddress
+    For iRow = 1 To iRows
+        DoEvents
+        If myItem.SenderEmailAddress = Cells(iRow, iCol) Then
+            DoEvents
+            myItem.Move mySubfolder
+            DoEvents
+            MsgBox "moved ... " & myItem.SenderEmailAddress
+            MsgBox "iItem " & iItem
+            MsgBox "iRow " & iRow
+            iItem = iItem - 1
+            GoTo Start_loop
+        End If
+    Next iRow
+    iItem = iItem - 1
+    GoTo Start_loop
+
+Exit_Sub:
+ MsgBox "Exit Sub..."
 End Sub
 </pre>
 </font>
