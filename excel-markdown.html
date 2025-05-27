@@ -30,21 +30,26 @@ Sub sbMakeMarkdown()
  ' https://stackoverflow.com/questions/72806674/how-copy-text-from-vba-to-windows-clipbaord/72857101#comment134719963_72857101
  ' https://stackoverflow.com/questions/76528307/how-to-transfer-data-from-table-to-another-in-2-different-worksheets
  ' https://learn.microsoft.com/en-us/office/vba/api/excel.range.text
- Dim iRows, iColumns, iRow, iColumn, iHeader As Long
+ ' On Wed, 25 Dec 2024 at 17:29, Alexei Shatikhin <AS> wrote:
+ ' sbMakeMarkdown always takes A1 and to right/down despite the selected range.
+ 
+ Dim iRows, iColumns, iRow, iColumn, iStartRow, iStartColumn, iHeader As Long
  Dim sValue, sMarkdown, sText As String
  Dim rSelectedRange As Range
  Set rSelectedRange = Application.Selection
  iColumns = rSelectedRange.Columns.Count
  iRows = rSelectedRange.Rows.Count
+ iStartColumn = rSelectedRange.Column
+ iStartRow = rSelectedRange.Row
  sMarkdown = ""
- For iRow = 1 To iRows
-  If iRow = 2 Then
-   For iHeader = 1 To iColumns
+ For iRow = iStartRow To iRows
+  If iRow = iStartRow + 1 Then
+   For iHeader = iStartColumn To iColumns
     sMarkdown = sMarkdown & " | ---"
    Next iHeader
    sMarkdown = sMarkdown & " | " & vbCrLf
   End If
-  For iColumn = 1 To iColumns
+  For iColumn = iStartColumn To iColumns
    sText = Cells(iRow, iColumn).Text
    sMarkdown = sMarkdown & " | " & sText
   Next iColumn
