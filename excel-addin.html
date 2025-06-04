@@ -30,209 +30,106 @@
 <br/> 3:28 you need a target folder ready to go
 <br/> 3:36 install on your (or any other) computer
 <br/> ends
- 
- 
- 
- 
- 
- 
- 
- 
- 
- https://www.youtube.com/watch?v=8lxk6xVb_us  https://www.youtube.com/watch?v=8lxk6xVb_us
- 
 
+ <br/><br/>https://www.youtube.com/watch?v=8lxk6xVb_us  <br/><br/>https://www.youtube.com/watch?v=8lxk6xVb_us
+<pre>
 Transcript
-0:00
-Hi everyone, welcome to my 4th video
-0:02
-on creating Excel add-ins. In my previous
-0:04
-videos, I've used VBA and XML to
-0:07
-create Excel add-ins. I've included the
-0:09
-links to those videos in the description
-0:11
-below. Today, I'll show you how to create
-0:14
-a COM add-in using C# in Visual Studio.
-0:17
-Although I'll be using C#, you can also
-0:19
-use Visual Basic if you prefer. It's up
-0:21
-to you.
-0:22
-First, download Visual Studio from the
-0:24
-Microsoft website. The link is shown on
-0:27
-the screen. If you already have Visual
-0:28
-Studio installed, make sure you've
-0:30
-installed the Office SharePoint
-0:32
-development components. If not, download
-0:34
-and run the Visual Studio installer.
-0:36
-Check the Office SharePoint development
-0:39
-box to install them.
-0:40
-Open the Visual Studio, create a new
-0:42
-project, choose Excel VSTO add in option
-0:45
-from the list and click Next. In the next
-0:47
-window, enter the project name BrainBell
-0:49
-and click Create. Visual Studio
-0:52
-will automatically generate the necessary
-0:54
-files for the project. ThisAddin.cs
-0:56
-is the main class for your add in and
-0:58
-Visual Studio provides some initial code
-1:00
-for this file.
-1:01
-Go to the Solution Explorer on the right.
-1:04
-If it is not visible, go to the top menu,
-1:06
-choose View and then click Solution
-1:08
-Explorer. In the Solution Explorer, right
-1:10
-click on your project name and click Add.
-1:12
-Then choose New Item. Select Ribbon
-1:14
-(Visual Designer) and click Add to insert
-1:17
-it into your project.
-1:18
-A new file, Ribbon1.cs (designer), will appear
-1:21
-where you can visually design tabs, groups, and
-1:23
-buttons using the toolbox. Drag a tab and
-1:26
-a group from the toolbox to the Designer
-1:28
-if they are not already inserted. Select
-1:30
-the tab, go to the Properties, and set
-1:32
-its label to "BrainBell Tab". Then select
-1:35
-the group and set its label to BrainBell.
-1:37
-Now select the BrainBell group in the
-1:39
-Designer, click Toolbox on the left to
-1:41
-expand it, and drag a button into the
-1:43
-group. While the button is selected, go
-1:45
-to its properties, set the label to
-1:47
-Toggle Gridlines, set control size to
-1:49
-ribbon control size large, and go to the
-1:51
-image property to select an icon for the
-1:53
-button.
-2:06
-Next, double click the button to edit its
-2:08
-event handler code. Visual Studio will
-2:11
-generate an event handler method for the
-2:13
-button. Insert your own code into this
-2:15
-method and remember to import the Excel
-2:17
-namespace into this class. This code will
-2:19
-execute when you click the Toggle
-2:21
-Gridlines button in Excel.
-2:30
-Now your project is ready for
-2:31
-demonstration. Press F5 or click the play
-2:34
-icon below the top menu to build and run
-2:36
-the project. Excel will open and the
-2:38
-BrainBell addin will be loaded.
-2:43
-The "BrainBell Tab" will appear before the
-2:45
-Help tab. Try clicking Toggle Gridlines
-2:48
-in the "BrainBell Tab" and you'll see it
-2:49
-working properly. Go to the Developer tab
-2:52
-and click COM Add Ins. You will see
-2:54
-the BrainBell add in listed and checked.
-2:56
-Go to the Visual Basic Editor. Unlike VBA
-2:59
-Add Ins, you won't find any VBA
-3:01
-code or addin modules here. Close Excel
-3:04
-and go back to Visual Studio.
-3:08
-In the Solution Explorer, right-click on
-3:10
-the BrainBell add-in project and select
-3:12
-Publish from the context menu. The
-3:14
-Publish Wizard window will appear. Click
-3:16
-Browse and choose an empty folder to save
-3:19
-the add-in setup files. Once Visual
-3:21
-Studio finishes copying the setup files,
-3:23
-your add-in is ready. You can distribute
-3:26
-it over a network, on a website, or
-3:28
-install it on your own computer. Go to
-3:30
-the add-in setup folder, run the setup
-3:32
-file, and the add-in will install on your
-3:33
-computer.
-3:49
-You may need to enable it in the
-3:51
-Developer tab's COM add-ins button. Thanks
-3:53
-for watching. Please like, share, and
-3:56
-subscribe for more videos.
- 
-<br/><br/>
+0:00 Hi everyone, welcome to my 4th video
+0:02 on creating Excel add-ins. In my previous
+0:04 videos, I've used VBA and XML to
+0:07 create Excel add-ins. I've included the
+0:09 links to those videos in the description
+0:11 below. Today, I'll show you how to create
+0:14 a COM add-in using C# in Visual Studio.
+0:17 Although I'll be using C#, you can also
+0:19 use Visual Basic if you prefer. It's up
+0:21 to you.
+0:22 First, download Visual Studio from the
+0:24 Microsoft website. The link is shown on
+0:27 the screen. If you already have Visual
+0:28 Studio installed, make sure you've
+0:30 installed the Office SharePoint
+0:32 development components. If not, download
+0:34 and run the Visual Studio installer.
+0:36 Check the Office SharePoint development
+0:39 box to install them.
+0:40 Open the Visual Studio, create a new
+0:42 project, choose Excel VSTO add in option
+0:45 from the list and click Next. In the next
+0:47 window, enter the project name BrainBell
+0:49 and click Create. Visual Studio
+0:52 will automatically generate the necessary
+0:54 files for the project. ThisAddin.cs
+0:56 is the main class for your add in and
+0:58 Visual Studio provides some initial code
+1:00 for this file.
+1:01 Go to the Solution Explorer on the right.
+1:04 If it is not visible, go to the top menu,
+1:06 choose View and then click Solution
+1:08 Explorer. In the Solution Explorer, right
+1:10 click on your project name and click Add.
+1:12 Then choose New Item. Select Ribbon
+1:14 (Visual Designer) and click Add to insert
+1:17 it into your project.
+1:18 A new file, Ribbon1.cs (designer), will appear
+1:21 where you can visually design tabs, groups, and
+1:23 buttons using the toolbox. Drag a tab and
+1:26 a group from the toolbox to the Designer
+1:28 if they are not already inserted. Select
+1:30 the tab, go to the Properties, and set
+1:32 its label to "BrainBell Tab". Then select
+1:35 the group and set its label to BrainBell.
+1:37 Now select the BrainBell group in the
+1:39 Designer, click Toolbox on the left to
+1:41 expand it, and drag a button into the
+1:43 group. While the button is selected, go
+1:45 to its properties, set the label to
+1:47 Toggle Gridlines, set control size to
+1:49 ribbon control size large, and go to the
+1:51 image property to select an icon for the
+1:53 button.
+2:06 Next, double click the button to edit its
+2:08 event handler code. Visual Studio will
+2:11 generate an event handler method for the
+2:13 button. Insert your own code into this
+2:15 method and remember to import the Excel
+2:17 namespace into this class. This code will
+2:19 execute when you click the Toggle
+2:21 Gridlines button in Excel.
+2:30 Now your project is ready for
+2:31 demonstration. Press F5 or click the play
+2:34 icon below the top menu to build and run
+2:36 the project. Excel will open and the
+2:38 BrainBell addin will be loaded.
+2:43 The "BrainBell Tab" will appear before the
+2:45 Help tab. Try clicking Toggle Gridlines
+2:48 in the "BrainBell Tab" and you'll see it
+2:49 working properly. Go to the Developer tab
+2:52 and click COM Add Ins. You will see
+2:54 the BrainBell add in listed and checked.
+2:56 Go to the Visual Basic Editor. Unlike VBA
+2:59 Add Ins, you won't find any VBA
+3:01 code or addin modules here. Close Excel
+3:04 and go back to Visual Studio.
+3:08 In the Solution Explorer, right-click on
+3:10 the BrainBell add-in project and select
+3:12 Publish from the context menu. The
+3:14 Publish Wizard window will appear. Click
+3:16 Browse and choose an empty folder to save
+3:19 the add-in setup files. Once Visual
+3:21 Studio finishes copying the setup files,
+3:23 your add-in is ready. You can distribute
+3:26 it over a network, on a website, or
+3:28 install it on your own computer. Go to
+3:30 the add-in setup folder, run the setup
+3:32 file, and the add-in will install on your
+3:33 computer.
+3:49 You may need to enable it in the
+3:51 Developer tab's COM add-ins button. Thanks
+3:53 for watching. Please like, share, and
+3:56 subscribe for more videos.
+</pre>
+ <br/><br/>
 <table width=100%>
 <tr><td width=25% align=left valign=top></td>
 <td width=50% valign=top bgcolor="#cccccc">
