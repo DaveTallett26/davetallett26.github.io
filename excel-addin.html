@@ -239,64 +239,33 @@ subscribe for more videos.
 <font size=3>
 <font face="arial">
 <pre>
-Option Explicit
+using Microsoft.Office.Tools.Ribbon;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Excel = Microsoft.Office.Interop.Excel;
+namespace pj_BrainBell
+{
+    public partial class Ribbon1
+    {
+        private void Ribbon1_Load(object sender, RibbonUIEventArgs e)
+        {
 
-Sub sbUsage()
- Dim iRow As Long
- Dim iRows As Long
- Dim iCol As Long
- Dim iItem As Long
- Dim iItems As Long
- Dim myInbox As Outlook.folder
- Dim mySubfolder As Outlook.folder
- Dim myItems As Outlook.Items
- Dim myItem As Outlook.MailItem
- Dim olkstore As Outlook.Store
- Dim olkRoot As Outlook.folder
-    For Each olkstore In Outlook.Session.Stores
-        If olkstore.DisplayName = "davidtallett29@gmail.com" Then
-            Set olkRoot = olkstore.GetRootFolder
-        End If
-    Next
- Set myInbox = olkRoot.Folders.Item("Inbox")
- Set mySubfolder = myInbox.Folders("Newsletters")
- Set myItems = myInbox.Items
+        }
 
- If myItems.Count = 0 Then
-    MsgBox "No items to process ..."
-    Exit Sub
- End If
-    
-    iCol = 1
-    iRows = ActiveSheet.UsedRange.Rows.Count
-    iItems = myItems.Count
-    MsgBox "iItems " & iItems
-    MsgBox "iRows " & iRows
-    iItem = iItems ' start at the bottom of the Inbox
-Start_loop:
-    If iItem = 0 Then GoTo Exit_Sub
-    DoEvents
-    Set myItem = myItems(iItem)
-    MsgBox "myItem.SenderEmailAddress " & myItem.SenderEmailAddress
-    For iRow = 1 To iRows
-        DoEvents
-        If myItem.SenderEmailAddress = Cells(iRow, iCol) Then
-            DoEvents
-            myItem.Move mySubfolder
-            DoEvents
-            MsgBox "moved ... " & myItem.SenderEmailAddress
-            MsgBox "iItem " & iItem
-            MsgBox "iRow " & iRow
-            iItem = iItem - 1
-            GoTo Start_loop
-        End If
-    Next iRow
-    iItem = iItem - 1
-    GoTo Start_loop
+        private void button1_Click(object sender, RibbonControlEventArgs e)
+        {
+            Excel.Worksheet activeWorksheet = Globals.ThisAddIn.Application.ActiveSheet as Excel.Worksheet;
 
-Exit_Sub:
- MsgBox "Exit Sub..."
-End Sub
+            if (activeWorksheet != null)
+            {
+                // toggle the display gridlines property
+                activeWorksheet.Application.ActiveWindow.DisplayGridlines = !activeWorksheet.Application.ActiveWindow.DisplayGridlines;
+            }
+        }
+    }
+}
 </pre>
 </font>
 </font>
