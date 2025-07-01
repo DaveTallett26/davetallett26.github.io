@@ -1,1 +1,35 @@
+/*
+// See https://aka.ms/new-console-template for more information
+Console.WriteLine("Hello, World!");
+*/
+
+/*
+// Hello World! program https://davetallett26.github.io/roslyn.html
+namespace HelloWorld
+{
+    class Hello
+    {
+        static void Main(string[] args)
+        {
+            System.Console.WriteLine("Hello World!");
+            System.Console.ReadKey(true);
+        }
+    }
+}
+*/
+
+using Microsoft.Office.Interop.OneNote;
+using OneNote = Microsoft.Office.Interop.OneNote;
+// https://learn.microsoft.com/en-us/office/client-developer/onenote/application-interface-onenote
+//static void GetEntireHierarchy()
+class Program
+{
+    static void Main(string[] args)
+    {
+        String strXML;
+        var onApp = new OneNote.Application();
+        onApp.GetHierarchy(null, HierarchyScope.hsNotebooks, out strXML, XMLSchema.xs2013);
+        Console.WriteLine(strXML);
+    }
+}
  
