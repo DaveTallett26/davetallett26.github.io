@@ -1,25 +1,28 @@
 <html>
 <head>
-<style>
-div {font-size: 300%;}
-<div.columnleft {
-  float: left;
-  width: 50%;
+<style type="text/css">
+.flexbox {
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+    width: 100%;
 }
-<div.columnright {
-  float: right;
-  width: 50%;
+
+.left {
+    background: #a0ffa0;
+    min-width: 75px;
+    flex-grow: 0;
+}
+
+.right {
+    background: #a0a0ff;
+    flex-grow: 1;
 }
 </style>
 <title>black</title>
 </head>
-<body bgcolor="#000000" onload="window.scrollTo(0, 2);">
-  <!--
-<a href="https://www.google.es">
-<img src="googlelogo_light_color_272x92dp.png" alt="Google" title="Google" width="200">
-</a>
-  -->
-<div.columnleft>  
+<div class="flexbox">
+<div class="left">
 <br/><a href="https://account.everyoneactive.com/login/">everyoneactive.com/login</a>
 <br/><a href="https://amazon.co.uk/">amazon.co.uk</a>
 <br/><a href="https://amazon.es/">amazon.es</a>
@@ -35,8 +38,8 @@ div {font-size: 300%;}
 <br/><a href="https://github.com/">github.com</a>
 <br/><a href="https://google.com/maps/">google.com/maps</a>
 <br/><a href="https://google.es">google.es</a>
-</div.columnleft>
-<div.columnright>  
+</div>
+<div class="right">
 <br/><a href="https://greenenergyuk.com/">100 Green</a>
 <br/><a href="https://htsc.org.uk/">htsc.org.uk</a>
 <br/><a href="https://learn.microsoft.com/en-us/answers/">learn.microsoft.com - Microsoft Q&A</a>
@@ -59,10 +62,8 @@ div {font-size: 300%;}
 <br/><a href="https://theguardian.com/uk">theguardian.com/uk</a>
 <br/><a href="https://translate.google.es/?sl=auto&tl=es&op=translate">translate.google.es</a>
 <br/><a href="https://yourparkingspace.co.uk/">yourparkingspace.co.uk</a>
-</div.columnright>
-  
+</div>  
 <br/>davidtallett29@gmail.com
 <br/>martin@gingercatwebdesign.net
-</div>
 </body>
 </html>
