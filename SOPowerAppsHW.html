@@ -49,6 +49,44 @@
 **Minimal version:** If you want just the bare minimum, skip steps 4 to 7. A single label with `"Hello, World!"` as its Text property is a complete Power Apps Hello World.
 
 When you're ready, select **File**, then **Save**, then **Publish** to make it available to others.
+
+  **********          **********          **********
+
 </pre>
+<br/>
+    This is what Github CoPilot produced when asked exactly the same question
+
+<pre>
+Screens:
+  Screen1:
+    Properties:
+      Fill: =RGBA(248, 249, 252, 1)
+      LoadingSpinnerColor: =RGBA(56, 96, 178, 1)
+    Children:
+      - GreetingLabel:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(34, 39, 49, 1)
+            Font: =Font.'Open Sans'
+            Height: =72
+            Size: =32
+            Text: =If(showGreeting, "Hello again!", "Hello, World!")
+            Width: =Parent.Width
+            X: =0
+            Y: =Parent.Height / 2 - 80
+      - GreetingButton:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Fill: =RGBA(56, 96, 178, 1)
+            Font: =Font.'Open Sans'
+            Height: =48
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: =UpdateContext({showGreeting: !showGreeting})
+            Text: =If(showGreeting, "Start over", "Say hello")
+            Width: =180
+            X: =(Parent.Width - Self.Width) / 2
+            Y: =Parent.Height / 2 + 12
+</pre>  
 </div>
 .
